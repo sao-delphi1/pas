@@ -1,0 +1,221 @@
+unit INQRRptHPP;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, RptLv2, DB, ADODB, QRCtrls, StdCtrls, QuickRpt, ExtCtrls;
+
+type
+  TfmINQRRptHpp = class(TfmRptLv2)
+    S_HppItemBarang: TADOStoredProc;
+    quRate: TADOQuery;
+    QRLabel2: TQRLabel;
+    qu002: TADOQuery;
+    QRLabel4: TQRLabel;
+    QRLabel6: TQRLabel;
+    SummaryBand1: TQRBand;
+    bnd001: TQRSubDetail;
+    QRLabel8: TQRLabel;
+    QRLabel7: TQRLabel;
+    QRLabel9: TQRLabel;
+    QRLabel10: TQRLabel;
+    QRLabel12: TQRLabel;
+    QRLabel13: TQRLabel;
+    quCalc: TADOQuery;
+    QRDBText6: TQRDBText;
+    QRDBText7: TQRDBText;
+    QRDBText1: TQRDBText;
+    QRDBText2: TQRDBText;
+    QRDBText3: TQRDBText;
+    QRLabel1: TQRLabel;
+    bnd002: TQRSubDetail;
+    QRDBText4: TQRDBText;
+    qu003: TADOQuery;
+    QRLabel5: TQRLabel;
+    QRLabel11: TQRLabel;
+    QRDBText5: TQRDBText;
+    QRLabel14: TQRLabel;
+    qlbValuta: TQRLabel;
+    qlbTotal: TQRLabel;
+    QRLabel15: TQRLabel;
+    qlbPrice: TQRLabel;
+    procedure qrlHPPPrint(sender: TObject; var Value: String);
+    procedure MyReportBeforePrint(Sender: TCustomQuickRep;
+      var PrintReport: Boolean);
+    procedure QRLabel7Print(sender: TObject; var Value: String);
+    procedure QRLabel10Print(sender: TObject; var Value: String);
+    procedure QRLabel13Print(sender: TObject; var Value: String);
+    procedure BndDetailBeforePrint(Sender: TQRCustomBand;
+      var PrintBand: Boolean);
+    procedure QRDBText5Print(sender: TObject; var Value: String);
+    procedure bnd002BeforePrint(Sender: TQRCustomBand;
+      var PrintBand: Boolean);
+    procedure bnd001AfterPrint(Sender: TQRCustomBand;
+      BandPrinted: Boolean);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    TanggalDari : TDateTime ;
+    TotalIDR,TotalUSD,RateHpp : Currency;
+    TotalSNIDR,TotalSNUSD,TotalNotaIDR,TotalNotaUSD : Currency;
+  end;
+
+var
+  fmINQRRptHpp: TfmINQRRptHpp;
+
+implementation
+
+uses MyUnit, UnitGeneral;
+
+{$R *.dfm}
+
+procedure TfmINQRRptHpp.qrlHPPPrint(sender: TObject; var Value: String);
+begin
+  inherited;
+  Value := FormatRptkurung(Value) ;
+end;
+
+procedure TfmINQRRptHpp.MyReportBeforePrint(Sender: TCustomQuickRep;
+  var PrintReport: Boolean);
+begin
+  inherited;
+  TotalIDR := 0;
+  TotalUSD := 0;
+  TotalSNIDR := 0;
+  TotalSNUSD := 0;
+  TotalNotaIDR := 0;
+  TotalNotaUSD := 0;
+end;
+
+procedure TfmINQRRptHpp.QRLabel7Print(sender: TObject; var Value: String);
+begin
+  inherited;
+  Value := FormatRptkurung(CurrToStr(TotalSNIDR+TotalNotaIDR));
+end;
+
+procedure TfmINQRRptHpp.QRLabel10Print(sender: TObject; var Value: String);
+begin
+  inherited;
+   Value := FormatRptkurung(CurrToStr(TotalSNUSD+TotalNotaUSD));
+end;
+
+procedure TfmINQRRptHpp.QRLabel13Print(sender: TObject; var Value: String);
+begin
+  inherited;
+   Value := FormatRptkurung(CurrToStr(RateHpp));
+end;
+
+procedure TfmINQRRptHpp.BndDetailBeforePrint(Sender: TQRCustomBand;
+  var PrintBand: Boolean);
+begin
+  inherited;
+      bnd001.Enabled := False; bnd002.Enabled := True;
+      with qu003,SQL do
+      begin
+        Close;Clear;
+        Add('SELECT DISTINCT K.PurchaseID,K.ItemID,ISNULL(K.Qty-(SELECT ISNULL(SUM(L.Qty),0) FROM '
+           +'ARTrPenjualanCost L WHERE L.ItemID=K.ItemID AND L.PurchaseID=K.PurchaseID)-(SELECT ISNULL(COUNT(E.SNID),0) '
+           +'FROM ARTrPenjualanSN E WHERE E.ItemID=K.ItemID),0) as Sisa FROM('
+           +'SELECT PurchaseID,ItemID,Qty FROM APTrPurchaseDt UNION ALL '
+           +'SELECT A.KonsinyasiID,ItemID,ISNULL(Qty-(SELECT ISNULL(SUM(P.Qty),0) FROM APTrReturnKonDt P '
+           +'INNER JOIN APTrReturnKonHd Q ON Q.ReturnKonID=P.ReturnKonID '
+           +'WHERE P.ItemID=A.ItemID AND P.KonsinyasiID=A.KonsinyasiID AND '
+           +'CONVERT(VARCHAR(8),Q.Transdate,112)<='''+FormatDateTime('yyyyMMdd',TanggalDari)+'''),0) FROM APTrKonsinyasiDt A) as K '
+           +'WHERE K.ItemID = '''+qu001.FieldByName('ItemID').AsString+''' AND '
+           +'ISNULL(K.Qty-(SELECT ISNULL(SUM(L.Qty),0) FROM ARTrPenjualanCost L WHERE L.ItemID=K.ItemID AND L.PurchaseID=K.PurchaseID),0) > 0');
+        Open;
+      end;
+{   with quCalc,SQL do
+   begin
+     Close;Clear;
+     Add('SELECT DISTINCT K.SNID FROM (SELECT SNID,ItemID FROM APTrPurchaseDtSN ) as K WHERE K.ItemID='''+qu001.FieldByName('ItemID').AsString+''' ');
+     Open;
+     if not IsEmpty then
+     begin
+       bnd001.Enabled := True; bnd002.Enabled := False;
+      with qu002,SQL do
+      begin
+        Close;Clear;
+        Add('SELECT DISTINCT K.SNID,K.CurrID,K.Price FROM (SELECT A.SNID,A.FgJual,A.ItemID,B.CurrID,A.Price FROM APTrPurchaseDtSN A '
+           +'INNER JOIN APTrPurchaseHd B ON A.PurchaseID=B.PurchaseID UNION ALL '
+           +'SELECT A.SNID,A.FgJual,A.ItemID,CASE WHEN A.SNID IN (SELECT SNID FROM APTrKonsinyasiInvDtSN) THEN '
+           +'(SELECT M.CurrID FROM APTrKonsinyasiInvDtSN N INNER JOIN APTrKonsinyasiInvHd M ON M.KonsinyasiInvID=N.KonsinyasiInvID '
+           +'WHERE N.SNID=A.SNID AND N.ItemID=A.ItemID) ELSE B.CurrID END as CurrID,'
+           +'CASE WHEN A.SNID IN (SELECT SNID FROM APTrKonsinyasiInvDtSN) THEN '
+           +'(SELECT M.Price FROM APTrKonsinyasiInvDtSN M WHERE M.SNID=A.SNID AND M.ItemID=A.ItemID) ELSE C.Price END as Price '
+           +'FROM APTrKonsinyasiDtSN A INNER JOIN APTrKonsinyasiHd B ON A.KonsinyasiID=B.KonsinyasiID '
+           +'INNER JOIN APTrKonsinyasiDt C ON A.KonsinyasiID=C.KonsinyasiID) as K '
+           +'WHERE K.FgJual=''T'' AND K.ItemID='''+qu001.FieldByName('ItemID').AsString+''' ');
+        Open;
+      end;
+     end else
+     begin
+       bnd001.Enabled := False; bnd002.Enabled := True;
+      with qu003,SQL do
+      begin
+        Close;Clear;
+        Add('SELECT DISTINCT K.PurchaseID,K.ItemID,ISNULL(K.Qty-(SELECT ISNULL(SUM(L.Qty),0) FROM '
+           +'ARTrPenjualanCost L WHERE L.ItemID=K.ItemID AND L.PurchaseID=K.PurchaseID)-(SELECT ISNULL(COUNT(E.SNID),0) '
+           +'FROM ARTrPenjualanSN E WHERE E.ItemID=K.ItemID),0) as Sisa FROM('
+           +'SELECT PurchaseID,ItemID,Qty FROM APTrPurchaseDt UNION ALL '
+           +'SELECT A.KonsinyasiID,ItemID,ISNULL(Qty-(SELECT SUM(P.Qty) FROM APTrReturnKonDt P '
+           +'WHERE P.ItemID=A.ItemID AND P.KonsinyasiID=A.KonsinyasiID),0) FROM APTrKonsinyasiDt A) as K '
+           +'WHERE K.ItemID = '''+qu001.FieldByName('ItemID').AsString+''' AND '
+           +'ISNULL(K.Qty-(SELECT ISNULL(SUM(L.Qty),0) FROM ARTrPenjualanCost L WHERE L.ItemID=K.ItemID AND L.PurchaseID=K.PurchaseID),0) > 0');
+        Open;
+      end;
+     end;
+   end;  }
+end;
+
+procedure TfmINQRRptHpp.QRDBText5Print(sender: TObject; var Value: String);
+begin
+  inherited;
+  Value := FormatRptqtykurung(Value)
+end;
+
+procedure TfmINQRRptHpp.bnd002BeforePrint(Sender: TQRCustomBand;
+  var PrintBand: Boolean);
+var Total : Currency;
+begin
+  inherited;
+  with quRate,SQL do
+  begin
+    Close;Clear;
+    ADd('SELECT DISTINCT K.CurrID,K.Price FROM( '
+       +'SELECT B.PurchaseID,A.ItemID,B.CurrID,A.Price FROM APTrPurchaseDt A '
+       +'INNER JOIN APTrPurchaseHd B ON A.PurchaseID=B.PurchaseID UNION ALL '
+       +'SELECT A.KonsinyasiID,A.ItemID,CASE WHEN A.KonsinyasiID IN (SELECT K.KonsinyasiID FROM '
+       +'APTrKonsinyasiInvDt K WHERE K.ItemID=A.ItemID) THEN '
+       +'(SELECT DISTINCT K.CurrID FROM APTrKonsinyasiInvHd K INNER JOIN APTrKonsinyasiInvDt L ON K.KonsinyasiInvID=L.KonsinyasiInvID '
+       +'WHERE L.KonsinyasiID=A.KonsinyasiID AND L.ItemID=A.ItemID) ELSE B.CurrID END as CurrID, '
+       +'ISNULL(CASE WHEN A.KonsinyasiID IN (SELECT K.KonsinyasiID FROM APTrKonsinyasiInvDt K WHERE K.ItemID=A.ItemID) THEN '
+       +'(SELECT TOP 1 L.Price FROM APTrKonsinyasiInvHd K INNER JOIN APTrKonsinyasiInvDt L ON K.KonsinyasiInvID=L.KonsinyasiInvID '
+       +'WHERE L.KonsinyasiID=A.KonsinyasiID AND L.ItemID=A.ItemID ORDER BY CONVERT(VARCHAR(8),K.Transdate,112))ELSE A.Price END,0) as Price '
+       +'FROM APTrKonsinyasiDt A INNER JOIN APTrKonsinyasiHd B ON A.KonsinyasiID=B.KonsinyasiID) as K '
+       +'WHERE K.PurchaseID='''+qu003.FieldByName('PurchaseID').AsString+''' AND K.ItemID='''+qu001.FieldByName('ItemID').AsString+''' ');
+    Open;
+  end;
+  qlbValuta.Caption := quRate.FieldByName('CurrID').AsString;
+  Total := qu003.FieldByName('Sisa').AsCurrency * quRate.FieldByName('Price').AsCurrency;
+  qlbTotal.Caption := FormatRptkurung(CurrToStr(Total));
+  qlbPrice.Caption := FormatRptkurung(CurrToStr(quRate.FieldByName('Price').AsCurrency));
+  if quRate.FieldByName('CurrID').AsString = 'IDR' then
+    TotalNotaIDR := TotalNotaIDR + (qu003.FieldByName('Sisa').AsCurrency * quRate.FieldByName('Price').AsCurrency)
+  else
+    TotalNotaUSD := TotalNotaUSD + (qu003.FieldByName('Sisa').AsCurrency * quRate.FieldByName('Price').AsCurrency);
+end;
+
+procedure TfmINQRRptHpp.bnd001AfterPrint(Sender: TQRCustomBand;
+  BandPrinted: Boolean);
+begin
+  inherited;
+{  if qu002.FieldByName('CurrID').AsString = 'IDR' then
+    TotalSNIDR := TotalSNIDR + qu002.FieldByName('Price').AsCurrency
+  else
+    TotalSNUSD := TotalSNUSD + qu002.FieldByName('Price').AsCurrency;    }
+end;
+
+end.

@@ -1,0 +1,186 @@
+inherited fmARRptPenjPerSalesDlg: TfmARRptPenjPerSalesDlg
+  Left = 409
+  Top = 117
+  Caption = ''
+  ClientHeight = 424
+  ClientWidth = 389
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited paTop: TPanel
+    Width = 389
+    inherited laTitle: TLabel
+      Width = 271
+      Caption = 'Laporan Penjualan Per Sales'
+    end
+  end
+  inherited paCenter: TPanel
+    Width = 389
+    Height = 342
+    object GroupBox1: TGroupBox
+      Left = 8
+      Top = 9
+      Width = 268
+      Height = 47
+      Caption = 'Periode'
+      Ctl3D = False
+      ParentCtl3D = False
+      TabOrder = 0
+      object Label2: TLabel
+        Left = 113
+        Top = 18
+        Width = 33
+        Height = 13
+        Caption = 'sampai'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        ParentFont = False
+      end
+      object dt1: TdxDateEdit
+        Left = 12
+        Top = 14
+        Width = 86
+        TabOrder = 0
+        Date = -700000
+        SaveTime = False
+        UseEditMask = True
+        StoredValues = 4
+      end
+      object dt2: TdxDateEdit
+        Left = 164
+        Top = 14
+        Width = 88
+        TabOrder = 1
+        Date = -700000
+        SaveTime = False
+        UseEditMask = True
+        StoredValues = 4
+      end
+    end
+    object rbAll: TRadioButton
+      Left = 10
+      Top = 61
+      Width = 53
+      Height = 17
+      Caption = '&All'
+      Checked = True
+      TabOrder = 1
+      TabStop = True
+      OnClick = rbSelectClick
+    end
+    object rbSelect: TRadioButton
+      Left = 82
+      Top = 61
+      Width = 61
+      Height = 17
+      Caption = '&Select'
+      TabOrder = 2
+      OnClick = rbSelectClick
+    end
+    object dbgList: TdxDBGrid
+      Left = 1
+      Top = 85
+      Width = 387
+      Height = 256
+      Bands = <
+        item
+        end>
+      DefaultLayout = True
+      HeaderPanelRowCount = 1
+      KeyField = 'SalesID'
+      SummaryGroups = <>
+      SummarySeparator = ', '
+      Align = alBottom
+      TabOrder = 3
+      DataSource = dsAct
+      Filter.Criteria = {00000000}
+      HideFocusRect = True
+      HideSelection = True
+      LookAndFeel = lfFlat
+      OptionsBehavior = [edgoAutoSort, edgoDragScroll, edgoEditing, edgoEnterShowEditor, edgoTabThrough, edgoVertThrough]
+      OptionsDB = [edgoCancelOnExit, edgoCanDelete, edgoCanInsert, edgoCanNavigation, edgoConfirmDelete, edgoLoadAllRecords, edgoUseBookmarks]
+      OptionsView = [edgoAutoWidth, edgoBandHeaderWidth, edgoIndicator, edgoRowSelect, edgoUseBitmap]
+      object dbgListSalesID: TdxDBGridMaskColumn
+        Caption = 'Kode Sales'
+        BandIndex = 0
+        RowIndex = 0
+        FieldName = 'SalesID'
+      end
+      object dbgListSalesName: TdxDBGridMaskColumn
+        Caption = 'Nama Sales'
+        Sorted = csUp
+        BandIndex = 0
+        RowIndex = 0
+        FieldName = 'SalesName'
+      end
+    end
+    object bbCancel: TdxButton
+      Left = 283
+      Top = 59
+      Width = 100
+      Height = 20
+      About = 'Design eXperience. '#169' 2002 M. Hoffmann'
+      Version = '1.0.2e'
+      OnClick = bbCancelClick
+      Caption = 'CARI SALES'
+      TabOrder = 4
+    end
+    object RG1: TRadioGroup
+      Left = 283
+      Top = 9
+      Width = 100
+      Height = 47
+      Caption = '[ Jenis ]'
+      Ctl3D = False
+      ItemIndex = 0
+      Items.Strings = (
+        'Penjualan'
+        'Sales Point')
+      ParentCtl3D = False
+      TabOrder = 5
+      OnClick = RG1Click
+    end
+  end
+  inherited paBottom: TPanel
+    Top = 383
+    Width = 389
+    inherited bbPreview: TBitBtn
+      Left = 163
+      OnClick = bbPreviewClick
+    end
+    inherited bbPrint: TBitBtn
+      Left = 237
+      OnClick = bbPreviewClick
+    end
+    inherited bbExit: TBitBtn
+      Left = 311
+    end
+    object rbJenis: TRadioGroup
+      Left = 5
+      Top = 2
+      Width = 153
+      Height = 35
+      Columns = 2
+      Ctl3D = False
+      ItemIndex = 0
+      Items.Strings = (
+        'Detil'
+        'Ringkasan')
+      ParentCtl3D = False
+      TabOrder = 3
+    end
+  end
+  inherited quAct: TADOQuery
+    SQL.Strings = (
+      'SELECT * FROM ARMsSales WHERE FgActive <> 0')
+    object quActSalesID: TStringField
+      FieldName = 'SalesID'
+    end
+    object quActSalesName: TStringField
+      FieldName = 'SalesName'
+      Size = 50
+    end
+  end
+end

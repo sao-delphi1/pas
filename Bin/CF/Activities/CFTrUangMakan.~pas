@@ -1,0 +1,448 @@
+unit CFTrUangMakan;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdLv3, ActnList, DB, dxExEdtr, dxCntner, ADODB, StdCtrls,
+  ExtCtrls, dxEdLib, dxButton, dxCore, dxContainer, Buttons, DBCtrls,
+  dxEditor, dxDBELib, dxTL, dxDBCtrl, dxDBGrid, dxDBTLCl, dxGrClms,DateUtils;
+
+type
+  TfmCFTrUangMakan = class(TfmStdLv3)
+    Label1: TLabel;
+    Label2: TLabel;
+    Label4: TLabel;
+    Label5: TLabel;
+    dxDBEdit1: TdxDBEdit;
+    GroupBox2: TGroupBox;
+    Label10: TLabel;
+    DBText3: TDBText;
+    Label11: TLabel;
+    DBText4: TDBText;
+    Label3: TLabel;
+    Label6: TLabel;
+    quMainUMID: TStringField;
+    quMainTransdate: TDateTimeField;
+    quMainNote: TStringField;
+    quMainUpdDate: TDateTimeField;
+    quMainUpdUser: TStringField;
+    quMainTTLMakan: TBCDField;
+    quDetilUMID: TStringField;
+    quDetilSalesID: TStringField;
+    quDetilTelat: TIntegerField;
+    quDetilDTelat: TBCDField;
+    quDetilUpdUser: TStringField;
+    quDetilUpdDate: TDateTimeField;
+    dbgAbsen: TdxDBGrid;
+    bbSave: TdxButton;
+    bbCancel: TdxButton;
+    dbgAbsenUMID: TdxDBGridMaskColumn;
+    dbgAbsenSalesID: TdxDBGridColumn;
+    dbgAbsenTelat: TdxDBGridColumn;
+    dbgAbsenDTelat: TdxDBGridColumn;
+    dbgAbsenUpdUser: TdxDBGridMaskColumn;
+    dbgAbsenUpdDate: TdxDBGridDateColumn;
+    quSales: TADOQuery;
+    quDetilLUangMakan: TCurrencyField;
+    quDetilCJamMasuk: TDateTimeField;
+    quDetilCTTelat: TCurrencyField;
+    dbgAbsenJamMasuk: TdxDBGridColumn;
+    quMainsalesid: TStringField;
+    Label7: TLabel;
+    DBText5: TDBText;
+    quMainLSalesName: TStringField;
+    dbgAbsenCTanggal: TdxDBGridColumn;
+    quDetilCDTTelat: TCurrencyField;
+    dbgAbsenCDTTelat: TdxDBGridColumn;
+    quMainTransdate1: TDateTimeField;
+    quMainTransdate2: TDateTimeField;
+    quDetilTanggal: TDateTimeField;
+    quAct1: TADOQuery;
+    quTotal: TADOQuery;
+    dsTotal: TDataSource;
+    DBText1: TDBText;
+    quTotalTotal: TBCDField;
+    dbgAbsenLUangMakan: TdxDBGridColumn;
+    DBText6: TDBText;
+    Shape6: TShape;
+    Shape3: TShape;
+    Shape4: TShape;
+    Label8: TLabel;
+    Label9: TLabel;
+    Label12: TLabel;
+    quMainKerajinan: TBCDField;
+    dxDBDateEdit1: TdxDBDateEdit;
+    dxDBButtonEdit1: TdxDBButtonEdit;
+    dxDBDateEdit2: TdxDBDateEdit;
+    dxDBDateEdit3: TdxDBDateEdit;
+    dxDBEdit2: TdxDBEdit;
+    quTotalGT: TBCDField;
+    quMainFgStatus: TStringField;
+    DBText2: TDBText;
+    quMainStatus: TStringField;
+    dxButton1: TdxButton;
+    DBText7: TDBText;
+    quDetilDendaT: TCurrencyField;
+    procedure FormShow(Sender: TObject);
+    procedure dsMainStateChange(Sender: TObject);
+    procedure dbgAbsenEnter(Sender: TObject);
+    procedure quMainNewRecord(DataSet: TDataSet);
+    procedure dxDBButtonEdit1ButtonClick(Sender: TObject;
+      AbsoluteIndex: Integer);
+    procedure dxDBDateEdit1KeyPress(Sender: TObject; var Key: Char);
+    procedure quMainBeforePost(DataSet: TDataSet);
+    procedure quMainAfterPost(DataSet: TDataSet);
+    procedure dsDetilStateChange(Sender: TObject);
+    procedure quDetilCalcFields(DataSet: TDataSet);
+    procedure quDetilAfterPost(DataSet: TDataSet);
+    procedure bbFindClick(Sender: TObject);
+    procedure dxButton1Click(Sender: TObject);
+    procedure quMainBeforeDelete(DataSet: TDataSet);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  fmCFTrUangMakan: TfmCFTrUangMakan;
+
+implementation
+
+uses MyUnit, UnitDate, UnitGeneral, ConMain, StdLv1, Search,
+  CFQRRptUangMakan, RptLv0, Allitem;
+
+{$R *.dfm}
+
+procedure TfmCFTrUangMakan.FormShow(Sender: TObject);
+begin
+  FFieldOrder := 'CONVERT(VARCHAR(8),TransDate,112), UMID';
+  FFieldTgl   := 'TransDate';
+  SettingDxGrid(dbgAbsen);
+  inherited;
+  quMain.Active := TRUE;
+  quDetil.Active:= TRUE;
+  quTotal.Active:= TRUE;
+end;
+
+procedure TfmCFTrUangMakan.dsMainStateChange(Sender: TObject);
+begin
+  inherited;
+  SetBtnOperationVisible(bbSave,bbCancel,FActDS);
+  SetReadOnly(dxDBEdit1,TRUE);
+  SetReadOnly(dxDBButtonEdit1,quMain.State<>dsInsert);
+  SetReadOnly(dxDBDateEdit1,quMain.State<>dsInsert);
+  SetReadOnly(dxDBDateEdit2,quMain.State<>dsInsert);
+  SetReadOnly(dxDBDateEdit3,quMain.State<>dsInsert);
+end;
+
+procedure TfmCFTrUangMakan.dbgAbsenEnter(Sender: TObject);
+begin
+  inherited;
+  if quMain.State in dsEditModes then quMain.Post;
+  if quDetil.IsEmpty then quDetil.Append;
+end;
+
+procedure TfmCFTrUangMakan.quMainNewRecord(DataSet: TDataSet);
+begin
+  inherited;
+  quMainTransdate.AsDateTime := Date;
+  quMainTransdate1.AsDateTime:= Date - 7;
+  quMainTransdate2.AsDateTime:= Date;
+  quMainsalesid.FocusControl;
+  quMainKerajinan.AsCurrency := 0;
+  quMainFgStatus.AsString := 'T';
+end;
+
+procedure TfmCFTrUangMakan.dxDBButtonEdit1ButtonClick(Sender: TObject;
+  AbsoluteIndex: Integer);
+begin
+  inherited;
+  with TfmSearch.Create(Self) do
+    try
+       Title := 'Sales';
+       SQLString := 'SELECT Salesname as Nama_Sales,SalesID as Kode_Sales'
+                   +',Address, Phone, HP FROM ARMsSales WHERE FgActive = 1 '
+                   +' ORDER BY SalesID';
+       if ShowModal = MrOK then
+       begin
+          if quMain.State = dsBrowse then quMain.Edit;
+          quMainSalesID.Value := Res[1];
+       end;
+    finally
+       free;
+    end;
+end;
+
+procedure TfmCFTrUangMakan.dxDBDateEdit1KeyPress(Sender: TObject;
+  var Key: Char);
+begin
+  inherited;
+  if Key=#13 then PostMessage(Self.Handle,WM_NEXTDLGCTL,0,0);
+end;
+
+procedure TfmCFTrUangMakan.quMainBeforePost(DataSet: TDataSet);
+var ST : String;
+    Period : Integer;
+begin
+  inherited;
+  if TRIM(quMainsalesid.AsString) = '' then
+  begin
+    ShowMessage('Kode Karyawan tidak boleh kosong');
+    quMainsalesid.FocusControl;
+    Abort;
+  end;
+  if TRIM(quMainLSalesName.AsString) = '' then
+  begin
+    ShowMessage('Karyawan tidak terdaftar');
+    quMainsalesid.FocusControl;
+    Abort;
+  end;
+  if TRIM(quMainTransdate.AsString) = '' then
+  begin
+    ShowMessage('Tanggal Transaksi Tidak boleh kosong');
+    quMainTransdate.FocusControl;
+    Abort;
+  end;
+  if TRIM(quMainTransdate1.AsString) = '' then
+  begin
+    ShowMessage('Periode dari tidak boleh kosong');
+    quMainTransdate1.FocusControl;
+    Abort;
+  end;
+  if TRIM(quMainTransdate2.AsString) = '' then
+  begin
+    ShowMessage('Periode sampai tidak boleh kosong');
+    quMainTransdate2.FocusControl;
+    Abort;
+  end;
+  if INT(quMainTransdate1.AsDateTime) > INT(quMainTransdate2.AsDateTime) then
+  begin
+    ShowMessage('Periode sampai harus lebih besar dari Periode dari');
+    quMainTransdate2.FocusControl;
+    Abort;
+  end;
+
+  if quMain.State = dsInsert then
+  begin
+    Period := DaysBetween(quMainTransdate2.AsDateTime,quMainTransdate1.AsDateTime);
+    if Period > 7 then
+    begin
+      ShowMessage('Periode Uang Makan harus 7 Hari');
+      quMainTransdate1.FocusControl;
+      Abort;
+    end;
+    with quAct,SQL do
+    begin
+      Close;Clear;
+      Add('SELECT * FROM TrAbsensi WHERE SalesID='''+quMainsalesid.AsString+''' AND CONVERT(VARCHAR(8),Tanggal,112) '
+         +'BETWEEN '''+FormatDateTime('yyyyMMdd',quMainTransdate1.AsDateTime)+''' AND '''+FormatDateTime('yyyyMMdd',quMainTransdate2.AsDateTime)+''' AND FgProses=''T'' ');
+      Open;
+      If IsEmpty then
+      begin
+        MsgInfo('Karyawan ini sudah diproses uang makannya untuk periode yang dipilih');
+        quMainTransdate1.FocusControl;
+        Abort;
+      end;
+    end;
+    ST := PT+'.UM'+ FormatDateTime('.YY.MM.', quMainTransDate.AsDateTime);
+    quMainUMID.AsString  := ST + FormatFloat('0000', RunNumberGL(quAct, 'CFTrUangMakanHd', 'UMID', ST, '0') + 1);
+  end;
+  quMainUpdDate.AsDateTime := GetServerDateTime;
+  quMainUpdUser.AsString := dmMain.UserId;
+end;
+
+procedure TfmCFTrUangMakan.quMainAfterPost(DataSet: TDataSet);
+var Kerajinan : currency;
+    Period : Integer;
+    Nota : string;
+begin
+  inherited;
+  if quDetil.IsEmpty then
+  begin
+    Nota := Self.quMainUMID.AsString;
+    if quMainTransdate1.AsDateTime = quMainTransdate2.AsDateTime then
+      Period := 1
+    else
+      Period := DaysBetween(quMainTransdate2.AsDateTime,quMainTransdate1.AsDateTime);
+    with quAct,SQL do
+    begin
+      Close;Clear;
+      Add('INSERT CFTrUangMakanDt (UMID,SalesID,Tanggal,UpdDate,UpdUser,Telat,DTelat) SELECT K.UMID,K.SalesID,K.Tanggal,Getdate(),'''+dmMain.UserId+''','
+         +'CASE WHEN ISNULL(K.Telat,0) <= 0 THEN 0 ELSE K.Telat END as Telat,K.DTelat FROM ('
+         +'SELECT A.UMID,A.SALESID,B.Tanggal,(LEFT(CONVERT(VARCHAR(5),B.Tanggal,108),2)*60+RIGHT(CONVERT(VARCHAR(5),B.Tanggal,108),2))- '
+         +'(LEFT((SELECT CONVERT(VARCHAR(5),C.JamKerja,108) FROM Calendar C '
+         +'WHERE CONVERT(VARCHAR(8),B.Tanggal,112)=CONVERT(VARCHAR(8),C.Transdate,112)),2)*60+ '
+         +'RIGHT((SELECT CONVERT(VARCHAR(5),C.JamKerja,108) FROM Calendar C '
+         +'WHERE CONVERT(VARCHAR(8),B.Tanggal,112)=CONVERT(VARCHAR(8),C.Transdate,112)),2)) as Telat, '
+         +'ISNULL((SELECT DTelat FROM Calendar C WHERE CONVERT(VARCHAR(8),C.Transdate,112)=CONVERT(VARCHAR(8),B.Tanggal,112)),0) as DTelat '
+         +'FROM CFTrUangMakanHd A INNER JOIN TrAbsensi B ON A.SalesID=B.SalesID WHERE A.UMID='''+quMainUMID.AsString+''' AND CONVERT(VARCHAR(8),B.Tanggal,112) '
+         +'BETWEEN '''+FormatDateTime('yyyyMMdd',quMainTransdate1.AsDateTime)+''' AND '''+FormatDateTime('yyyyMMdd',quMainTransdate2.AsDateTime)+''' '
+         +'AND B.FgProses=''T'') as K ');
+      ExecSQL;
+    end;
+    with quAct1,SQL do
+    begin
+      Close;Clear;
+      Add('SELECT COUNT(*) as Total,B.Kerajinan FROM CFTrUangMakanDt A INNER JOIN ARMsSales B ON A.SalesID=B.SalesID '
+         +'WHERE A.UMID='''+quMainUMID.AsString+''' AND A.SalesID='''+quMainsalesid.AsString+''' GROUP BY B.Kerajinan');
+      Open;
+    end;
+    if Period <= quAct1.FieldByName('Total').AsInteger then
+      Kerajinan := quAct1.FieldByName('Kerajinan').AsCurrency
+    else
+      Kerajinan := 0;
+    with quAct,SQL do
+    begin
+      Close;Clear;
+      Add('UPDATE CFTrUangMakanHd SET Kerajinan='''+CurrToStr(Kerajinan)+''' WHERE UMID='''+quMainUMID.AsString+'''');
+      ExecSQL;
+    end;
+  end;
+  quDetil.Requery();
+  quTotal.Requery();
+  Self.quMain.Requery();
+  quMain.Locate('UMID',Nota,[]);
+end;
+
+procedure TfmCFTrUangMakan.dsDetilStateChange(Sender: TObject);
+begin
+  inherited;
+  SetReadOnly(dbgAbsenJamMasuk,TRUE);
+  SetReadOnly(dbgAbsenJamMasuk,TRUE);
+  SetReadOnly(dbgAbsenDTelat,TRUE);
+  SetReadOnly(dbgAbsenCTanggal,TRUE);
+  SetReadOnly(dbgAbsenCDTTelat,TRUE);
+  SetReadOnly(dbgAbsenLUangMakan,TRUE);
+end;
+
+procedure TfmCFTrUangMakan.quDetilCalcFields(DataSet: TDataSet);
+var Telat : integer;
+begin
+  inherited;
+  with quAct,SQL do
+  begin
+    Close;Clear;
+    Add('SELECT UangMakan FROM ARMsSales WHERE SalesID='''+quMainsalesid.AsString+''' ');
+    Open;
+  end;
+  quDetilCJamMasuk.AsDateTime :=  quDetilTanggal.AsDateTime;
+  if quDetilTelat.AsInteger MOD 5 = 0 then
+    Telat := quDetilTelat.AsInteger DIV 5
+  else
+    Telat := (quDetilTelat.AsInteger DIV 5) + 1;
+  quDetilDendaT.AsCurrency := Telat * 1000;
+  if (quDetilDendaT.AsCurrency) < quAct.FieldByName('UangMakan').AsCurrency then
+    quDetilCDTTelat.AsCurrency := quAct.FieldByName('UangMakan').AsCurrency - (quDetilDendaT.AsCurrency)
+  else
+    quDetilCDTTelat.AsCurrency := 0;
+end;
+
+procedure TfmCFTrUangMakan.quDetilAfterPost(DataSet: TDataSet);
+begin
+  inherited;
+  quTotal.Requery();
+end;
+
+procedure TfmCFTrUangMakan.bbFindClick(Sender: TObject);
+begin
+  inherited;
+  with TfmSearch.Create(Self) do
+    try
+       Title := 'Transaksi Uang Makan';
+       SQLString := ' SELECT A.UMID as Nota,CONVERT(VARCHAR(10),A.Transdate,103) as Tgl,B.SalesName,'
+                   +' CONVERT(VARCHAR(10),A.Transdate1,103) as Dari,CONVERT(VARCHAR(10),A.Transdate2,103) as Sampai '
+                   +' FROM CFTrUangMakanHd A INNER JOIN ARMsSales B ON A.SalesID=B.SalesID '
+                   +' WHERE '+FSQLWhere
+                   +' ORDER BY A.UMID ';
+       if ShowModal = MrOK then
+       begin
+         quMain.Locate('UMID',Res[0],[]);
+       end;
+    finally
+       free;
+    end;
+end;
+
+procedure TfmCFTrUangMakan.dxButton1Click(Sender: TObject);
+var Nota : string;
+begin
+  inherited;
+  If (Self.quMain.State = dsEdit) or (Self.quMain.State = dsInsert) then
+  begin
+    ShowMessage('Data Belum disimpan');
+    Abort;
+  end;
+  Nota := Self.quMainUMID.AsString;
+  if quDetil.IsEmpty then Abort;
+  with quAct,SQL do
+  begin
+    Close;Clear;
+    Add('UPDATE TrAbsensi SET FgProses=''Y'' '
+       +'WHERE CONVERT(VARCHAR(8),Tanggal,112) IN (SELECT CONVERT(VARCHAR(8),Tanggal,112) FROM CFTrUangMakanDt '
+       +'WHERE UMID='''+quMainUMID.AsString+''' AND SalesID='''+quMainsalesid.AsString+''') ');
+    Add('UPDATE CFTrUangMakanHd SET FgStatus=''Y'' WHERE UMID='''+quMainUMID.AsString+''' ');
+    ExecSQL;
+  end;
+  with TfmCFQRRptUangMakan.Create(Self) do
+  try
+    qrlCompName.Caption := sCompanyName;
+    qrlTitle.Caption := 'Slip Pengeluaran Uang Makan';
+    qrlPeriode.Caption := 'Periode : '+FormatDateTime('dd/MM/yyyy',quMainTransdate1.AsDateTime)+ ' s/d '+ FormatDateTime('dd/MM/yyyy',quMainTransdate2.AsDateTime);
+    qlbTerbilang.Caption := '* Terbilang '+ convert(FormatFloat(sEditFormat, quTotalGT.AsCurrency))+'rupiah #';
+    qlbSubTotal.Caption := quTotalTotal.AsString;
+    qlbKerajinan.Caption := quMainKerajinan.AsString;
+    qlbGrandTotal.Caption := quTotalGT.AsString;
+    with qu001,SQL do
+    Begin
+      Close;Clear;
+      add('SELECT A.UMID,CONVERT(VARCHAR(10),A.Transdate,103) as Tanggal,B.SalesName,A.Kerajinan,A.SalesID FROM CFTrUangMakanHd A '
+         +'INNER JOIN ARMsSales B ON A.SalesID=B.SalesID WHERE A.UMID='''+quMainUMID.AsString+''' ');
+      Open;
+    End;
+    with qu002,SQL do
+    begin
+      Close;Clear;
+      Add('SELECT CONVERT(VARCHAR(10),A.Tanggal,103) as Tgl,CONVERT(VARCHAR(10),A.Tanggal,108) as JamMasuk,A.Telat,A.DTelat,B.UangMakan '
+         +'FROM CFTrUangMakanDt A INNER JOIN ARMsSales B ON A.SalesID=B.SalesID WHERE A.UMID=:UMID AND A.SalesID=:SalesID');
+      with Parameters do
+      begin
+        ParamByName('UMID').Value := ftString;
+        ParamByName('SalesID').Value := ftString;
+      end;
+      Open;
+    end;
+
+    if sCetak = '0' then
+       MyReport.PreviewModal
+    else
+       MyReport.Print;
+
+  finally
+      free;
+  end;
+  DeleteFromAllMoney(quMainUMID.AsString,'600.28','82');
+  InsertToAllMoney(quMainUMID.AsString,quMainTransDate.value,'Karyawan','KK','600.28',sDGRBi,quTotalGT.Value
+           ,'Uang Makan Periode '+FormatDateTime('dd/MM/yyyy',quMainTransdate1.AsDateTime)+'-'+
+           FormatDateTime('dd/MM/yyyy',quMainTransdate2.AsDateTime)+' Karyawan '+quMainLSalesName.AsString,'82','','','KARYAWAN','IDR',1);
+
+  Self.quMain.Requery();
+  quMain.Locate('UMID',Nota,[]);
+end;
+
+procedure TfmCFTrUangMakan.quMainBeforeDelete(DataSet: TDataSet);
+begin
+  inherited;
+  DeleteFromAllMoney(quMainUMID.AsString,'82');
+  with quAct,SQL do
+  begin
+    Close;Clear;
+    Add('UPDATE TrAbsensi SET FgProses=''T'' '
+       +'WHERE CONVERT(VARCHAR(8),Tanggal,112) IN (SELECT CONVERT(VARCHAR(8),Tanggal,112) FROM CFTrUangMakanDt '
+       +'WHERE UMID='''+quMainUMID.AsString+''' AND SalesID='''+quMainsalesid.AsString+''') ');
+    ExecSQL;
+  end;
+end;
+
+end.

@@ -1,0 +1,179 @@
+unit ARRptPenjPerProductDlg;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, RptDlg, DB, dxExEdtr, dxCntner, ADODB, StdCtrls, Buttons,
+  ExtCtrls, dxEditor, dxEdLib, dxTL, dxDBCtrl, dxDBGrid, dxCore, dxButton;
+
+type
+  TfmARRptPenjPerProductDlg = class(TfmRptDlg)
+    GroupBox1: TGroupBox;
+    Label2: TLabel;
+    dt1: TdxDateEdit;
+    dt2: TdxDateEdit;
+    rbAll: TRadioButton;
+    rbSelect: TRadioButton;
+    dbgList: TdxDBGrid;
+    bbCancel: TdxButton;
+    quActProductID: TStringField;
+    quActProductDesc: TStringField;
+    dbgListProductID: TdxDBGridMaskColumn;
+    dbgListProductDesc: TdxDBGridMaskColumn;
+    cbHarga: TCheckBox;
+    procedure bbPreviewClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure rbSelectClick(Sender: TObject);
+    procedure bbCancelClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  fmARRptPenjPerProductDlg: TfmARRptPenjPerProductDlg;
+
+implementation
+
+uses INQRRptAdjusment, UnitGeneral,
+  StdLv0, APQRRptPembPerBrg, ARQRRptPenjPerBrg, Search,
+  ARQRRptPenjPerProduct;
+
+{$R *.dfm}
+
+procedure TfmARRptPenjPerProductDlg.bbPreviewClick(Sender: TObject);
+begin
+  inherited;
+  with TfmARQRRptPenjPerProduct.Create(Self) do
+     try
+       qrlTitle.Caption := laTitle.Caption;
+       qrlPeriode.Caption := 'Periode : '+FormatDateTime('dd/MM/yyyy',dt1.date)+' s/d '+FormatDateTime('dd/MM/yyyy',dt2.date);
+       Tanggaldari := dt1.date;
+       TanggalSampai := dt2.date;
+
+       if not cbHarga.Checked then
+       begin
+         QRLabel4.Left := 962; QRDBText7.Left := 962; QRLabel31.Enabled := False;
+         QRLabel5.Enabled := False; QRLabel7.Enabled := False;
+         QRDBText6.Enabled := False; QRDBText8.Enabled := False;
+         QRDBText4.Width := 470; QRLabel27.Enabled := False; QRLabel28.Enabled := False;
+         QRLabel11.Enabled := False; QRLabel15.Enabled := False; QRLabel17.Enabled := False;
+         QRLabel13.Enabled := False; QRLabel19.Enabled := False; QRLabel21.Enabled := False;
+         GroupFooterBand1.Height := 20; GroupFooterBand2.Height := 20;
+       end;
+
+       with qu001,sql do
+       begin
+         Close;Clear;
+         add( ' Select Distinct K.ProductId,K.Product,K.ProductId as ProductId2 FROM '
+             +' ( select Distinct C.ProductId,(C.ProductId+'' - ''+D.ProductDesc) as Product'
+             +' FROM ARTrPenjualandt B INNER JOIN INMsItem C ON C.ItemId=B.ItemId'
+             +' INNER JOIN INMsProduct D ON C.ProductId=D.ProductId'
+             +' INNER JOIN ARTrPenjualanHd A ON A.SaleId=B.SaleId WHERE'
+             +' Convert(varchar(8),TransDate,112) BETWEEN '''+FormatDateTime('yyyyMMdd',dt1.Date)+''' AND '''+FormatDateTime('yyyyMMdd',dt2.Date)+'''');
+         if rbSelect.Checked then
+           Add(' AND C.ProductId IN '+SelGrid(quAct,dbgList,'ProductId'));
+         Add(' ) as K ORDER BY K.ProductId');
+         Open;
+         if IsEmpty then
+         begin
+           MsgInfo('No Data !');
+           Abort;
+         end;
+       end;
+
+       with qu002,sql do
+       begin
+         Close;Clear;
+         add( ' Select Distinct K.ItemId,K.Barang,K.ItemId as ItemId2 FROM '
+             +' ( select Distinct B.ItemId,(B.ItemId+'' - ''+C.ItemName) as Barang,C.ProductId'
+             +' FROM ARTrPenjualandt B INNER JOIN INMsItem C ON C.ItemId=B.ItemId'
+             +' INNER JOIN ARTrPenjualanHd A ON A.SaleId=B.SaleId WHERE'
+             +' C.ProductId=:ProductId AND '
+             +' Convert(varchar(8),TransDate,112) BETWEEN '''+FormatDateTime('yyyyMMdd',dt1.Date)+''' AND '''+FormatDateTime('yyyyMMdd',dt2.Date)+'''');
+         Add(' ) as K');
+         add(' order by K.ItemId');
+         Parameters.ParamByName('ProductId').DataType := ftString;
+         Open;
+         if IsEmpty then
+         begin
+           MsgInfo('No Data !');
+           Abort;
+         end;
+       end;
+
+       with qu003,sql do
+       begin
+         Close;Clear;
+         add(' Select Distinct K.ItemId,K.saleid,K.Tgl,K.Tgl2,K.QTY,K.CustName,K.CurrId,K.Price,K.Total,K.POID FROM'
+            +' ( SELECT distinct A.ItemId,C.SaleId,Convert(varchar(10),TransDate,103) as Tgl,Convert(varchar(8),TransDate,112) as tgl2,'
+            +' A.QTY,B.CustName,C.CurrId,A.Price,(A.Price*A.Qty) as Total,C.POID '
+            +' FROM ARTrPenjualanDt A INNER JOIN ARTrPenjualanHd C ON A.SaleId=C.SaleId'
+            +' INNER JOIN ARMsCustomer B ON C.CustId=B.CustId'
+            +' WHERE A.ItemId=:ItemId AND'
+            +' Convert(varchar(8),TransDate,112) BETWEEN '''+FormatDateTime('yyyyMMdd',Tanggaldari)+''' AND '''+FormatDateTime('yyyyMMdd',TanggalSampai)+'''');
+         Add('  ) as K ORDER BY K.Tgl2');
+         Parameters.ParamByName('ItemId').DataType := ftString;
+         Open;
+         if IsEmpty then
+         begin
+           MsgInfo('No Data !');
+           Abort;
+         end;
+       end;
+
+       if Sender=bbPreview then
+          MyReport.Previewmodal
+       else
+          MyReport.Print;
+
+
+     finally
+        free;
+     end;
+end;
+
+procedure TfmARRptPenjPerProductDlg.FormShow(Sender: TObject);
+begin
+  inherited;
+  quAct.Open;
+  dt1.Date := date;
+  dt2.date := date;
+end;
+
+procedure TfmARRptPenjPerProductDlg.rbSelectClick(Sender: TObject);
+begin
+  inherited;
+  if Sender=rbAll then
+  begin
+     dbgList.OptionsBehavior := dbgList.OptionsBehavior - [edgoMultiSelect];
+  end else
+  if Sender=rbSelect then
+  begin
+     dbgList.OptionsBehavior := dbgList.OptionsBehavior + [edgoMultiSelect];
+     if dbgList.FocusedNode <> nil then
+       dbgList.FocusedNode.Selected := TRUE;
+  end;
+end;
+
+procedure TfmARRptPenjPerProductDlg.bbCancelClick(Sender: TObject);
+begin
+  inherited;
+  with TfmSearch.Create(Self) do
+    try
+       Title := 'Barang';
+       SQLString := ' SELECT ProductDesc as Product ,ProductID as Kode_Product'
+                   +' FROM InMsProduct '
+                   +' ORDER BY ProductID';
+       if ShowModal = MrOK then
+       begin
+         Self.quAct.Locate('ProductID',Res[1],[]);
+       end;
+    finally
+       free;
+    end;
+end;
+
+end.

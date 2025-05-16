@@ -1,0 +1,460 @@
+unit Allitem;
+
+interface
+
+Function InsertToAllItem(VoucherNo:string;TransDate:TDateTime;WareHouseId:string;ItemID:string;FgTrans:Byte;Qty:Currency;
+                          Price:Currency;ModuleID:string;TempField2: string) : Integer;overload;
+Function InsertToAllItem(VoucherNo:string;TempField:string;TransDate:TDateTime;WareHouseId:string;ItemID:string;FgTrans:Byte;Qty:Currency;
+                         Price:Currency;CurrId:string;Rate:Currency;ModuleID:string;TempField2:string) : Integer;overload;
+Function InsertToAllItem(VoucherNo:string;TempField:string;TransDate:TDateTime;WareHouseId:string;ItemID:string;FgTrans:Byte;Qty:Currency;
+                         Price:Currency;CurrId:string;Rate:Currency;ModuleID:string;TempField2:string;Salesid:string;Komisi:Currency) : Integer;overload;
+Function InsertToAllItem1(VoucherNo:string;TempField:string;TempField1:string;TransDate:TDateTime;WareHouseId:string;
+                         ItemID:string;FgTrans:Byte;Qty:Currency;ModuleID:string;TempField2:string) : Integer;
+Function InsertToAllItem2(VoucherNo:string;TempField:string;SouceNo:string;TransDate:TDateTime;WareHouseId:string;ItemID:string;FgTrans:Byte;Qty:Currency;
+                         Price:Currency;CurrId:string;Rate:Currency;ModuleID:string;TempField2:string) : Integer;overload;
+Function DeleteFromAllItem(VoucherNo:String;FgTrans:Byte):Integer;overload
+Function DeleteFromAllItem(VoucherNo:String;ItemID:String;FgTrans:Byte):Integer;overload
+Function DeleteFromAllItem1(VoucherNo:String;TempField:string;FgTrans:Byte):Integer;overload
+Function DeleteFromAllItem(VoucherNo:String;TempField:string;TempField1:string;WarehouseId:String
+                           ;FgTrans:Byte):Integer;overload
+Function DeleteFromAllItem(VoucherNo:String;TempField:string;ItemId:string;WarehouseId:String
+                           ;Price : Currency;FgTrans:Byte):Integer;overload
+Function UpdateTglPembAllItem(VoucherNo:String;TempField:string;TransDate:TDateTime):Integer;overload
+
+function InsertToAllMoney(VoucherNo:String;Transdate:TDateTime;Actor:String;FgBBkk:string;Rekeningid:String;GroupRekId:String;
+                           Amount:Currency;Note:string;FgTrans:String;TempField:string;TempField1:string;TempField3:string;ValutaId:String;rate:Currency):Integer;overload;
+function InsertToAllMoney(VoucherNo:String;SourceNo:String;Transdate:TDateTime;Actor:String;FgBBkk:string;Rekeningid:String;GroupRekId:String;
+                           Amount:Currency;Note:string;FgTrans:String;TempField:string;TempField1:string;TempField3:string;ValutaId:String;rate:Currency):Integer;overload;
+Function DeleteFromAllMoney(VoucherNo:String;RekeningId:string;FgTrans:string):Integer;overload ;
+Function DeleteFromAllMoney1(VoucherNo:String;SourceNo:string;FgTrans:string):Integer;overload ;
+Function DeleteFromAllMoney(VoucherNo:String;FgTrans:string):Integer;overload ;
+Function DeleteFromAllMoney1(VoucherNo:String;SourceNo:string;Tempfield:string;FgTrans:string):Integer;overload ;
+
+implementation
+
+uses ConMain, ADODB, Dialogs;
+
+Function DeleteFromAllMoney(VoucherNo:String;FgTrans:string):Integer;
+begin
+   with dmMain.quUnit,SQL do
+   begin
+      Close; Clear;
+      Add('DELETE FROM AllMoney WHERE VoucherNo=:VoucherNo AND FgTrans=:FgTrans');
+      with Parameters do
+      begin
+          ParamByName('VoucherNo').Value  := VoucherNo;
+          ParamByName('FgTrans').Value := FgTrans;
+      end;
+      Result := ExecSQL;
+   end;
+end;
+
+Function DeleteFromAllMoney(VoucherNo:String;RekeningId:string;FgTrans:String):Integer;
+begin
+   with dmMain.quUnit,SQL do
+   begin
+      Close; Clear;
+      Add('DELETE FROM AllMoney WHERE VoucherNo=:VoucherNo AND RekeningID=:RekeningId AND FgTrans=:FgTrans');
+      with Parameters do
+      begin
+          ParamByName('VoucherNo').Value  := VoucherNo;
+          ParamByName('RekeningID').Value := RekeningID;
+          ParamByName('FgTrans').Value := FgTrans;
+      end;
+      Result := ExecSQL;
+   end;
+end;
+
+Function DeleteFromAllMoney1(VoucherNo:String;SourceNo:string;FgTrans:String):Integer;
+begin
+   with dmMain.quUnit,SQL do
+   begin
+      Close; Clear;
+      Add('DELETE FROM AllMoney WHERE VoucherNo=:VoucherNo AND SourceNo=:SourceNo AND FgTrans=:FgTrans');
+      with Parameters do
+      begin
+          ParamByName('VoucherNo').Value  := VoucherNo;
+          ParamByName('SourceNo').Value := SourceNo;
+          ParamByName('FgTrans').Value := FgTrans;
+      end;
+      Result := ExecSQL;
+   end;
+end;
+
+Function DeleteFromAllMoney1(VoucherNo:String;SourceNo:string;Tempfield:string;FgTrans:String):Integer;
+begin
+   with dmMain.quUnit,SQL do
+   begin
+      Close; Clear;
+      Add('DELETE FROM AllMoney WHERE VoucherNo=:VoucherNo AND SourceNo=:SourceNo AND Tempfield=:Tempfield AND FgTrans=:FgTrans');
+      with Parameters do
+      begin
+          ParamByName('VoucherNo').Value  := VoucherNo;
+          ParamByName('SourceNo').Value := SourceNo;
+          ParamByName('Tempfield').Value := Tempfield;
+          ParamByName('FgTrans').Value := FgTrans;
+      end;
+      Result := ExecSQL;
+   end;
+end;
+
+
+function InsertToAllMoney(VoucherNo:String;Transdate:TDateTime;Actor:string;FgBBKK:string;Rekeningid:String;GroupRekId:String;
+                           Amount:Currency ; Note:string ; FgTrans:String;TempField:String;TempField1:String;TempField3:string;ValutaId:String;rate:Currency):Integer;
+begin
+   with dmMain.quUnit,SQL do
+   begin
+      Close; Clear;
+      Add(' INSERT INTO AllMoney(VoucherNo,TransDate,Actor,FgBBKK,Rekeningid,GroupRekId,Amount,Note,FgTrans,TempField,TempField1,TempField3,ValutaId,Rate)'
+     {       +'                      Amount,Note,FgTrans,TempField,TempField1) '}
+         +'              VALUES(:VoucherNo,:TransDate,:Actor,:FgBBKK,:Rekeningid,:GroupRekId,:Amount,:Note,:FgTrans,:TempField,:TempField1,:TempField3,:ValutaId,:Rate)');
+      with Parameters do
+      begin
+         ParamByName('VoucherNo').Value := VoucherNo;
+         ParamByName('TransDate').Value := TransDate;
+         ParamByName('Actor').Value := Actor;
+         ParamByName('FgBBKK').Value := FgBBKK;
+         ParamByName('Rekeningid').Value := Rekeningid;
+         ParamByName('GroupRekId').Value  := GroupRekId;
+         ParamByName('Amount').Value  := Amount;
+         ParamByName('Note').Value  := Note;
+         ParamByName('FgTrans').Value := FgTrans;
+         ParamByName('TempField').Value := TempField;
+         ParamByName('TempField1').Value := TempField1;
+         ParamByName('TempField3').Value := TempField3;
+         ParamByName('ValutaId').Value := ValutaId;
+         ParamByName('Rate').Value := Rate;
+      end;
+       result := ExecSQL;
+   end;
+end;
+function InsertToAllMoney(VoucherNo:String;SourceNo:String;Transdate:TDateTime;Actor:string;FgBBKK:string;Rekeningid:String;GroupRekId:String;
+                           Amount:Currency ; Note:string ; FgTrans:String;TempField:String;TempField1:String;TempField3:String;ValutaId:String;rate:Currency):Integer;
+begin
+   with dmMain.quUnit,SQL do
+   begin
+      Close; Clear;
+      Add(' INSERT INTO AllMoney(VoucherNo,SourceNo,TransDate,Actor,FgBBKK,Rekeningid,GroupRekId,Amount,Note,FgTrans,TempField,TempField1,TempField3,ValutaId,Rate)'
+     {       +'                      Amount,Note,FgTrans,TempField,TempField1) '}
+         +'              VALUES(:VoucherNo,:SourceNo,:TransDate,:Actor,:FgBBKK,:Rekeningid,:GroupRekId,:Amount,:Note,:FgTrans,:TempField,:TempField1,:TempField3,:ValutaId,:Rate)');
+      with Parameters do
+      begin
+         ParamByName('VoucherNo').Value := VoucherNo;
+         ParamByName('SourceNo').Value := SourceNo;
+         ParamByName('TransDate').Value := TransDate;
+         ParamByName('Actor').Value := Actor;
+         ParamByName('FgBBKK').Value := FgBBKK;
+         ParamByName('Rekeningid').Value := Rekeningid;
+         ParamByName('GroupRekId').Value  := GroupRekId;
+         ParamByName('Amount').Value  := Amount;
+         ParamByName('Note').Value  := Note;
+         ParamByName('FgTrans').Value := FgTrans;
+         ParamByName('TempField').Value := TempField;
+         ParamByName('TempField1').Value := TempField1;
+         ParamByName('TempField3').Value := TempField3;
+         ParamByName('ValutaId').Value := ValutaId;
+         ParamByName('Rate').Value := Rate;
+      end;
+       result := ExecSQL;
+   end;
+end;
+
+
+Function InsertToAllItem(VoucherNo:string;TransDate:TDateTime;WareHouseId:string;ItemID:string;FgTrans:Byte;Qty:Currency;
+                         Price:Currency;ModuleID:string;TempField2: string) : Integer;
+begin
+   with dmMain.quUnit,SQL do
+   begin
+      Close; Clear;
+      Add(' INSERT INTO AllItem(VoucherNo,TransDate,WareHouseId,ItemID,FgTrans,Qty, '
+         +'                      Price,ModuleID,TempField2) '
+         +'              VALUES(:VoucherNo,:TransDate,:WarehouseId,:ItemID,:FgTrans,:Qty, '
+         +'                     :Price,:ModuleID,:TempField2)');
+      with Parameters do
+      begin
+         ParamByName('VoucherNo').Value := VoucherNo;
+         ParamByName('TransDate').Value := TransDate;
+         ParamByName('ItemID').Value := ItemID;
+         ParamByName('FgTrans').Value  := FgTrans;
+         ParamByName('WareHouseId').Value  := WareHouseId;
+         ParamByName('Qty').Value := Qty;
+         ParamByName('Price').Value := Price;
+         ParamByName('ModuleID').Value  := ModuleID;
+         ParamByName('TempField2').Value  := TempField2;
+      end;
+      result := ExecSQL;
+   end;
+end;
+
+Function InsertToAllItem(VoucherNo:string;TempField:string;TransDate:TDateTime;WareHouseId:string;ItemID:string;FgTrans:Byte;Qty:Currency;
+                         Price:Currency;CurrId:String;Rate:Currency;ModuleID:string;TempField2:string) : Integer;
+begin
+   with dmMain.quUnit,SQL do
+   begin
+      Close; Clear;
+      Add(' INSERT INTO AllItem(VoucherNo,TempField,TransDate,WareHouseId,ItemID,FgTrans,Qty, '
+         +'                      Price,CurrId,Rate,ModuleID,TempField2) '
+         +'              VALUES(:VoucherNo,:TempField,:TransDate,:WarehouseId,:ItemID,:FgTrans,:Qty, '
+         +'                     :Price,:CurrId,:Rate,:ModuleID,:TempField2)');
+      with Parameters do
+      begin
+         ParamByName('VoucherNo').Value := VoucherNo;
+         ParamByName('TempField').Value := TempField;
+         ParamByName('TransDate').Value := TransDate;
+         ParamByName('ItemID').Value := ItemID;
+         ParamByName('FgTrans').Value  := FgTrans;
+         ParamByName('WareHouseId').Value  := WareHouseId;
+         ParamByName('Qty').Value := Qty;
+         ParamByName('Price').Value := Price;
+         ParamByName('Currid').Value := CurrId;
+         ParamByName('Rate').Value := Rate;
+         ParamByName('ModuleID').Value  := ModuleID;
+         ParamByName('TempField2').Value  := TempField2;
+      end;
+      result := ExecSQL;
+   end;
+end;
+
+Function InsertToAllItem(VoucherNo:string;TempField:string;TransDate:TDateTime;WareHouseId:string;ItemID:string;FgTrans:Byte;Qty:Currency;
+                         Price:Currency;CurrId:string;Rate:Currency;ModuleID:string;TempField2:string;Salesid:string;Komisi:Currency) : Integer;overload;
+begin
+   with dmMain.quUnit,SQL do
+   begin
+      Close; Clear;
+      Add(' INSERT INTO AllItem(VoucherNo,TempField,TransDate,WareHouseId,ItemID,FgTrans,Qty, '
+         +'                      Price,CurrId,Rate,ModuleID,TempField2,SalesId,Komisi) '
+         +'              VALUES(:VoucherNo,:TempField,:TransDate,:WarehouseId,:ItemID,:FgTrans,:Qty, '
+         +'                     :Price,:CurrId,:Rate,:ModuleID,:TempField2,:SalesId,:Komisi)');
+      with Parameters do
+      begin
+         ParamByName('VoucherNo').Value := VoucherNo;
+         ParamByName('TempField').Value := TempField;
+         ParamByName('TransDate').Value := TransDate;
+         ParamByName('ItemID').Value := ItemID;
+         ParamByName('FgTrans').Value  := FgTrans;
+         ParamByName('WareHouseId').Value  := WareHouseId;
+         ParamByName('Qty').Value := Qty;
+         ParamByName('Price').Value := Price;
+         ParamByName('Currid').Value := CurrId;
+         ParamByName('Rate').Value := Rate;
+         ParamByName('ModuleID').Value  := ModuleID;
+         ParamByName('TempField2').Value  := TempField2;
+         ParamByName('SalesId').Value  := SalesID;
+         ParamByName('Komisi').Value  := Komisi;
+      end;
+      result := ExecSQL;
+   end;
+end;
+
+Function InsertToAllItem1(VoucherNo:string;TempField:string;TempField1:string;TransDate:TDateTime;WareHouseId:string;
+                         ItemID:string;FgTrans:Byte;Qty:Currency;ModuleID:string;TempField2:string) : Integer;
+begin
+   with dmMain.quUnit,SQL do
+   begin
+      Close; Clear;
+      Add(' INSERT INTO AllItem(VoucherNo,TempField,TempField1,TransDate,WareHouseId,ItemID,FgTrans,Qty, '
+         +'                      ModuleID,TempField2) '
+         +'              VALUES(:VoucherNo,:TempField,:TempField1,:TransDate,:WarehouseId,:ItemID,:FgTrans,:Qty, '
+         +'                     :ModuleID,:TempField2)');
+      with Parameters do
+      begin
+         ParamByName('VoucherNo').Value := VoucherNo;
+         ParamByName('TempField').Value := TempField;
+         ParamByName('TempField1').Value := TempField1;
+         ParamByName('TransDate').Value := TransDate;
+         ParamByName('ItemID').Value := ItemID;
+         ParamByName('FgTrans').Value  := FgTrans;
+         ParamByName('WareHouseId').Value  := WareHouseId;
+         ParamByName('Qty').Value := Qty;
+         ParamByName('ModuleID').Value  := ModuleID;
+         ParamByName('TempField2').Value  := TempField2;
+      end;
+      result := ExecSQL;
+   end;
+end;
+
+Function InsertToAllItem2(VoucherNo:string;TempField:string;SouceNo:string;TransDate:TDateTime;WareHouseId:string;ItemID:string;FgTrans:Byte;Qty:Currency;
+                         Price:Currency;CurrId:string;Rate:Currency;ModuleID:string;TempField2:string) : Integer;overload;
+begin
+   with dmMain.quUnit,SQL do
+   begin
+      Close; Clear;
+      Add(' INSERT INTO AllItem(VoucherNo,TempField,SourceNo,TransDate,WareHouseId,ItemID,FgTrans,Qty, '
+         +'                      Price,CurrId,Rate,ModuleID,TempField2) '
+         +'              VALUES(:VoucherNo,:TempField,:SourceNo,:TransDate,:WarehouseId,:ItemID,:FgTrans,:Qty, '
+         +'                     :Price,:CurrId,:Rate,:ModuleID,:TempField2)');
+      with Parameters do
+      begin
+         ParamByName('VoucherNo').Value := VoucherNo;
+         ParamByName('TempField').Value := TempField;
+         ParamByName('SourceNo').Value := SouceNo;
+         ParamByName('TransDate').Value := TransDate;
+         ParamByName('ItemID').Value := ItemID;
+         ParamByName('FgTrans').Value  := FgTrans;
+         ParamByName('WareHouseId').Value  := WareHouseId;
+         ParamByName('Qty').Value := Qty;
+         ParamByName('Price').Value := Price;
+         ParamByName('Currid').Value := CurrId;
+         ParamByName('Rate').Value := Rate;
+         ParamByName('ModuleID').Value  := ModuleID;
+         ParamByName('TempField2').Value  := TempField2;
+      end;
+      result := ExecSQL;
+   end;
+end;
+{
+Function InsertToAllItem(VoucherNo:string;TempField:string;TempField1:string; TransDate:TDateTime;WareHouseId:string;ItemID:string;FgTrans:Byte;Qty:Currency;
+                         TransUOM:string;Price:Currency;ModuleID:string) : Integer;
+begin
+   with dmMain.quUnit,SQL do
+   begin
+      Close; Clear;
+      Add(' INSERT INTO AllItem(VoucherNo,TempField,TempField1,TransDate,WareHouseId,ItemID,FgTrans,Qty,TransUOM, '
+         +'                      Price,ModuleID) '
+         +'              VALUES(:VoucherNo,:TempField,:TempField1,:TransDate,:WarehouseId,:ItemID,:FgTrans,:Qty,:TransUOM, '
+         +'                     :Price,:ModuleID)');
+      with Parameters do
+      begin
+         ParamByName('VoucherNo').Value := VoucherNo;
+         ParamByName('TempField').Value := TempField;
+         ParamByName('TempField1').Value := TempField1;
+         ParamByName('TransDate').Value := TransDate;
+         ParamByName('ItemID').Value := ItemID;
+         ParamByName('FgTrans').Value  := FgTrans;
+         ParamByName('WareHouseId').Value  := WareHouseId;
+         ParamByName('Qty').Value := Qty;
+         ParamByName('TransUOM').Value    := TransUOM;
+         ParamByName('Price').Value := Price;
+         ParamByName('ModuleID').Value  := ModuleID;
+      end;
+      result := ExecSQL;
+   end;
+end;   }
+
+
+Function DeleteFromAllItem(VoucherNo:String;TempField:string;ItemId:string;WarehouseId:String
+                           ;Price :Currency;FgTrans:Byte):Integer;overload
+begin
+   with dmMain.quUnit,SQL do
+   begin
+      Close; Clear;
+      Add(' DELETE FROM AllItem WHERE VoucherNo=:VoucherNo AND TempField=:TempField '
+         +' AND ItemID=:ItemID AND WarehouseId=:WareHouseId AND Price=:Price AND FgTrans=:FgTrans');
+      with Parameters do
+      begin
+          ParamByName('VoucherNo').Value  := VoucherNo;
+          ParamByName('TempField').Value  := TempField;
+          ParamByName('ItemId').Value  := ItemId;
+          ParamByName('WareHouseId').Value  := WarehouseId;
+          ParamByName('Price').Value  := Price;
+          ParamByName('FgTrans').Value  := FgTrans;
+      end;
+      Result := ExecSQL;
+   end;
+end;
+
+Function DeleteFromAllItem(VoucherNo:String;FgTrans:Byte):Integer;overload
+begin
+   with dmMain.quUnit,SQL do
+   begin
+      Close; Clear;
+      Add('DELETE FROM AllItem WHERE VoucherNo=:VoucherNo AND FgTrans=:FgTrans');
+      with Parameters do
+      begin
+          ParamByName('VoucherNo').Value  := VoucherNo;
+          ParamByName('FgTrans').Value  := FgTrans;
+      end;
+      Result := ExecSQL;
+   end;
+end;
+
+Function DeleteFromAllItem(VoucherNo:String;ItemID:String;FgTrans:Byte):Integer;overload
+begin
+   with dmMain.quUnit,SQL do
+   begin
+      Close; Clear;
+      Add('DELETE FROM AllItem WHERE VoucherNo=:VoucherNo AND ItemID=:ItemId AND FgTrans=:FgTrans');
+      with Parameters do
+      begin
+          ParamByName('VoucherNo').Value  := VoucherNo;
+          ParamByName('ItemID').Value := ItemID;
+          ParamByName('FgTrans').Value := FgTrans;
+      end;
+      Result := ExecSQL;
+   end;
+end;
+
+Function DeleteFromAllItem1(VoucherNo:String;TempField:string;FgTrans:Byte):Integer;overload
+begin
+   with dmMain.quUnit,SQL do
+   begin
+      Close; Clear;
+      Add('DELETE FROM AllItem WHERE VoucherNo=:VoucherNo AND TempField=:TempField AND FgTrans=:FgTrans');
+      with Parameters do
+      begin
+          ParamByName('VoucherNo').Value  := VoucherNo;
+          ParamByName('TempField').Value  := TempField;
+          ParamByName('FgTrans').Value  := FgTrans;
+      end;
+      Result := ExecSQL;
+   end;
+end;
+
+Function DeleteFromAllItem(VoucherNo:String;TempField:string;TempField1:string;WarehouseId:String;FgTrans:Byte):Integer;overload
+begin
+   with dmMain.quUnit,SQL do
+   begin
+      Close; Clear;
+      Add(' DELETE FROM AllItem WHERE VoucherNo=:VoucherNo AND TempField=:TempField AND TempField1=:TempField1'
+         +' AND WarehouseId=:WareHouseId AND FgTrans=:FgTrans');
+      with Parameters do
+      begin
+          ParamByName('VoucherNo').Value  := VoucherNo;
+          ParamByName('TempField').Value  := TempField;
+          ParamByName('TempField1').Value  := TempField1;
+          ParamByName('WareHouseId').Value  := WarehouseId;
+          ParamByName('FgTrans').Value  := FgTrans;
+      end;
+      Result := ExecSQL;
+   end;
+end;
+
+Function UpdateTglPembAllItem(VoucherNo:String;TempField:string;TransDate:TDateTime):Integer;overload
+begin
+   with dmMain.quUnit,SQL do
+   begin
+      Close; Clear;
+      Add(' UPDATE AllItem SET Transdate=:Transdate WHERE VoucherNo=:VoucherNo AND '
+         +' TempField=:TempField');
+      with Parameters do
+      begin
+          ParamByName('VoucherNo').Value  := VoucherNo;
+          ParamByName('TempField').Value  := TempField;
+          ParamByName('TransDate').Value  := TransDate;
+      end;
+      Result := ExecSQL;
+   end;
+end;
+
+{Function UpdateCustlPenjAllItem(VoucherNo:String;TempField:string;TransDate:TDateTime):Integer;overload
+begin
+   with dmMain.quUnit,SQL do
+   begin
+      Close; Clear;
+      Add(' UPDATE AllItem SET Transdate=:Transdate WHERE VoucherNo=:VoucherNo AND '
+         +' TempField=:TempField');
+      with Parameters do
+      begin
+          ParamByName('VoucherNo').Value  := VoucherNo;
+          ParamByName('TempField').Value  := TempField;
+          ParamByName('TransDate').Value  := TransDate;
+      end;
+      Result := ExecSQL;
+   end;
+end;}
+
+
+
+
+end.
+

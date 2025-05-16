@@ -1,0 +1,139 @@
+inherited fmCFRptRekapPiutangInternalDlg: TfmCFRptRekapPiutangInternalDlg
+  Left = 444
+  Top = 144
+  Caption = ''
+  ClientHeight = 492
+  ClientWidth = 400
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited paTop: TPanel
+    Width = 400
+    inherited laTitle: TLabel
+      Width = 332
+      Caption = 'Laporan Rekap Piutang Karyawan'
+    end
+  end
+  inherited paCenter: TPanel
+    Width = 400
+    Height = 410
+    object rbSelect: TRadioButton
+      Left = 63
+      Top = 59
+      Width = 61
+      Height = 17
+      Caption = '&Select'
+      TabOrder = 0
+      OnClick = rbAllClick
+    end
+    object rbAll: TRadioButton
+      Left = 7
+      Top = 59
+      Width = 53
+      Height = 17
+      Caption = '&All'
+      Checked = True
+      TabOrder = 1
+      TabStop = True
+      OnClick = rbAllClick
+    end
+    object GroupBox1: TGroupBox
+      Left = 8
+      Top = 8
+      Width = 125
+      Height = 45
+      Caption = 'Periode'
+      Ctl3D = False
+      ParentCtl3D = False
+      TabOrder = 2
+      object dt1: TdxDateEdit
+        Left = 21
+        Top = 14
+        Width = 85
+        TabOrder = 0
+        Date = -700000
+        SaveTime = False
+        UseEditMask = True
+        StoredValues = 4
+      end
+    end
+    object bbCancel: TdxButton
+      Left = 284
+      Top = 44
+      Width = 110
+      Height = 29
+      About = 'Design eXperience. '#169' 2002 M. Hoffmann'
+      Version = '1.0.2e'
+      OnClick = bbCancelClick
+      Caption = 'CARI KARYAWAN'
+      TabOrder = 3
+    end
+    object dbgListKaryawan: TdxDBGrid
+      Left = 1
+      Top = 76
+      Width = 398
+      Height = 333
+      Bands = <
+        item
+        end>
+      DefaultLayout = True
+      HeaderPanelRowCount = 1
+      KeyField = 'SalesID'
+      SummaryGroups = <>
+      SummarySeparator = ', '
+      Align = alBottom
+      TabOrder = 4
+      DataSource = dsAct
+      Filter.Criteria = {00000000}
+      HideFocusRect = True
+      HideSelection = True
+      LookAndFeel = lfFlat
+      OptionsBehavior = [edgoAutoSort, edgoDragScroll, edgoEditing, edgoEnterShowEditor, edgoTabThrough, edgoVertThrough]
+      OptionsDB = [edgoCancelOnExit, edgoCanDelete, edgoCanInsert, edgoCanNavigation, edgoConfirmDelete, edgoLoadAllRecords, edgoUseBookmarks]
+      OptionsView = [edgoAutoWidth, edgoBandHeaderWidth, edgoIndicator, edgoRowSelect, edgoUseBitmap]
+      object dbgListKaryawanSalesID: TdxDBGridColumn
+        Caption = 'Kode Karyawan'
+        Width = 123
+        BandIndex = 0
+        RowIndex = 0
+        FieldName = 'SalesID'
+      end
+      object dbgListKaryawanSalesName: TdxDBGridColumn
+        Caption = 'Nama Karyawan'
+        Width = 261
+        BandIndex = 0
+        RowIndex = 0
+        FieldName = 'SalesName'
+      end
+    end
+  end
+  inherited paBottom: TPanel
+    Top = 451
+    Width = 400
+    inherited bbPreview: TBitBtn
+      Left = 174
+      OnClick = bbPreviewClick
+    end
+    inherited bbPrint: TBitBtn
+      Left = 248
+    end
+    inherited bbExit: TBitBtn
+      Left = 322
+    end
+    object cbxOuts: TCheckBox
+      Left = 8
+      Top = 12
+      Width = 153
+      Height = 17
+      Caption = 'Tampilkan yang masih sisa'
+      Checked = True
+      State = cbChecked
+      TabOrder = 3
+    end
+  end
+  inherited quAct: TADOQuery
+    SQL.Strings = (
+      'SELECT SalesID,SalesName'
+      'FROM ARMsSales'
+      'WHERE FgActive=1')
+  end
+end

@@ -1,0 +1,86 @@
+unit BackUp;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdLv1, DB, dxExEdtr, dxCntner, ADODB, Buttons, dxCore,Inifiles,
+  dxContainer, StdCtrls;
+
+type
+  TfmBackUp = class(TfmStdLv1)
+    bbOK: TBitBtn;
+    bbCancel: TBitBtn;
+    procedure bbCancelClick(Sender: TObject);
+    procedure bbOKClick(Sender: TObject);
+  private
+    sDatabase : string;
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  fmBackUp: TfmBackUp;
+
+implementation
+
+uses MyUnit, UnitGeneral;
+
+{$R *.dfm}
+
+procedure TfmBackUp.bbCancelClick(Sender: TObject);
+begin
+  inherited;
+  Close;
+end;
+
+procedure TfmBackUp.bbOKClick(Sender: TObject);
+
+procedure backup(path : string; dest : string; nama : string);
+var MyIniFile : TIniFile;
+    sPath : string;
+begin
+  sPath := ExtractFileDir(Application.ExeName) + '\setting.ini';
+  MyIniFile := TIniFile.Create(sPath);
+  sDatabase := Decrypt(MyIniFile.ReadString('Server','01',''));
+  MyIniFile.Free;
+
+  if not FileExists(ExtractFilePath(Application.ExeName) + nama) then
+  begin
+    Screen.Cursor := crHourGlass;
+    if quExec(quAct,
+    ' USE master ' +
+    ' if exists (select * from master.dbo.sysdevices where name = '''+sDatabase+''') ' +
+    '   EXEC sp_dropdevice '''+sDatabase+''' ' +
+    ' EXEC sp_addumpdevice ''disk'', '''+sDatabase+''', ' + QuotedStr(dest) +
+    ' BACKUP DATABASE ' + sDatabase + ' TO '+sDatabase+' ') then
+      ShowMessage('Data sudah dibackup ke '''+QuotedStr(dest)+'''')
+    else
+      ShowMessage('Backup Data Gagal'+#13+'Hubungi Vendor Anda');
+    Screen.Cursor := crDefault;
+  end
+  else
+    ShowMessage('Tidak bisa back up, file sudah ada');
+end;
+
+var path, nama1, dest : string;
+    ctr : integer;
+begin
+  path := ExtractFilePath(Application.ExeName);
+  if not DirectoryExists(path + 'BackUp') then CreateDir(path + 'BackUp');
+  path := path + 'BackUp\';
+  nama1 := PT + FormatDateTime('yyyymmdd',now);
+  Dest := nama1;
+  ctr := 0;
+  while FileExists(path + Dest) do
+  begin
+       inc(ctr);
+       Dest := nama1 + '_' + inttostr(ctr);
+  end;
+  Dest := path + Dest;
+  backup(path,dest,nama1);
+  quExec(quAct, ' USE ' + sDatabase );
+end;
+
+end.

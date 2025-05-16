@@ -1,0 +1,161 @@
+unit APRptSisaTerimaBarangDlg;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, RptDlg, dxExEdtr, dxTL, dxDBCtrl, dxDBGrid, dxCntner, StdCtrls,
+  DB, ADODB, Buttons, ExtCtrls, dxEditor, dxEdLib, dxCore, dxButton;
+
+type
+  TfmAPRptSisaTerimaBarangDlg = class(TfmRptDlg)
+    GroupBox1: TGroupBox;
+    Label1: TLabel;
+    dt1: TdxDateEdit;
+    rbAll: TRadioButton;
+    rbSelect: TRadioButton;
+    dbgList: TdxDBGrid;
+    dbgListSuppID: TdxDBGridMaskColumn;
+    dbgListSuppName: TdxDBGridMaskColumn;
+    bbCancel: TdxButton;
+    quActSuppID: TStringField;
+    quActSuppName: TStringField;
+    quActAddress: TStringField;
+    quActCity: TStringField;
+    quActContactPerson: TStringField;
+    quActPhone: TStringField;
+    quActFax: TStringField;
+    quActEmail: TStringField;
+    quActNote: TStringField;
+    quActUpdDate: TDateTimeField;
+    quActUpdUser: TStringField;
+    procedure FormShow(Sender: TObject);
+    procedure rbSelectClick(Sender: TObject);
+    procedure bbPreviewClick(Sender: TObject);
+    procedure bbCancelClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  fmAPRptSisaTerimaBarangDlg: TfmAPRptSisaTerimaBarangDlg;
+
+implementation
+
+uses StdLv0, INQRRptMsItem, UnitGeneral, APQRRptSisaTerimaBarang, Search;
+
+{$R *.dfm}
+
+procedure TfmAPRptSisaTerimaBarangDlg.FormShow(Sender: TObject);
+begin
+  inherited;
+  quAct.Open;
+  dt1.Date := date;
+end;
+
+procedure TfmAPRptSisaTerimaBarangDlg.rbSelectClick(Sender: TObject);
+begin
+  inherited;
+   if Sender=rbAll then
+  begin
+     dbgList.OptionsBehavior := dbgList.OptionsBehavior - [edgoMultiSelect];
+  end else
+  if Sender=rbSelect then
+  begin
+     dbgList.OptionsBehavior := dbgList.OptionsBehavior + [edgoMultiSelect];
+     if dbgList.FocusedNode <> nil then
+       dbgList.FocusedNode.Selected := TRUE;
+  end;
+end;
+
+procedure TfmAPRptSisaTerimaBarangDlg.bbPreviewClick(Sender: TObject);
+begin
+  inherited;
+  with TfmAPQRRptSisaTerimaBarang.Create(Self) do
+     try
+       qrlTitle.Caption := laTitle.Caption;
+       qrlPeriode.Caption := 'Periode : '+FormatDateTime('dd/MM/yyyy',dt1.Date);
+       tgldari := dt1.Date;
+
+       with qu001,SQL do
+       begin
+           Close;Clear;
+           add(' SELECT DISTINCT A.SuppId,(A.SuppId+''-''+B.SuppName) as Pelanggan,B.SuppName '
+              +' FROM APTrKonsinyasiHd A '
+              +' INNER JOIN APMsSupplier B ON A.SuppId=B.SuppId'
+              +' INNER JOIN APTrKonsinyasiDt C ON A.KonsinyasiID=C.KonsinyasiId'
+              +' WHERE ISNULL(C.Qty,0) '
+              +' -(SELECT Isnull(SUM(Qty),0) FROM APTrPurchaseDt D INNER JOIN APTrPurchaseHd X '
+              +' ON D.PurchaseiD=X.PurchaseiD WHERE D.ItemId=C.ItemId AND X.KonsinyasiId=A.KonsinyasiId '
+              +' AND CONVERT(VARCHAR(8),X.Transdate,112)<='''+FormatDateTime('yyyyMMdd',dt1.Date)+''' )'
+              //+' -(SELECT ISNULL(SUM(Qty),0) FROM APTrReturnKonDt G INNER JOIN APTrReturnKonHd Y '
+              //+' ON G.ReturnKonID=Y.ReturnKonID WHERE G.ItemId=C.ItemId And G.KonsinyasiId=A.KonsinyasiId '
+              //+' AND CONVERT(VARCHAR(8),Y.Transdate,112)<='''+FormatDateTime('yyyyMMdd',dt1.Date)+''')'
+              +' <> 0');
+           if rbSelect.Checked then
+            Add(' AND A.SuppID IN '+SelGrid(quAct,dbgList,'SuppID'));
+           Add('  AND Convert(varchar(8),A.Transdate,112)<='''+FormatDateTime('yyyyMMdd',dt1.Date)+'''');
+           add('  ORDER by B.SuppName ');
+           Open;
+          if IsEmpty then
+          begin
+             MsgInfo('No Data !');
+             Abort;
+          end;
+       end;
+       with qu002,SQL do
+       begin
+         Close;Clear;
+         Add('SELECT K.KonsinyasiID+'' (''+K.CurrID+'')'' as KonsinyasiID,CONVERT(VARCHAR(10),K.Transdate,103) as Tgl,K.ItemID,K.ItemID+'' - ''+L.ItemName as ItemName,'
+            +'ISNULL(K.Qty-K.Invoice-K.Retur,0) as Sisa,ISNULL(K.Price,0) as Price,K.CurrID FROM ( '
+
+            +'SELECT B.KonsinyasiID,B.SuppID,'
+            +'A.CurrID,B.Transdate,A.ItemID,ISNULL(A.Qty,0) as Qty,'
+
+            +'ISNULL((SELECT SUM(Qty) FROM APTrPurchaseDt D INNER JOIN APTrPurchaseHd E ON D.PurchaseID=E.PurchaseID '
+            +'WHERE D.ItemID=A.ItemID AND E.KonsinyasiID=B.KonsinyasiID AND CONVERT(VARCHAR(8),E.Transdate,112)<='''+FormatDateTime('yyyyMMdd',dt1.Date)+'''),0) as Invoice,'
+
+            //+'ISNULL((SELECT SUM(Qty) FROM APTrReturnKonDt F INNER JOIN APTrReturnKonHd G ON F.ReturnKonID=G.ReturnKonID '
+            //+'WHERE F.ItemID=A.ItemID AND F.KonsinyasiID=B.KonsinyasiID AND CONVERT(VARCHAR(8),G.Transdate,112)<='''+FormatDateTime('yyyyMMdd',dt1.Date)+'''),0) as Retur,'
+            +'0 as Retur, '
+
+            +'A.Price FROM APTrKonsinyasiDt A INNER JOIN APTrKonsinyasiHd B ON A.KonsinyasiID=B.KonsinyasiID '
+
+            +') as K '
+            +'INNER JOIN INMsItem L ON K.ItemID=L.ItemID WHERE K.SuppID=:SuppID '
+            +'AND CONVERT(VARCHAR(8),K.Transdate,112) <= '''+FormatDateTime('yyyyMMdd',dt1.Date)+''' '
+            +'AND ISNULL(K.Qty-K.Invoice-K.Retur,0) > 0');
+         Parameters.ParamByName('SuppID').Value := ftString;
+         Open;
+       end;
+
+       if Sender=bbPreview then
+          MyReport.PreviewModal
+       else
+          MyReport.Print;
+
+
+     finally
+        free;
+     end;
+end;
+
+procedure TfmAPRptSisaTerimaBarangDlg.bbCancelClick(Sender: TObject);
+begin
+  inherited;
+  with TfmSearch.Create(Self) do
+    try
+       Title := 'Supplier';
+       SQLString := ' SELECT SuppName as Supplier,SuppID as Kode_Supplier FROM APMsSupplier A ORDER BY SuppID';
+       if ShowModal = MrOK then
+       begin
+         Self.quAct.Locate('SuppID',Res[1],[]);
+       end;
+    finally
+       free;
+    end;
+end;
+
+end.

@@ -1,0 +1,233 @@
+unit ARRptPenjPerBrgDlg;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, RptDlg, DB, dxExEdtr, dxCntner, ADODB, StdCtrls, Buttons,
+  ExtCtrls, dxEditor, dxEdLib, dxTL, dxDBCtrl, dxDBGrid, dxCore, dxButton;
+
+type
+  TfmARRptPenjPerBrgDlg = class(TfmRptDlg)
+    quActItemID: TStringField;
+    quActItemName: TStringField;
+    GroupBox1: TGroupBox;
+    Label2: TLabel;
+    dt1: TdxDateEdit;
+    dt2: TdxDateEdit;
+    rbAll: TRadioButton;
+    rbSelect: TRadioButton;
+    dbgList: TdxDBGrid;
+    dbgListItemID: TdxDBGridMaskColumn;
+    dbgListItemName: TdxDBGridMaskColumn;
+    bbCancel: TdxButton;
+    RgOption: TRadioGroup;
+    procedure bbPreviewClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure rbSelectClick(Sender: TObject);
+    procedure bbCancelClick(Sender: TObject);
+    procedure RgOptionClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  fmARRptPenjPerBrgDlg: TfmARRptPenjPerBrgDlg;
+
+implementation
+
+uses INQRRptAdjusment, UnitGeneral,  
+  StdLv0, APQRRptPembPerBrg, ARQRRptPenjPerBrg, Search, RptLv3, RptLv2,
+  UnitDate;
+
+{$R *.dfm}
+
+procedure TfmARRptPenjPerBrgDlg.bbPreviewClick(Sender: TObject);
+begin
+  inherited;
+  with TfmARQRRptPenjPerBrg.Create(Self) do
+     try
+       qrlTitle.Caption := laTitle.Caption;
+       qrlPeriode.Caption := 'Periode : '+FormatDateTime('dd/MM/yyyy',dt1.date)+' s/d '+FormatDateTime('dd/MM/yyyy',dt2.date);
+       Tanggaldari := dt1.date;
+       TanggalSampai := dt2.date;
+
+       if RgOption.ItemIndex = 0 then
+       begin
+         with qu001,SQL do
+         begin
+           Close;Clear;
+           add( ' Select Distinct K.ItemId,K.Barang,K.ItemId as ItemId2 '
+               +' FROM ( '
+               +' select Distinct B.ItemId,(B.ItemId+''-''+C.ItemName) as Barang'
+               +' FROM ARTrPenjualandt B INNER JOIN INMsItem C ON C.ItemId=B.ItemId'
+               +' INNER JOIN ARTrPenjualanHd A ON A.SaleId=B.SaleId WHERE'
+               +' Convert(varchar(8),TransDate,112) BETWEEN '''+FormatDateTime('yyyyMMdd',dt1.Date)+''' AND '''+FormatDateTime('yyyyMMdd',dt2.Date)+'''');
+           if rbSelect.Checked then
+              Add(' AND B.ItemId IN '+SelGrid(quAct,dbgList,'ItemID'));
+           Add(' ) as K');
+           add(' order by K.ItemId');
+           Open;
+           if IsEmpty then
+           begin
+             MsgInfo('No Data !');
+             Abort;
+           end;
+         end;
+
+         with qu002,sql do
+         begin
+           Close;Clear;
+           add(' Select Distinct K.ItemId,K.saleid,K.Tgl,K.Tgl2,K.QTY,K.CustName,K.CurrId,K.Price,K.Total '
+              +' FROM ( '
+              +' SELECT distinct A.ItemId,C.SaleId,Convert(varchar(10),TransDate,103) as Tgl,Convert(varchar(8),TransDate,112) as tgl2,'
+              +' A.QTY,B.CustName,C.CurrId,(A.Price+A.Komisi) as Price,((A.Price+A.Komisi)*A.Qty) as Total '
+              +' FROM ARTrPenjualanDt A INNER JOIN ARTrPenjualanHd C ON A.SaleId=C.SaleId'
+              +' INNER JOIN ARMsCustomer B ON C.CustId=B.CustId'
+              +' WHERE A.ItemId=:ItemId AND'
+              +' Convert(varchar(8),TransDate,112) BETWEEN '''+FormatDateTime('yyyyMMdd',Tanggaldari)+''' AND '''+FormatDateTime('yyyyMMdd',TanggalSampai)+'''');
+           Add('  ) as K ORDER BY K.Tgl2');
+           Parameters.ParamByName('ItemId').DataType := ftString;
+           Open;
+           if IsEmpty then
+           begin
+             MsgInfo('No Data !');
+             Abort;
+           end;
+         end;
+       end else
+       begin
+         QRDBText5.Enabled := True; QRLabel8.Enabled := True;
+         QRLabel3.Caption := 'Wilayah :';
+         with qu001,SQL do
+         begin
+           Close;Clear;
+           add('SELECT DISTINCT B.City as ItemID,B.City as Barang,B.City as ItemID2 FROM ARTrPenjualanHd A '
+              +'INNER JOIN ARMsCustomer B ON A.CustID=B.CustID AND ISNULL(B.City,'''')<>'''' '
+              +'WHERE Convert(varchar(8),TransDate,112) BETWEEN '''+FormatDateTime('yyyyMMdd',dt1.Date)+''' AND '''+FormatDateTime('yyyyMMdd',dt2.Date)+''' ');
+           if rbSelect.Checked then
+              Add(' AND B.City IN '+SelGrid(quAct,dbgList,'ItemID'));
+           add(' ORDER BY B.City');
+           Open;
+           if IsEmpty then
+           begin
+             MsgInfo('No Data !');
+             Abort;
+           end;
+         end;
+
+         with qu002,sql do
+         begin
+           Close;Clear;
+           add(' Select Distinct K.ItemId,K.saleid,K.Tgl,K.Tgl2,K.QTY,K.CustName,K.CurrId,K.Price,K.Total,K.ItemName '
+              +' FROM ( '
+              +' SELECT distinct A.ItemId,C.SaleId,Convert(varchar(10),TransDate,103) as Tgl,Convert(varchar(8),TransDate,112) as tgl2,'
+              +' A.QTY,B.CustName,C.CurrId,(A.Price+A.Komisi) AS Price,((A.Price+A.Komisi)*A.Qty) as Total,D.ItemName '
+              +' FROM ARTrPenjualanDt A INNER JOIN ARTrPenjualanHd C ON A.SaleId=C.SaleId'
+              +' INNER JOIN ARMsCustomer B ON C.CustId=B.CustId INNER JOIN INMsItem D ON A.ItemID=D.ItemID'
+              +' WHERE B.City=:ItemId AND'
+              +' Convert(varchar(8),TransDate,112) BETWEEN '''+FormatDateTime('yyyyMMdd',Tanggaldari)+''' AND '''+FormatDateTime('yyyyMMdd',TanggalSampai)+'''');
+           Add('  ) as K ORDER BY K.Tgl2');
+           Parameters.ParamByName('ItemId').DataType := ftString;
+           Open;
+           if IsEmpty then
+           begin
+             MsgInfo('No Data !');
+             Abort;
+           end;
+         end;
+       end;
+
+       if Sender=bbPreview then
+          MyReport.Previewmodal
+       else
+          MyReport.Print;
+
+
+     finally
+        free;
+     end;
+end;
+
+procedure TfmARRptPenjPerBrgDlg.FormShow(Sender: TObject);
+begin
+  inherited;
+  quAct.Open;
+  dt1.Date := EncodeDate(GetYear(Date),GetMonth(Date),1);
+  dt2.date := date;
+end;
+
+procedure TfmARRptPenjPerBrgDlg.rbSelectClick(Sender: TObject);
+begin
+  inherited;
+  if Sender=rbAll then
+  begin
+     dbgList.OptionsBehavior := dbgList.OptionsBehavior - [edgoMultiSelect];
+  end else
+  if Sender=rbSelect then
+  begin
+     dbgList.OptionsBehavior := dbgList.OptionsBehavior + [edgoMultiSelect];
+     if dbgList.FocusedNode <> nil then
+       dbgList.FocusedNode.Selected := TRUE;
+  end;
+end;
+
+procedure TfmARRptPenjPerBrgDlg.bbCancelClick(Sender: TObject);
+begin
+  inherited;
+  with TfmSearch.Create(Self) do
+    try
+       if RgOption.ItemIndex = 0 then
+       begin
+         Title := 'Barang';
+         SQLString := ' SELECT ItemName as Nama_Barang ,ItemId as Kode_Barang'
+                     +' FROM INMsItem A ORDER BY ItemID';
+       end else
+       begin
+         Title := 'Wilayah';
+         SQLString := ' SELECT Wilayah FROM ARMsWilayah ORDER BY Wilayah';
+       end;
+       if ShowModal = MrOK then
+       begin
+         Self.quAct.Locate('ItemID',Res[1],[]);
+       end;
+    finally
+       free;
+    end;
+end;
+
+procedure TfmARRptPenjPerBrgDlg.RgOptionClick(Sender: TObject);
+begin
+  inherited;
+  if RgOption.ItemIndex = 0 then
+  begin
+    laTitle.Caption := 'Laporan Penjualan per Barang';
+    dbgListItemName.Visible := True;
+    dbgListItemID.Visible := True;
+    dbgListItemID.Caption := 'Kode Barang';
+    bbCancel.Caption := 'CARI BARANG';
+    with quAct,SQL do
+    begin
+      Close;Clear;
+      Add('SELECT ItemID,ItemName FROM INMsItem ORDER BY ItemID');
+      Open;
+    end;
+  end else
+  begin
+    laTitle.Caption := 'Laporan Penjualan per Wilayah';
+    dbgListItemName.Visible := False;
+    dbgListItemID.Visible := True;
+    dbgListItemID.Caption := 'Wilayah';
+    bbCancel.Caption := 'CARI WILAYAH';
+    with quAct,SQL do
+    begin
+      Close;Clear;
+      Add('SELECT Wilayah as ItemID,Wilayah as ItemName FROM ARMsWilayah ORDER BY Wilayah');
+      Open;
+    end;
+  end;
+end;
+
+end.

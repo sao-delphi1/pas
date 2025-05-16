@@ -1,0 +1,672 @@
+unit INTransfer;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdLv4, dxExEdtr, ActnList, DB, dxCntner, ADODB, dxTL, dxDBCtrl,
+  dxDBGrid, dxPageControl, dxEdLib, dxButton, StdCtrls, ExtCtrls, Buttons,
+  dxCore, dxContainer, dxDBTLCl, dxGrClms, dxEditor, dxDBELib, DBCtrls, Printers;
+
+type
+  TfmINTransfer = class(TfmStdLv4)
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    DBText1: TDBText;
+    dbg: TdxDBGrid;
+    Label4: TLabel;
+    DBText2: TDBText;
+    Label5: TLabel;
+    quGudang: TADOQuery;
+    dsGudang: TDataSource;
+    dxDBEdit1: TdxDBEdit;
+    dxDBDateEdit1: TdxDBDateEdit;
+    dxDBButtonEdit1: TdxDBButtonEdit;
+    dxDBButtonEdit2: TdxDBButtonEdit;
+    dxDBMemo1: TdxDBMemo;
+    bbSave: TdxButton;
+    bbCancel: TdxButton;
+    quMainTransferID: TStringField;
+    quMainTransferDate: TDateTimeField;
+    quMainWareHouseSrc: TStringField;
+    quMainWareHouseDest: TStringField;
+    quMainNote: TStringField;
+    quMainUpdDate: TDateTimeField;
+    quMainUpdUser: TStringField;
+    quMainLWareHouseDest: TStringField;
+    dbgListTransferID: TdxDBGridMaskColumn;
+    dbgListTransferDate: TdxDBGridDateColumn;
+    dbgListWareHouseSrc: TdxDBGridMaskColumn;
+    dbgListWareHouseDest: TdxDBGridMaskColumn;
+    dbgListNote: TdxDBGridMaskColumn;
+    dbgListLWareHouseDest: TdxDBGridLookupColumn;
+    dbgListLwareHouseSrc: TdxDBGridLookupColumn;
+    quMainLWareHouseScr: TStringField;
+    dbgQty: TdxDBGridColumn;
+    dbgItemID: TdxDBGridButtonColumn;
+    dbgItemName: TdxDBGridColumn;
+    quItem: TADOQuery;
+    quItemItemID: TStringField;
+    quItemItemName: TStringField;
+    quDetilTransferID: TStringField;
+    quDetilItemID: TStringField;
+    quDetilQty: TBCDField;
+    quDetilUpdDate: TDateTimeField;
+    quDetilUpdUser: TStringField;
+    quDetilLuItemName: TStringField;
+    quItemProductID: TStringField;
+    quItemGroupID: TStringField;
+    quItemProductDesc: TStringField;
+    quDetilLuProduct: TStringField;
+    dbgProduct: TdxDBGridColumn;
+    quItemGroupDesc: TStringField;
+    quDetilLuGroup: TStringField;
+    dbgGroup: TdxDBGridColumn;
+    GroupBox2: TGroupBox;
+    Label21: TLabel;
+    DBText8: TDBText;
+    Label22: TLabel;
+    DBText9: TDBText;
+    TmbBrg: TdxButton;
+    KrgBrg: TdxButton;
+    bbSimpanDetil: TdxButton;
+    BtlBrg: TdxButton;
+    bbCetak: TdxButton;
+    dbgSN: TdxDBGrid;
+    dbgSNTransferID: TdxDBGridMaskColumn;
+    dbgSNItemID: TdxDBGridMaskColumn;
+    dbgSNWareHouseId: TdxDBGridMaskColumn;
+    dbgSNUpdDate: TdxDBGridDateColumn;
+    dbgSNUpdUser: TdxDBGridMaskColumn;
+    Label6: TLabel;
+    quSN: TADOQuery;
+    quSNSNID: TStringField;
+    quSNTransferID: TStringField;
+    quSNItemID: TStringField;
+    quSNUpdDate: TDateTimeField;
+    quSNUpdUser: TStringField;
+    quSNWareHouseSrc: TStringField;
+    quSNWareHouseDest: TStringField;
+    dsSN: TDataSource;
+    dbgSNSNID: TdxDBGridButtonColumn;
+    procedure FormShow(Sender: TObject);
+    procedure dsMainStateChange(Sender: TObject);
+    procedure dxDBButtonEdit1ButtonClick(Sender: TObject;
+      AbsoluteIndex: Integer);
+    procedure dxDBButtonEdit2ButtonClick(Sender: TObject;
+      AbsoluteIndex: Integer);
+    procedure dxDBEdit1KeyPress(Sender: TObject; var Key: Char);
+    procedure pcMainChanging(Sender: TObject; NewPage: TdxTabSheet;
+      var AllowChange: Boolean);
+    procedure quMainBeforePost(DataSet: TDataSet);
+    procedure dbgEnter(Sender: TObject);
+    procedure quMainNewRecord(DataSet: TDataSet);
+    procedure dbgItemIDButtonClick(Sender: TObject;
+      AbsoluteIndex: Integer);
+    procedure quDetilBeforePost(DataSet: TDataSet);
+    procedure quDetilNewRecord(DataSet: TDataSet);
+    procedure dsDetilStateChange(Sender: TObject);
+    procedure bbFindClick(Sender: TObject);
+    procedure quMainBeforeDelete(DataSet: TDataSet);
+    procedure quDetilBeforeDelete(DataSet: TDataSet);
+    procedure quDetilAfterPost(DataSet: TDataSet);
+    procedure TmbBrgClick(Sender: TObject);
+    procedure KrgBrgClick(Sender: TObject);
+    procedure bbSimpanDetilClick(Sender: TObject);
+    procedure BtlBrgClick(Sender: TObject);
+    procedure bbCetakClick(Sender: TObject);
+    procedure dsSNStateChange(Sender: TObject);
+    procedure quSNNewRecord(DataSet: TDataSet);
+    procedure dbgSNSNIDButtonClick(Sender: TObject;
+      AbsoluteIndex: Integer);
+    procedure quSNBeforePost(DataSet: TDataSet);
+    procedure quSNAfterPost(DataSet: TDataSet);
+    procedure quSNBeforeInsert(DataSet: TDataSet);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  fmINTransfer: TfmINTransfer;
+
+implementation
+
+uses StdLv2, StdLv1, StdLv0, ConMain, Search, UnitGeneral, MyUnit, Allitem,
+  ARQRRptSuratJalan, StdLv3;
+
+{$R *.dfm}
+
+procedure TfmINTransfer.FormShow(Sender: TObject);
+begin
+  FFieldOrder := 'CONVERT(VARCHAR(8),TransferDate,112), TransferID';
+  FFieldTgl   := 'TransferDate';
+  SettingDxGrid(dbg);
+  SettingDxGrid(dbgSN);
+  inherited;
+  quMain.Active := TRUE;
+  quDetil.Active := TRUE;
+  quSN.Active := TRUE;
+  quDetilQty.DisplayFormat:=sDisFormat1;
+  quDetilQty.EditFormat := sEditformat;
+end;
+
+procedure TfmINTransfer.dsMainStateChange(Sender: TObject);
+begin
+  inherited;
+  SetBtnOperationVisible(bbSave,bbCancel,FActDS);
+  SetReadOnly(dxDBEdit1,TRUE);
+  SetReadOnly(dxDBDateEdit1,qumain.state <>dsInsert);
+  SetReadOnly(dxDBButtonEdit1,qumain.state <>dsInsert);
+  SetReadOnly(dxDBButtonEdit2,qumain.state <>dsInsert);
+end;
+
+procedure TfmINTransfer.dxDBButtonEdit1ButtonClick(Sender: TObject;
+  AbsoluteIndex: Integer);
+begin
+  inherited;
+  with TfmSearch.Create(Self) do
+     try
+        Title := 'Gudang';
+        SQLString := 'SELECT WareHouseID as Kode_Gudang, WareHouseName as Nama_Gudang'
+                    +' FROM INMsWareHouse ORDER BY WareHouseId';
+        if ShowModal = MrOK then
+        begin
+           if quMain.State = dsBrowse then quMain.Edit;
+              quMainWareHouseSrc.Value := Res[0];
+        end;
+     finally
+        free;
+     end;
+end;
+
+procedure TfmINTransfer.dxDBButtonEdit2ButtonClick(Sender: TObject;
+  AbsoluteIndex: Integer);
+begin
+  inherited;
+   with TfmSearch.Create(Self) do
+     try
+        Title := 'Gudang';
+        SQLString := 'SELECT WareHouseID as Kode_Gudang, WareHouseName as Nama_Gudang'
+                    +' FROM INMsWareHouse ORDER BY WareHouseId';
+        if ShowModal = MrOK then
+        begin
+           if quMain.State = dsBrowse then quMain.Edit;
+           quMainWareHouseDest.Value := Res[0];
+        end;
+     finally
+        free;
+     end;
+end;
+
+procedure TfmINTransfer.dxDBEdit1KeyPress(Sender: TObject; var Key: Char);
+begin
+  inherited;
+  if Key=#13 then PostMessage(Self.Handle,WM_NEXTDLGCTL,0,0)
+end;
+
+procedure TfmINTransfer.pcMainChanging(Sender: TObject;
+  NewPage: TdxTabSheet; var AllowChange: Boolean);
+begin
+  inherited;
+ AllowChange := FActDS.State=dsBrowse;
+end;
+
+procedure TfmINTransfer.quMainBeforePost(DataSet: TDataSet);
+var ST : String;
+begin
+  inherited;
+  If Trim(quMainTransferDate.AsString)='' then
+  Begin
+    MsgInfo('Tanggal Transfer tidak boleh kosong');
+    quMainTransferDate.FocusControl;
+    Abort;
+  End;
+
+  If Trim(quMainWareHouseSrc.Value)='' then
+  Begin
+    MsgInfo('Gudang Sumber tidak boleh kosong');
+    quMainWareHouseSrc.FocusControl;
+    Abort;
+  End;
+
+  If Trim(quMainLWareHouseScr.Value)='' then
+  Begin
+    MsgInfo('Gudang Sumber tidak ada dalam Master Gudang');
+    quMainWareHouseSrc.FocusControl;
+    Abort;
+  End;
+
+  If Trim(quMainWareHouseDest.Value)='' then
+  Begin
+    MsgInfo('Gudang Tujuan tidak boleh kosong');
+    quMainWareHouseDest.FocusControl;
+    Abort;
+  End;
+
+  If Trim(quMainLWareHouseDest.Value)='' then
+  Begin
+    MsgInfo('Gudang Tujuan tidak ada dalam Master Gudang');
+    quMainWareHouseDest.FocusControl;
+    Abort;
+  End;
+
+  If quMainWareHouseSrc.Value=quMainWareHouseDest.Value then
+  Begin
+    MsgInfo('Gudang Sumber dengan Gudang Tujuan tidak boleh sama');
+    quMainWareHouseSrc.FocusControl;
+    Abort;
+  End;
+
+  if qumain.State=dsinsert then
+  Begin
+    ST := 'TRS'+ FormatDateTime('/YY/MM/', quMainTransferDate.AsDateTime);
+    quMainTransferID.Value  := ST + FormatFloat('0000', RunNumberGL(quAct, 'INTrTransferItemHd', 'TransferId', ST, '0') + 1);
+  End;
+
+  quMainUpdUser.Value := dmMain.UserId;
+  quMainUpddate.Value := GetServerDateTime;
+
+end;
+
+procedure TfmINTransfer.dbgEnter(Sender: TObject);
+begin
+  inherited;
+  if quMain.State in dsEditModes then quMain.Post;
+  if quDetil.IsEmpty then quDetil.Append;
+end;
+
+procedure TfmINTransfer.quMainNewRecord(DataSet: TDataSet);
+begin
+  inherited;
+  quMainTransferDate.Value:= date;
+  quMainWareHouseSrc.Value := sDGTr;
+  quMainTransferDate.FocusControl;
+end;
+
+procedure TfmINTransfer.dbgItemIDButtonClick(Sender: TObject;
+  AbsoluteIndex: Integer);
+begin
+  inherited;
+  with TfmSearch.Create(Self) do
+    try
+       Title := 'Item';
+       SQLString := 'SELECT ItemName as Nama_Item,ItemId as Kode_Item '
+                   +' FROM INMsItem'
+                   +' ORDER BY ItemId';
+       if ShowModal = MrOK then
+       begin
+          if quDetil.State = dsBrowse then quDetil.Edit;
+          quDetilItemID.Value   := Res[1];
+       end;
+    finally
+       free;
+    end;
+end;
+
+procedure TfmINTransfer.quDetilBeforePost(DataSet: TDataSet);
+begin
+  inherited;
+  if TRIM(quDetilItemID.Value)='' then
+  begin
+     MsgInfo('Kode Item tidak boleh kosong !');
+     quDetilItemID.FocusControl;
+     Abort;
+  end;
+
+  if TRIM(quDetilLUItemName.Value)='' then
+  begin
+     MsgInfo('Item tidak terdaftar di Master Item');
+     quDetilItemID.FocusControl;
+     Abort;
+  end;
+
+  if quDetil.State = dsInsert then
+  begin
+     with quAct, SQL do
+     begin
+        Close; Clear;
+        Add('SELECT Count(*) FROM  INTrTransferItemDt  WHERE TransferId=:TransferId AND ItemId=:ItemId');
+        with Parameters do
+        begin
+           ParamByName('TransferId').Value := quMainTransferID.Value;
+           ParamByName('ItemId').Value  := quDetilItemID.Value;
+        end;
+        Open;
+        if Fields[0].AsInteger > 0 then
+        begin
+           MsgInfo('Kode Item sudah ada dalam List');
+           quDetilItemID.FocusControl;
+           Abort;
+        end;
+     end;
+  end;
+
+  if quDetilQty.Value <=0 then
+  begin
+     MsgInfo('Jumlah Barang Tidak boleh lebih kecil sama dengan 0');
+     quDetilQty.FocusControl;
+     Abort;
+  end;
+
+  quDetilUpdUser.Value := dmMain.UserId;
+  quDetilUpdDate.Value := GetServerDateTime;
+
+end;
+
+procedure TfmINTransfer.quDetilNewRecord(DataSet: TDataSet);
+begin
+  inherited;
+  quDetilQty.Value:=0;
+end;
+
+procedure TfmINTransfer.dsDetilStateChange(Sender: TObject);
+begin
+  inherited;
+  SetReadOnly(dbgItemID,quDetil.State<>dsInsert);
+  SetReadOnly(dbgItemName,TRUE);
+  SetReadOnly(dbgProduct,TRUE);
+  SetReadOnly(dbgGroup,TRUE);
+end;
+
+procedure TfmINTransfer.bbFindClick(Sender: TObject);
+begin
+  inherited;
+  with TfmSearch.Create(Self) do
+    try
+       Title := 'Transfer Barang';
+       SQLString := ' SELECT TransferId as Kode_Transfer'
+                   +' ,Convert(Varchar(10),Transferdate,103) as Tgl_Transfer'
+                   +' ,WareHouseSrc as Kode_Gudang_Sumber'
+                   +' ,WareHouseDest as Kode_Gudang_Tujuan'
+                   +' ,Note as Keterangan'
+                   +' FROM INTrTransferItemHd'
+                   +' WHERE '+FSQLWhere
+                   +' ORDER BY TransferId';
+       if ShowModal = MrOK then
+       begin
+         qumain.Locate('TransferId',Res[0],[]);
+       end;
+    finally
+       free;
+    end;
+end;
+
+procedure TfmINTransfer.quMainBeforeDelete(DataSet: TDataSet);
+begin
+  inherited;
+  deleteFromAllItem(quMainTransferID.Value,2);
+  deleteFromAllItem(quMainTransferID.Value,52);
+end;
+
+procedure TfmINTransfer.quDetilBeforeDelete(DataSet: TDataSet);
+begin
+  inherited;
+  DeleteFromAllItem(quMainTransferID.Value,quDetilItemID.Value,2);
+  DeleteFromAllItem(quMainTransferID.Value,quDetilItemID.Value,52);
+end;
+
+procedure TfmINTransfer.quDetilAfterPost(DataSet: TDataSet);
+begin
+  inherited;
+  DeleteFromAllItem(quDetilTransferID.Value, quDetilItemID.Value,  2);
+  DeleteFromAllItem(quDetilTransferID.Value, quDetilItemID.Value, 52);
+
+  InsertToAllItem(quDetilTransferID.Value,quMainTransferDate.Value,quMainWareHouseSrc.Value,quDetilItemID.Value,
+                  52,abs(quDetilQty.Value),0,'IN',quMainLWareHouseScr.Value);
+  InsertToAllItem(quDetilTransferID.Value,quMainTransferDate.Value,quMainWareHouseDest.Value,quDetilItemID.Value,
+                  2, abs(quDetilQty.Value),0,'IN',quMainLWareHouseDest.Value);
+  if MessageDlg('Apakah anda akan menginput serial number ? ', mtInformation, [mbYes, mbNo], 0) = mrYes then
+  begin
+     quSN.Last;
+     quSN.Append;
+     Abort;
+  end else
+  begin
+    quDetil.Append;
+  end;
+end;
+
+procedure TfmINTransfer.TmbBrgClick(Sender: TObject);
+begin
+  inherited;
+  quDetil.Append;
+end;
+
+procedure TfmINTransfer.KrgBrgClick(Sender: TObject);
+begin
+  inherited;
+  if (dsdetil <> nil) and (dsDetil.DataSet <> nil) and
+     (MessageDlg('Hapus Barang ?', mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
+        dsDetil.DataSet.Delete;
+end;
+
+procedure TfmINTransfer.bbSimpanDetilClick(Sender: TObject);
+begin
+  inherited;
+  if Self.quDetil.State = dsInsert then
+  begin
+   Self.quDetil.Edit;
+   Self.quDetil.Post;
+   Self.quDetil.Requery();
+  end;
+  if Self.quDetil.State = dsEdit then
+  begin
+   quDetil.Post;
+  end;
+end;
+
+procedure TfmINTransfer.BtlBrgClick(Sender: TObject);
+begin
+  inherited;
+  quDetil.Cancel;
+end;
+
+procedure TfmINTransfer.bbCetakClick(Sender: TObject);
+var iPrint : integer;
+begin
+  inherited;
+  iPrint := Printer.Printers.IndexOf(sDPB);
+  with TfmQRRptSuratJalan.Create(Self) do
+   try
+     MyReport.PrinterSettings.PrinterIndex := iPrint;
+     QRLabel2.Caption := 'Dari :';
+     QRLabel3.Caption := 'Ke :';
+     qlbNamaInvoice.Caption := 'Slip Transfer Barang';
+     QRLabel9.Enabled:=False; QRLabel7.Enabled:=False; QRDBText2.Enabled := False; QRDBText6.Enabled := False;
+     qlbKet.Top :=20; QRLabel12.Top := 4;
+     QRLabel14.Enabled := False;
+     qlbJatuhTempo.Enabled := False;
+     qlbTempo.Enabled := False;
+     QRDBText5.Width := 590;     
+     with qu001,SQL do
+     Begin
+       Close;Clear;
+       add(' Select A.TransferID as SaleID, CONVERT(VARCHAR(10),A.TransferDate,103)as Tgl,'
+          +' A.WareHouseSrc+''-''+B.WareHouseName as CustName,A.WareHouseDest+''-''+C.WareHouseName as Address '
+          +' FROM INTrTransferItemHD A INNER JOIN INMsWareHouse B ON A.WareHouseSrc=B.WareHouseID '
+          +' INNER JOIN INMsWareHouse C ON A.WareHouseDest=C.WareHouseID'
+          +' WHERE A.TransferID='''+quMainTransferID.Value+'''');
+       Open;
+     End;
+
+     With qu002,sql do
+     Begin
+       Close;Clear;
+       add(' SELECT A.ItemID,A.Qty,B.ItemName,B.UOMID FROM INTrTransferItemDt A'
+          +' INNER JOIN INMsItem B ON A.ItemID=B.ItemID '
+          +' WHERE A.TransferID=:SaleID ORDER BY A.ItemID');
+       Open;
+     End;
+
+     if quMainNote.AsString <> '' then
+        qlbKet.Caption := 'Keterangan: ' + quMainNote.AsString
+     else
+        qlbKet.Caption := '';
+     if sCetak = '0' then
+       MyReport.PreviewModal
+     else
+       MyReport.Print;
+   finally
+     free;
+   end;
+end;
+
+procedure TfmINTransfer.dsSNStateChange(Sender: TObject);
+begin
+  inherited;
+  SetReadOnly(dbgSNSNID,quSN.State<>dsinsert);
+end;
+
+procedure TfmINTransfer.quSNNewRecord(DataSet: TDataSet);
+begin
+  inherited;
+  quSNSNID.FocusControl;
+  quSNWareHouseSrc.AsString := quMainWareHouseSrc.AsString;
+  quSNWareHouseDest.AsString := quMainWareHouseDest.AsString;
+end;
+
+procedure TfmINTransfer.dbgSNSNIDButtonClick(Sender: TObject;
+  AbsoluteIndex: Integer);
+begin
+  inherited;
+  with TfmSearch.Create(Self) do
+    try
+       Title := 'Serial Number ';
+       SQLString :=   ' SELECT K.SNID as Serial_Number,K.PurchaseId as Nota_Pembelian, '
+                     +' Convert(varchar(10),K.TransDate,103) as Tanggal_Nota, '
+                     +' K.SuppId as Kode_Supplier, K.SuppName as Nama_Supplier, '
+                     +' K.ItemId as Kode_Barang , K.ItemName as Nama_Barang  FROM '
+                     +' (SELECT A.SNID, C.PurchaseId, C.TransDate, C.SuppId, D.SuppName, '
+                     +' B.ItemId, F.ItemName, A.FgJual FROM APTrPurchaseDtSN A '
+                     +' INNER JOIN APTrPurchasedt B ON A.PurchaseID=B.PurchaseID AND A.ItemID=B.ItemID '
+                     +' AND A.WareHouseID=B.WareHouseID AND A.Price=B.Price AND A.SuppId=B.SuppId '
+                     +' INNER JOIN APTrPurchaseHd C ON B.PurchaseId=C.PurchaseId and B.SuppId=C.SuppId'
+                     +' INNER JOIN APMsSupplier D ON C.SuppID = D.SuppID '
+                     +' INNER JOIN INMsItem F ON F.ItemId=B.ItemId '
+                     +' UNION ALL SELECT A.SNID, C.KonsinyasiID, C.Transdate, C.CustID, D.Custname, '
+                     +' B.ItemID, F.ItemName, A.FgJual FROM APTrKonsinyasiDtSn A '
+                     +' INNER JOIN APTrKonsinyasiDt B ON A.KonsinyasiID=B.KonsinyasiID AND A.ItemID=B.ItemID '
+                     +' INNER JOIN APTrKonsinyasiHd C ON B.KonsinyasiID=C.KonsinyasiID '
+                     +' INNER JOIN ArMsCustomer D ON C.CustID=D.CustID '
+                     +' INNER JOIN INMsItem F ON F.ItemID=B.ItemID '
+                     +' UNION ALL SELECT A.SNID,A.ReturnRepID,B.Transdate,B.SuppID,C.SuppName, '
+                     +' A.ItemID,D.ItemName, A.FgJual FROM APTrReturnRepSn A '
+                     +' INNER JOIN APTrReturnRepHd B ON A.ReturnRepID=B.ReturnRepID '
+                     +' INNER JOIN APMsSupplier C ON B.SuppID=C.SuppID '
+                     +' INNER JOIN INMsItem D ON A.ItemID=D.ItemID) as K '
+                     +' WHERE K.ItemID='''+quDetilItemID.AsString+''' AND K.FgJual=''T'' '
+                     +' ORDER BY K.SNID ';
+       if ShowModal = MrOK then
+       begin
+          if quSN.State = dsBrowse then quSN.Edit;
+             quSNSNID.Value :=Res[0];
+       end;
+    finally
+       free;
+    end;
+end;
+
+procedure TfmINTransfer.quSNBeforePost(DataSet: TDataSet);
+begin
+  inherited;
+  if TRIM(quSNSNID.Value)='' then
+  Begin
+   ShowMessage('Kode Serial Number tidak boleh kosong');
+   quSNSNID.FocusControl;
+   Abort;
+  End;
+
+  If quSN.State= dsInsert then
+  Begin
+    With quAct,Sql do
+    Begin
+       Close;Clear;
+       add(' SELECT SNID from INTrTransferItemSN WHERE TransferID=:TransferID and SNID=:SNID and ItemID=:ItemID'
+          +' AND WareHouseSrc=:WareHouseSrc AND WareHouseDest=:WareHouseDest');
+          Parameters.ParamByName('TransferID').Value:= quMainTransferID.AsString;
+          Parameters.ParamByName('SNID').Value:= quSNSNID.AsString;
+          Parameters.ParamByName('ItemID').Value:= quDetilItemID.AsString;
+          Parameters.ParamByName('WareHouseSrc').Value:= quMainWareHouseSrc.AsString;
+          Parameters.ParamByName('WareHouseDest').Value:= quMainWareHouseDest.AsString;
+       Open;
+       If quAct.RecordCount <> 0 then
+       Begin
+          ShowMessage('Serial Number sudah ada');
+          quSNSNID.FocusControl;
+          Abort;
+       End;
+    End;
+  End;
+
+  If quSN.State= dsInsert then
+  Begin
+    With quAct,Sql do
+    Begin
+       Close;Clear;
+       add('SELECT K.FgJual,K.SNID FROM (SELECT SNID,FgJual,ItemID FROM APTrPurchaseDtSn '
+          +'UNION ALL SELECT SNID,FgJual,ItemID FROM APTrKonsinyasiDtSn '
+          +'UNION ALL SELECT SNID,FgJual,ItemID FROM APTrReturnRepSn) as K '
+          +'WHERE K.SNID='''+quSNSNID.AsString+''' AND ItemID='''+quDetilItemID.AsString+''' ');
+       Open;
+       If quAct.FieldByName('SNID').AsString = '' then
+       Begin
+          MsgInfo('Serial Number ini belum pernah masuk');
+          quSNSNID.FocusControl;
+          Abort;
+       End;
+       if quAct.FieldByName('FgJual').AsString = 'Y' then
+       Begin
+          MsgInfo('Serial Number sudah pernah dipakai');
+          quSNSNID.FocusControl;
+          Abort;
+       End;
+    End;
+  End;
+  quSNUpdDate.AsDateTime := GetServerDateTime;
+  quSNUpdUser.AsString := dmMain.UserId;
+end;
+
+procedure TfmINTransfer.quSNAfterPost(DataSet: TDataSet);
+begin
+  inherited;
+  with quAct,SQL do
+  begin
+   Close;Clear;
+  add(' SELECT Count(SNID) as Jumlah from INTrTransferItemSN WHERE TransferID='''+quMainTransferID.AsString+''''
+          +' and ItemID='''+quDetilItemID.AsString+''''
+          +' AND WareHouseSrc='''+quMainWareHouseSrc.AsString+''' AND WareHouseDest='''+quMainWareHouseDest.AsString+'''');
+   Open;
+  End;
+  if quAct.FieldByName('jumlah').AsInteger = quDetilQty.AsInteger then
+  begin
+   quDetil.Last;
+   quDetil.Append;
+   quDetilItemID.FocusControl;
+   Abort;
+  End
+  else
+  begin
+   quSN.Append;
+  // quSNSNID.FocusControl;
+  end;
+
+end;
+
+procedure TfmINTransfer.quSNBeforeInsert(DataSet: TDataSet);
+begin
+  inherited;
+  with quAct,SQL do
+  begin
+   Close;Clear;
+   Add(' Select Count(SNId) as jumlah From INTrTransferItemSN WHERE TransferID ='''+quMainTransferID.AsString+''''
+      +' AND ItemId='''+quDetilItemID.Value+''''
+      +' And WareHouseSrc='''+quMainWareHouseSrc.AsString+''' AND WareHouseDest='''+quMainWareHouseDest.AsString+''' ');
+   Open;
+  End;
+  if quAct.FieldByName('jumlah').AsInteger >= quDetilQty.AsInteger then Abort;
+end;
+
+end.

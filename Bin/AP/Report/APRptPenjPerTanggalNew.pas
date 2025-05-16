@@ -1,0 +1,246 @@
+unit APRptPenjPerTanggalNew;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, RptDlg, DB, dxExEdtr, dxCntner, ADODB, StdCtrls, Buttons,
+  ExtCtrls, dxEditor, dxEdLib, dxTL, dxDBCtrl, dxDBGrid;
+
+type
+  TfmAPRptPenjPerTanggalNew = class(TfmRptDlg)
+    dbgPembelian: TdxDBGrid;
+    quActTransdate: TDateTimeField;
+    quActPurchaseId: TStringField;
+    quActSuppID: TStringField;
+    quActSuppName: TStringField;
+    quActItemid: TStringField;
+    quActItemName: TStringField;
+    quActCurrID: TStringField;
+    quActPPN: TBCDField;
+    quActTTLPb: TBCDField;
+    dbgPembelianColumn1: TdxDBGridColumn;
+    dbgPembelianColumn2: TdxDBGridColumn;
+    dbgPembelianColumn3: TdxDBGridColumn;
+    dbgPembelianColumn4: TdxDBGridColumn;
+    dbgPembelianColumn5: TdxDBGridColumn;
+    dbgPembelianColumn6: TdxDBGridColumn;
+    dbgPembelianColumn7: TdxDBGridColumn;
+    dbgPembelianColumn8: TdxDBGridColumn;
+    dbgPembelianColumn9: TdxDBGridColumn;
+    dbgPembelianColumn10: TdxDBGridColumn;
+    GroupBox1: TGroupBox;
+    dt1: TdxDateEdit;
+    dt2: TdxDateEdit;
+    Label1: TLabel;
+    Button1: TButton;
+    saveDlg: TSaveDialog;
+    RadioGroup1: TRadioGroup;
+    quActSubTotal: TBCDField;
+    bbExcel: TBitBtn;
+    bbCancel: TBitBtn;
+    Label2: TLabel;
+    procedure FormShow(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
+    procedure RadioGroup1Click(Sender: TObject);
+    procedure dsActStateChange(Sender: TObject);
+    procedure bbCancelClick(Sender: TObject);
+    procedure bbExcelClick(Sender: TObject);
+    procedure dbgPembelianDblClick(Sender: TObject);
+  private
+    { Private declarations }
+    procedure RefreshForm;
+    procedure RefreshData;
+  public
+    { Public declarations }
+    FgForm : String;
+  end;
+
+var
+  fmAPRptPenjPerTanggalNew: TfmAPRptPenjPerTanggalNew;
+
+implementation
+
+{$R *.dfm}
+uses MyUnit, UnitGeneral, UnitDate, APDetail;
+
+procedure TfmAPRptPenjPerTanggalNew.FormShow(Sender: TObject);
+begin
+  inherited;
+  if FgForm='AP' then
+  begin
+    Caption := 'Laporan Pembelian Per Tanggal';
+  end else
+  begin
+    Caption := 'Laporan Penjualan Per Tanggal';
+  end;
+
+  dt1.Date := EncodeDate(GetYear(Date),GetMonth(Date),1);
+  dt2.Date := Date;
+  Button1Click(Button1);
+end;
+
+procedure TfmAPRptPenjPerTanggalNew.RefreshForm;
+begin
+  if FgForm='AP' then
+  begin
+    if RadioGroup1.ItemIndex=0 then
+    begin
+      dbgPembelianColumn1.Caption := 'Tanggal';
+      dbgPembelianColumn2.Caption := 'Nomor Invoice';
+      dbgPembelianColumn3.Caption := 'Kode Supplier';
+      dbgPembelianColumn4.Caption := 'Nama Supplier';
+      dbgPembelianColumn5.Caption := 'Kode Barang'; dbgPembelianColumn5.Visible := False;
+      dbgPembelianColumn6.Caption := 'Nama Barang'; dbgPembelianColumn6.Visible := False;
+      dbgPembelianColumn7.Caption := 'Subtotal';
+      dbgPembelianColumn8.Caption := 'Currency'; dbgPembelianColumn8.Visible := False;
+      dbgPembelianColumn9.Caption := 'PPN';
+      dbgPembelianColumn10.Caption := 'Total';
+      Label2.Visible := TRUE;
+    end else
+    begin
+      dbgPembelianColumn1.Caption := 'Tanggal';
+      dbgPembelianColumn2.Caption := 'Nomor Invoice';
+      dbgPembelianColumn3.Caption := 'Kode Supplier';
+      dbgPembelianColumn4.Caption := 'Nama Supplier';
+      dbgPembelianColumn5.Caption := 'Kode Barang'; dbgPembelianColumn5.Visible := True;
+      dbgPembelianColumn6.Caption := 'Nama Barang'; dbgPembelianColumn6.Visible := True;
+      dbgPembelianColumn7.Caption := 'Jumlah';
+      dbgPembelianColumn8.Caption := 'Satuan'; dbgPembelianColumn8.Visible := True;
+      dbgPembelianColumn9.Caption := 'Harga';
+      dbgPembelianColumn10.Caption := 'Total';
+      Label2.Visible := False;
+    end;
+  end else
+  begin
+    if RadioGroup1.ItemIndex=0 then
+    begin
+      dbgPembelianColumn1.Caption := 'Tanggal';
+      dbgPembelianColumn2.Caption := 'Nomor Invoice';
+      dbgPembelianColumn3.Caption := 'Kode Customer';
+      dbgPembelianColumn4.Caption := 'Nama Customer';
+      dbgPembelianColumn5.Caption := 'Kode Barang'; dbgPembelianColumn5.Visible := False;
+      dbgPembelianColumn6.Caption := 'Nama Barang'; dbgPembelianColumn6.Visible := False;
+      dbgPembelianColumn7.Caption := 'Subtotal';
+      dbgPembelianColumn8.Caption := 'Currency'; dbgPembelianColumn8.Visible := False;
+      dbgPembelianColumn9.Caption := 'PPN';
+      dbgPembelianColumn10.Caption := 'Total';
+      Label2.Visible := TRUE;
+    end else
+    begin
+      dbgPembelianColumn1.Caption := 'Tanggal';
+      dbgPembelianColumn2.Caption := 'Nomor Invoice';
+      dbgPembelianColumn3.Caption := 'Kode Customer';
+      dbgPembelianColumn4.Caption := 'Nama Customer';
+      dbgPembelianColumn5.Caption := 'Kode Barang'; dbgPembelianColumn5.Visible := True;
+      dbgPembelianColumn6.Caption := 'Nama Barang'; dbgPembelianColumn6.Visible := True;
+      dbgPembelianColumn7.Caption := 'Jumlah';
+      dbgPembelianColumn8.Caption := 'Satuan'; dbgPembelianColumn8.Visible := True;
+      dbgPembelianColumn9.Caption := 'Harga';
+      dbgPembelianColumn10.Caption := 'Total';
+      Label2.Visible := False;
+    end;
+  end;
+end;
+
+procedure TfmAPRptPenjPerTanggalNew.RefreshData;
+begin
+  with quAct,SQL do
+  begin
+    Close;Clear;
+    Add('select K.Transdate,K.PurchaseId,K.SuppID,K.SuppName,K.ItemID,K.ItemName,K.SubTotal,K.CurrID,K.PPN,K.TTLPb '
+       +'FROM ( ');
+    if (FgForm='AP') AND (RadioGroup1.ItemIndex=0) then
+    Add('select A.Transdate,A.PurchaseId,A.SuppID,B.SuppName,A.SuppID as Itemid,'
+       +'B.SuppName as ItemName,A.STPb as Subtotal,A.CurrID,A.PPN,A.TTLPb '
+       +'from APTrPurchaseHd A '
+       +'inner join APMsSupplier B on A.SuppID=B.SuppID ');
+    if (FgForm='AR') AND (RadioGroup1.ItemIndex=0) then
+    Add('select A.Transdate,A.SaleID as PurchaseID,A.CustID as SuppId,B.CustName as SuppName,A.CustID as ItemId, '
+       +'B.CustName as ItemName,CASE WHEN A.FgForm=''AR'' THEN A.StPj-A.DP ELSE A.DP END as SubTotal,A.CurrID,A.PPN,A.TTLPj as TTLPb '
+       +'from ARTrPenjualanHd A '
+       +'inner join ARMsCustomer B on A.CustID=B.CustID ');
+    if (FgForm='AP') AND (RadioGroup1.ItemIndex=1) then
+    Add('select C.Transdate,A.PurchaseId,C.SuppID,B.SuppName,A.ItemID,D.ItemName,A.Qty as SubTotal,D.UOMID as CurrID, '
+       +'A.Price as PPN,A.Qty*A.Price as TTLPb '
+       +'from APTrPurchaseDT A '
+       +'inner join APTrPurchaseHd C on A.PurchaseID=C.PurchaseID '
+       +'inner join APMsSupplier B on C.SuppID=B.SuppID '
+       +'inner join inmsitem D on A.Itemid=D.ItemiD ');
+    if (FgForm='AR') AND (RadioGroup1.ItemIndex=1) then
+    Add('select C.Transdate,A.SaleID as PurchaseID,C.CustID as SuppID,B.CustName as SuppName,A.ItemID,D.ItemName, '
+       +'CAST(A.Qty as Numeric(18,4)) as SubTotal,A.UOMID as CurrID,(A.Price+A.Komisi) as PPN,A.Qty*(A.Price+A.Komisi) as TTLPb '
+       +'from ARTrPenjualanDT A '
+       +'inner join ARTrPenjualanHd C on A.Saleid=C.SaleID '
+       +'inner join ARMsCustomer B on C.CustID=B.CustID '
+       +'inner join inmsitem D on A.Itemid=D.ItemiD ');
+    Add(') as K ');
+    Add('WHERE CONVERT(VARCHAR(10),K.Transdate,112) BETWEEN '''+FormatDateTime('yyyymmdd',dt1.date)+''' AND '''+FormatDateTime('yyyymmdd',dt2.date)+''' ');
+    Add('ORDER BY K.Transdate ');
+    Open;
+  end;
+end;
+
+procedure TfmAPRptPenjPerTanggalNew.Button1Click(Sender: TObject);
+begin
+  inherited;
+  RefreshForm;
+  RefreshData;
+end;
+
+procedure TfmAPRptPenjPerTanggalNew.RadioGroup1Click(Sender: TObject);
+begin
+  inherited;
+  Button1Click(Button1);
+end;
+
+procedure TfmAPRptPenjPerTanggalNew.dsActStateChange(Sender: TObject);
+begin
+  inherited;
+  SetReadOnly(dbgPembelianColumn1,TRUE);
+  SetReadOnly(dbgPembelianColumn2,TRUE);
+  SetReadOnly(dbgPembelianColumn3,TRUE);
+  SetReadOnly(dbgPembelianColumn4,TRUE);
+  SetReadOnly(dbgPembelianColumn5,TRUE);
+  SetReadOnly(dbgPembelianColumn6,TRUE);
+  SetReadOnly(dbgPembelianColumn7,TRUE);
+  SetReadOnly(dbgPembelianColumn8,TRUE);
+  SetReadOnly(dbgPembelianColumn9,TRUE);
+  SetReadOnly(dbgPembelianColumn10,TRUE);
+end;
+
+procedure TfmAPRptPenjPerTanggalNew.bbCancelClick(Sender: TObject);
+begin
+  inherited;
+  Close;
+end;
+
+procedure TfmAPRptPenjPerTanggalNew.bbExcelClick(Sender: TObject);
+begin
+  inherited;
+  if saveDlg.Execute then
+  begin
+    if Pos('.XLS', uppercase(saveDlg.FileName)) > 0 then
+      dbgPembelian.SaveToXLS(saveDlg.FileName, true)
+    else
+      dbgPembelian.SaveToXLS(saveDlg.FileName + '.xls', true);
+  end;
+end;
+
+procedure TfmAPRptPenjPerTanggalNew.dbgPembelianDblClick(Sender: TObject);
+begin
+  inherited;
+  if RadioGroup1.ItemIndex=0 then
+  begin
+    with TfmAPDetail.Create(Self) do
+    try
+      laTitle.Caption := Self.quActPurchaseId.AsString;
+      AP := FgForm;
+      ShowModal;
+    finally
+      free;
+    end;
+  end;
+end;
+
+end.

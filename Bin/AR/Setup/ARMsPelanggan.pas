@@ -1,0 +1,379 @@
+unit ARMsPelanggan;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdLv4, dxExEdtr, ActnList, DB, dxCntner, ADODB, dxTL, dxDBCtrl,
+  dxDBGrid, dxPageControl, dxEdLib, dxButton, StdCtrls, ExtCtrls, Buttons,
+  dxCore, dxContainer, dxDBELib, dxEditor, DBCtrls;
+
+type
+  TfmARMsPelanggan = class(TfmStdLv4)
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label5: TLabel;
+    Label7: TLabel;
+    Label8: TLabel;
+    bbSave: TdxButton;
+    bbCancel: TdxButton;
+    dbgListKdPelanggan: TdxDBGridColumn;
+    dbgListNmPelanggan: TdxDBGridColumn;
+    dbgListPhone: TdxDBGridColumn;
+    dbgListAlamat: TdxDBGridColumn;
+    dbgListKota: TdxDBGridColumn;
+    dbgListFax: TdxDBGridColumn;
+    DBText2: TDBText;
+    Label4: TLabel;
+    DBText1: TDBText;
+    Label9: TLabel;
+    Label10: TLabel;
+    Label12: TLabel;
+    Label11: TLabel;
+    Label13: TLabel;
+    dbgListEmail: TdxDBGridColumn;
+    dbgListNote: TdxDBGridColumn;
+    quMainCustID: TStringField;
+    quMainCustName: TStringField;
+    quMainAddress: TStringField;
+    quMainCity: TStringField;
+    quMainPhone: TStringField;
+    quMainEmail: TStringField;
+    quMainNote: TStringField;
+    quMainCustType: TStringField;
+    quMainUpdDate: TDateTimeField;
+    quMainUpdUser: TStringField;
+    quMainTipe: TStringField;
+    dbgListTipe: TdxDBGridColumn;
+    Label6: TLabel;
+    DBRadioGroup1: TDBRadioGroup;
+    quMainLimitPiutang: TBCDField;
+    Label14: TLabel;
+    quMainFgKoma: TStringField;
+    DBRadioGroup2: TDBRadioGroup;
+    quMainUP: TStringField;
+    Label15: TLabel;
+    quMainFax: TStringField;
+    quMainlimitasli: TBCDField;
+    Label16: TLabel;
+    Label17: TLabel;
+    quMainTerm: TIntegerField;
+    quMainSalesID: TStringField;
+    DBText3: TDBText;
+    Label18: TLabel;
+    quMainLSales: TStringField;
+    quMainKodeFP: TStringField;
+    Label19: TLabel;
+    dxDBEdit3: TdxDBEdit;
+    dxDBEdit1: TdxDBEdit;
+    dxDBEdit2: TdxDBEdit;
+    dxDBMemo1: TdxDBMemo;
+    dxDBEdit8: TdxDBEdit;
+    dxDBButtonEdit2: TdxDBButtonEdit;
+    dxDBEdit7: TdxDBEdit;
+    dxDBEdit6: TdxDBEdit;
+    dxDBEdit4: TdxDBEdit;
+    dxDBEdit10: TdxDBEdit;
+    dxDBButtonEdit4: TdxDBButtonEdit;
+    dxDBEdit5: TdxDBEdit;
+    dxDBEdit9: TdxDBEdit;
+    dxDBMemo2: TdxDBMemo;
+    Label20: TLabel;
+    dxDBEdit11: TdxDBEdit;
+    Label21: TLabel;
+    quMainKodeNITKU: TStringField;
+    procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure dsMainStateChange(Sender: TObject);
+    procedure dxDBEdit1KeyPress(Sender: TObject; var Key: Char);
+    procedure quMainBeforePost(DataSet: TDataSet);
+    procedure bbFindClick(Sender: TObject);
+    procedure quMainNewRecord(DataSet: TDataSet);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure quMainAfterPost(DataSet: TDataSet);
+    procedure ActDeleteExecute(Sender: TObject);
+    procedure dxDBButtonEdit4ButtonClick(Sender: TObject;
+      AbsoluteIndex: Integer);
+    procedure quMainCalcFields(DataSet: TDataSet);
+    procedure dxDBButtonEdit2ButtonClick(Sender: TObject;
+      AbsoluteIndex: Integer);
+  private
+    { Private declarations }
+    Procedure Status;
+  public
+    { Public declarations }
+    CallAnotherForm : Boolean;
+    TempPlg : string;
+  end;
+
+var
+  fmARMsPelanggan: TfmARMsPelanggan;
+
+implementation
+
+uses StdLv2, StdLv1, StdLv0, UnitGeneral, ConMain, Search, StdLv3, MyUnit;
+
+{$R *.dfm}
+Procedure TfmARMsPelanggan.Status;
+Begin
+ with quact,sql do
+  Begin
+    Close;Clear;
+    Add(' Select CustId FROM ARTrPenjualanHd WHERE CustId='''+quMainCustID.Value+'''');
+    Open;
+    if not IsEmpty then
+    Begin
+       MsgInfo('Kode Customer sudah di pakai di penjualan');
+       Abort;
+    End;
+ End;
+ with quact,sql do
+  Begin
+    Close;Clear;
+    Add(' Select CustId FROM ARTrKonTransBrgHd WHERE CustId='''+quMainCustID.Value+'''');
+    Open;
+    if not IsEmpty then
+    Begin
+       MsgInfo('Kode Customer sudah di pakai di Konsinyasi');
+       Abort;
+    End;
+ End;
+End;
+procedure TfmARMsPelanggan.FormCreate(Sender: TObject);
+begin
+  inherited;
+  UsePeriod := FALSE;
+  CallAnotherForm := false;
+end;
+
+procedure TfmARMsPelanggan.FormShow(Sender: TObject);
+begin
+  inherited;
+  quMain.Active := TRUE;
+  if CallAnotherForm then bbnew.OnClick(bbNew);
+  TempPlg :='';
+  quMainLimitPiutang.DisplayFormat:= sDisFormat;
+  quMainLimitPiutang.EditFormat := sEditformat;
+  if GroupUser <> 'admin' then
+  begin
+    dxDBEdit5.ReadOnly := True;
+    dxDBEdit5.Color := clSilver;
+  end;
+end;
+
+procedure TfmARMsPelanggan.dsMainStateChange(Sender: TObject);
+begin
+  inherited;
+  SetReadOnly(dxDBEdit1,TRUE);
+  SetBtnOperationVisible(bbSave,bbCancel,FActDS);
+end;
+
+procedure TfmARMsPelanggan.dxDBEdit1KeyPress(Sender: TObject;
+  var Key: Char);
+begin
+  inherited;
+  if Key=#13 then PostMessage(Self.Handle,WM_NEXTDLGCTL,0,0)
+end;
+
+procedure TfmARMsPelanggan.quMainBeforePost(DataSet: TDataSet);
+var A : string;
+begin
+  inherited;
+  if TRIM(quMainTerm.AsString) = '' then quMainTerm.AsCurrency := 0;
+  with quAct,SQL do
+  begin
+    Close;Clear;
+    Add('SELECT '''+quMainCustType.AsString+'''+UPPER(LEFT('''+dxDBEdit2.Text+''',1)) as A ');
+    Open;
+  end;
+
+  if quMain.State = dsInsert then
+  begin
+    A:= quAct.FieldByName('A').AsString;
+    quMainCustID.AsString  := A + FormatFloat('000', RunNumberGL(quAct, 'ARMsCustomer', 'CustID', A, '0') + 1);
+  end;
+
+  if Trim(quMainCustID.Value)='' then
+  begin
+    MsgInfo('Kode Pelanggan tidak boleh kosong');
+    quMainCustID.FocusControl;
+    Abort;
+  end;
+
+  if TRIM(quMainCity.AsString) <> '' then
+  begin
+    with quAct,SQL do
+    begin
+      Close;Clear;
+      Add('SELECT Wilayah FROM ARMsWilayah WHERE Wilayah='''+quMainCity.AsString+''' ');
+      Open;
+      if IsEmpty then
+      begin
+        pesan('Wilayah tidak terdaftar');
+        quMainCity.FocusControl;
+        Abort;
+      end;
+    end;
+  end;
+
+  if TRIM(quMainCustType.AsString) = 'D' then
+  begin
+    with quAct,SQL do
+    begin
+      Close;Clear;
+      Add('SELECT Email,CustName FROM ARMsCustomer WHERE Email='''+quMainEmail.AsString+''' AND CustID<>'''+quMainCustID.AsString+''' ');
+      Open;
+      if not IsEmpty then
+      begin
+        pesan('NPWP sudah dipakai atas nama ['+quAct.FieldByName('CustName').AsString+']');
+        quMainEmail.FocusControl;
+        Abort;
+      end;
+    end;
+  end;
+
+  if quMain.State = dsInsert then
+  Begin
+    With quAct,Sql do
+    Begin
+      Close;Clear;
+      add('Select CustId from ARMsCustomer Where CustId='''+quMainCustID.Value+''' ');
+      Open;
+      If Not IsEmpty then
+      Begin
+        MsgInfo('Kode Customer sudah dipakai Kode Customer lain');
+        quMainCustID.FocusControl;
+        Abort;
+      End;
+    End;
+  End;
+
+  If Trim(quMainCustName.Value)='' then
+  begin
+    MsgInfo('Nama Customer tidak boleh kosong');
+    quMainCustName.FocusControl;
+    Abort;
+  end;
+
+  if TRIM(quMainLimitPiutang.AsString)='' then
+  Begin
+    MsgInfo('Limit piutang tidak boleh kosong');
+    quMainLimitPiutang.FocusControl;
+    Abort;
+  End;
+
+  if quMainLimitPiutang.Value < 1 then
+  Begin
+    MsgInfo('Limit piutang tidak boleh lqbih kecil dari 1');
+    quMainLimitPiutang.FocusControl;
+    Abort;
+  End;
+
+  quMainUpdDate.Value := Date;
+  quMainUpdUser.value := dmMain.UserId;
+
+end;
+
+procedure TfmARMsPelanggan.bbFindClick(Sender: TObject);
+begin
+  inherited;
+  with TfmSearch.Create(Self) do
+      begin
+       try
+         Title := 'Master Customer';
+         SQLString := 'SELECT CustName as Nama_Pelanggan,Address as Alamat,Email as NPWP,City as Kota,Phone as Telepon,Fax,CustId as Kode_Pelanggan from ARMsCustomer ';
+         if ShowModal = MrOk then
+         begin
+            qumain.Locate('CustId',Res[6],[]);
+         end;
+       finally
+         free;
+       end;
+    end;
+end;
+
+procedure TfmARMsPelanggan.quMainNewRecord(DataSet: TDataSet);
+begin
+  inherited;
+  quMainCustName.FocusControl;
+  quMainCustType.AsString:='D';
+  quMainFgKoma.AsString := 'T';
+  quMainKodeFP.AsString := '04';
+  quMainKodeNITKU.AsString := '000000';
+  quMainLimitPiutang.AsCurrency := 500000000;
+end;
+
+procedure TfmARMsPelanggan.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+  inherited;
+  CallAnotherForm := false;
+end;
+
+procedure TfmARMsPelanggan.quMainAfterPost(DataSet: TDataSet);
+begin
+  inherited;
+  if CallAnotherForm then
+  Begin
+   TempPlg:=quMainCustID.Value;
+   Close;
+  End;
+end;
+
+procedure TfmARMsPelanggan.ActDeleteExecute(Sender: TObject);
+begin
+  Status;
+  inherited;
+
+end;
+
+procedure TfmARMsPelanggan.dxDBButtonEdit4ButtonClick(Sender: TObject;
+  AbsoluteIndex: Integer);
+begin
+  inherited;
+  with TfmSearch.Create(Self) do
+     try
+        Title := 'Sales';
+        SQLString := 'SELECT SalesName as Nama_Sales,SalesID as Kode_Sales FROM ARMsSales WHERE FgActive<>0 ORDER BY SalesID';
+        if ShowModal = MrOK then
+        begin
+           if quMain.State = dsBrowse then quMain.Edit;
+           quMainSalesID.Value := Res[1];
+        end;
+     finally
+        free;
+     end;
+end;
+
+procedure TfmARMsPelanggan.quMainCalcFields(DataSet: TDataSet);
+begin
+  inherited;
+  with quAct,SQL do
+  begin
+    Close;Clear;
+    Add('SELECT SalesName FROm ARMsSales WHERE SalesID='''+quMainSalesID.AsString+''' ');
+    Open;
+  end;
+  quMainLSales.AsString := quAct.FieldByName('SalesName').AsString;
+end;
+
+procedure TfmARMsPelanggan.dxDBButtonEdit2ButtonClick(Sender: TObject;
+  AbsoluteIndex: Integer);
+begin
+  inherited;
+   with TfmSearch.Create(Self) do
+    try
+       Title := 'Wilayah';
+       SQLString := 'SELECT Wilayah FROM ARMsWilayah ORDER BY Wilayah';
+       if ShowModal = MrOk then
+       begin
+          if quMain.State = dsBrowse then quMain.Edit;
+             quMainCity.Value := Res[0];
+       end;
+    finally
+       free;
+    end;
+end;
+
+end.

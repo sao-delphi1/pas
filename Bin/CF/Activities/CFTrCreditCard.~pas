@@ -1,0 +1,333 @@
+unit CFTrCreditCard;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdLv31, ActnList, DB, dxExEdtr, dxCntner, ADODB, StdCtrls,
+  ExtCtrls, dxPageControl, dxEdLib, dxButton, dxCore, dxContainer, Buttons,
+  DBCtrls, dxDBELib, dxEditor;
+
+type
+  TfmCFTrCreditCard = class(TfmStdLv31)
+    quMainVoucherNo: TStringField;
+    quMainTransdate: TDateTimeField;
+    quMainActor: TStringField;
+    quMainAmount: TBCDField;
+    quMainCharge: TBCDField;
+    quMainCardID: TStringField;
+    quMainNote: TStringField;
+    quMainUpdDate: TDateTimeField;
+    quMainUpdUser: TStringField;
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    quMainCardBank: TStringField;
+    Label4: TLabel;
+    Label5: TLabel;
+    Label6: TLabel;
+    Label7: TLabel;
+    Label8: TLabel;
+    GroupBox2: TGroupBox;
+    Label21: TLabel;
+    DBText8: TDBText;
+    Label22: TLabel;
+    DBText9: TDBText;
+    dxDBEdit1: TdxDBEdit;
+    quMainBankID: TStringField;
+    quTotal: TADOQuery;
+    dsTotal: TDataSource;
+    quTotalTotal: TBCDField;
+    quBank: TADOQuery;
+    quMainLBankName: TStringField;
+    DBText1: TDBText;
+    DBText2: TDBText;
+    quTotalCharge: TBCDField;
+    quTotalSCharge: TBCDField;
+    Label9: TLabel;
+    DBText3: TDBText;
+    Label10: TLabel;
+    DBText4: TDBText;
+    quMainSuppID: TStringField;
+    quMainCurrID: TStringField;
+    quSupplier: TADOQuery;
+    quValuta: TADOQuery;
+    quMainLValuta: TStringField;
+    quMainLSuppName: TStringField;
+    dxDBDateEdit1: TdxDBDateEdit;
+    dxDBEdit2: TdxDBEdit;
+    dxDBEdit3: TdxDBEdit;
+    dxDBEdit6: TdxDBEdit;
+    dxDBButtonEdit1: TdxDBButtonEdit;
+    dxDBEdit4: TdxDBEdit;
+    dxDBEdit5: TdxDBEdit;
+    dxDBButtonEdit2: TdxDBButtonEdit;
+    dxDBButtonEdit3: TdxDBButtonEdit;
+    procedure FormShow(Sender: TObject);
+    procedure dsMainStateChange(Sender: TObject);
+    procedure dxDBDateEdit1KeyPress(Sender: TObject; var Key: Char);
+    procedure quMainNewRecord(DataSet: TDataSet);
+    procedure quMainBeforePost(DataSet: TDataSet);
+    procedure bbFindClick(Sender: TObject);
+    procedure dxDBButtonEdit1ButtonClick(Sender: TObject;
+      AbsoluteIndex: Integer);
+    procedure quMainAfterPost(DataSet: TDataSet);
+    procedure quMainBeforeDelete(DataSet: TDataSet);
+    procedure dxDBButtonEdit2ButtonClick(Sender: TObject;
+      AbsoluteIndex: Integer);
+    procedure dxDBButtonEdit3ButtonClick(Sender: TObject;
+      AbsoluteIndex: Integer);
+    procedure quMainBeforeEdit(DataSet: TDataSet);
+  private
+    { Private declarations }
+    Procedure CekStatus;
+  public
+    { Public declarations }
+  end;
+
+var
+  fmCFTrCreditCard: TfmCFTrCreditCard;
+
+implementation
+
+uses MyUnit, UnitGeneral, Search, ConMain, Allitem;
+
+{$R *.dfm}
+Procedure TfmCFTrCreditCard.CekStatus;
+Begin //cek apakah sudah ada pembayaran kalo sudah ada tidak bisa di utak atik
+   with quAct, SQL do
+   begin
+      Close; Clear;
+      Add(' SELECT A.PaymentId FROM APTrPaymentDt A INNER JOIN APTrPaymentHd B ON A.PaymentId=B.PaymentId'+
+          ' WHERE A.PurchaseID='''+quMainVoucherNo.AsString+''' And B.SuppId='''+ quMainSuppID.AsString +'''');
+      Open;
+      if not IsEmpty then
+      begin
+         MsgInfo('Sudah ada pembayaran ['+quAct.Fieldbyname('PaymentId').AsString +'], tidak bisa edit/Delete lagi');
+         Abort;
+      end;
+   end;
+End;
+
+procedure TfmCFTrCreditCard.FormShow(Sender: TObject);
+begin
+  FFieldOrder := 'CONVERT(VARCHAR(8),TransDate,112), VoucherNo';
+  FFieldTgl   := 'TransDate';
+  inherited;
+  quMain.Active := True;
+  quTotal.Active := True;
+end;
+
+procedure TfmCFTrCreditCard.dsMainStateChange(Sender: TObject);
+begin
+  inherited;
+  SetBtnOperationVisible(bbSave,bbCancel,FActDS);
+  SetReadOnly(dxDBEdit1,TRUE);
+  SetReadOnly(dxDBDateEdit1,quMain.State<>dsInsert);
+  SetReadOnly(dxDBButtonEdit2,quMain.State<>dsInsert);
+  SetReadOnly(dxDBButtonEdit3,quMain.State<>dsInsert);
+end;
+
+procedure TfmCFTrCreditCard.dxDBDateEdit1KeyPress(Sender: TObject;
+  var Key: Char);
+begin
+  inherited;
+  if Key=#13 then PostMessage(Self.Handle,WM_NEXTDLGCTL,0,0);
+end;
+
+procedure TfmCFTrCreditCard.quMainNewRecord(DataSet: TDataSet);
+begin
+  inherited;
+  quMainTransdate.FocusControl;
+  quMainTransdate.AsDateTime := Date;
+  quMainAmount.AsCurrency := 0;
+  quMainCharge.AsCurrency := 3;
+  quMainCurrID.AsString := 'IDR';
+end;
+
+procedure TfmCFTrCreditCard.quMainBeforePost(DataSet: TDataSet);
+var ST : string;
+begin
+  inherited;
+  if TRIM(quMainTransdate.AsString)= '' then
+  begin
+    ShowMessage('Tanggal Transaksi tidak boleh kosong');
+    quMainTransdate.FocusControl;
+    Abort;
+  end;
+  if TRIM(quMainCardID.AsString)= '' then
+  begin
+    ShowMessage('No Kartu Kredit tidak boleh kosong');
+    quMainCardID.FocusControl;
+    Abort;
+  end;
+  if TRIM(quMainCardBank.AsString)= '' then
+  begin
+    ShowMessage('Bank Penerbit tidak boleh kosong');
+    quMainCardBank.FocusControl;
+    Abort;
+  end;
+  if TRIM(quMainBankID.AsString)= '' then
+  begin
+    ShowMessage('Bank Penerima tidak boleh kosong');
+    quMainBankID.FocusControl;
+    Abort;
+  end;
+  if TRIM(quMainLBankName.AsString)= '' then
+  begin
+    ShowMessage('Bank Penerima tidak terdaftar');
+    quMainBankID.FocusControl;
+    Abort;
+  end;
+  if (TRIM(quMainAmount.AsString)= '') or (quMainAmount.AsCurrency <= 0 ) then
+  begin
+    ShowMessage('Amount tidak boleh kosong');
+    quMainAmount.FocusControl;
+    Abort;
+  end;
+  if (TRIM(quMainCharge.AsString)='') or (quMainCharge.AsCurrency <= 0) then
+  begin
+    ShowMessage('Service Charge tidak boleh kosong');
+    quMainCharge.FocusControl;
+    Abort;
+  end;
+  if quMainSuppID.AsString = '' then
+  begin
+    ShowMessage('Field Vendor tidak boleh kosong.');
+    quMainSuppID.FocusControl;
+    Abort;
+  end;
+  if TRIM(quMainLSuppName.AsString) = '' then
+  begin
+    ShowMessage('Vendor tidak terdaftar');
+    quMainSuppID.FocusControl;
+    Abort;
+  end;
+  if quMainCurrID.AsString = '' then
+  begin
+    ShowMessage('Valuta tidak boleh kosong');
+    quMainCurrID.FocusControl;
+    Abort;
+  end;
+  if TRIM(quMainLValuta.AsString) = '' then
+  begin
+    ShowMessage('Pilihan valuta yang ada antara IDR dan USD saja');
+    quMainCurrID.FocusControl;
+    Abort;
+  end;
+  if quMain.State = dsInsert then
+  begin
+    ST := 'CC.'+PT+ FormatDateTime('.YY.MM.', quMainTransDate.AsDateTime);
+    quMainVoucherNo.AsString  := ST+ FormatFloat('0000', RunNumberGL(quAct, 'CFTrCreditCard', 'VoucherNo', ST, '0') + 1);
+  end;
+  quMainUpdDate.AsDateTime := GetServerDateTime;
+  quMainUpdUser.AsString := dmMain.UserId;
+end;
+
+procedure TfmCFTrCreditCard.bbFindClick(Sender: TObject);
+begin
+  inherited;
+  with TfmSearch.Create(Self) do
+    try
+       Title := 'Transaksi Titipan Credit Card';
+       SQLString := 'SELECT A.VoucherNo,CONVERT(VARCHAR(10),A.Transdate,103) as Tanggal,'
+                   +'A.CardID as No_Kartu,A.CardBank as Bank_Penerbit,A.Note as Atas_Nama,B.BankName as Bank_Penerima,'
+                   +'ISNULL(Amount+(Amount*Charge*0.01),0) as Nilai_Transaksi FROM CFTrCreditCard A '
+                   +'INNER JOIN CFMsBank B ON A.BankID=B.BankID '
+                   +'WHERE '+FSQLWhere
+                   +'ORDER BY A.VoucherNo';
+       if ShowModal = MrOK then
+       begin
+         qumain.Locate('VoucherNo',Res[0],[]);
+       end;
+    finally
+       free;
+    end;
+end;
+
+procedure TfmCFTrCreditCard.dxDBButtonEdit1ButtonClick(Sender: TObject;
+  AbsoluteIndex: Integer);
+begin
+  inherited;
+   with TfmSearch.Create(Self) do
+    try
+       Title := 'Bank';
+       SQLString := 'SELECT BankId as Kode_Bank, BankName as Nama_Bank'
+                   +' FROM CFMsBank ORDER BY BankId';
+       if ShowModal = MrOK then
+       begin
+           if quMain.State = dsBrowse then quMain.Edit;
+           quMainBankId.Value := Res[0];
+       end;
+    finally
+       Free;
+    end;
+end;
+
+procedure TfmCFTrCreditCard.quMainAfterPost(DataSet: TDataSet);
+begin
+  inherited;
+  DeleteFromAllMoney(quMainVoucherNo.Value,sDRPj,'19');
+  DeleteFromAllMoney(quMainVoucherNo.Value,sDRPb,'18');
+  InsertToAllMoney(quMainVoucherNo.Value,quMainVoucherNo.Value,quMainTransdate.Value,quMainNote.AsString,'BM',sDRPj,sDGRPj,quMainAmount.Value,'Titipan Kartu Kredit dengan No Kartu '+quMainCardID.AsString+'',
+                   '19',quMainBankID.AsString,quMainLBankName.AsString,'Kredit','IDR',1);
+  InsertToAllMoney(quMainVoucherNo.Value,quMainVoucherNo.Value,quMainTransdate.Value,quMainNote.AsString,'BM',sDRPj,sDGRPj,quTotalCharge.Value,'Service Charge No Kartu '+quMainCardID.AsString+'',
+                   '19',quMainBankID.AsString,quMainLBankName.AsString,'Charge','IDR',1);
+  InsertToAllMoney(quMainVoucherNo.Value,quMainVoucherNo.Value,quMainTransdate.Value,quMainNote.AsString,'BK',sDRPb,sDGRPb,quTotalSCharge.Value,'Administrasi Service Charge No Kartu '+quMainCardID.AsString+'',
+                   '18',quMainBankID.AsString,quMainLBankName.AsString,'Administrasi','IDR',1);
+end;
+
+procedure TfmCFTrCreditCard.quMainBeforeDelete(DataSet: TDataSet);
+begin
+  inherited;
+  CekStatus;
+  DeleteFromAllMoney(quMainVoucherNo.Value,sDRPj,'19');
+  DeleteFromAllMoney(quMainVoucherNo.Value,sDRPb,'18');
+end;
+
+procedure TfmCFTrCreditCard.dxDBButtonEdit2ButtonClick(Sender: TObject;
+  AbsoluteIndex: Integer);
+begin
+  inherited;
+  with TfmSearch.Create(Self) do
+    try
+       Title := 'Vendor';
+       SQLString := 'SELECT SuppName as Nama_Supplier,SuppId as Kode_Supplier,  '
+                   +'Address as Alamat,City as Kota,Phone as Telephone,'
+                   +'Contactperson as Contact_Person,Fax FROM APMsSupplier '
+                   +'ORDER BY SuppID';
+       if ShowModal = MrOK then
+       begin
+          if quMain.State = dsBrowse then quMain.Edit;
+          quMainSuppId.Value := Res[1];
+       end;
+    finally
+       free;
+    end;
+end;
+
+procedure TfmCFTrCreditCard.dxDBButtonEdit3ButtonClick(Sender: TObject;
+  AbsoluteIndex: Integer);
+begin
+  inherited;
+   with TfmSearch.Create(Self) do
+    try
+       Title := 'Valuta';
+       SQLString := 'SELECT CurrId as Kode_Valuta, CurrName as Nama_Valuta FROM SAMsValuta ORDER BY CurrId';
+       if ShowModal = MrOk then
+       begin
+          if quMain.State = dsBrowse then quMain.Edit;
+             quMainCurrID.Value := Res[0];
+       end;
+    finally
+       free;
+    end;
+end;
+
+procedure TfmCFTrCreditCard.quMainBeforeEdit(DataSet: TDataSet);
+begin
+  inherited;
+  CekStatus;
+end;
+
+end.

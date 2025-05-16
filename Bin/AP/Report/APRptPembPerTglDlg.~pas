@@ -1,0 +1,171 @@
+unit APRptPembPerTglDlg;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, RptDlg, DB, dxExEdtr, dxCntner, ADODB, StdCtrls, Buttons,
+  ExtCtrls, dxEditor, dxEdLib;
+
+type
+  TfmAPRptPembPerTglDlg = class(TfmRptDlg)
+    GroupBox1: TGroupBox;
+    Label2: TLabel;
+    rcNota: TdxCheckEdit;
+    dt1: TdxDateEdit;
+    dt2: TdxDateEdit;
+    procedure bbPreviewClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    Status : string;
+  end;
+
+var
+  fmAPRptPembPerTglDlg: TfmAPRptPembPerTglDlg;
+
+implementation
+
+uses INQRRptAdjusment, UnitGeneral, APQRRptPembPerTgl, UnitDate,
+  CFQRRptLabaRugi;
+
+{$R *.dfm}
+
+procedure TfmAPRptPembPerTglDlg.bbPreviewClick(Sender: TObject);
+begin
+  inherited;
+  if Status <> 'RugiLaba' then
+  begin
+  with TfmAPQRRptPembPerTgl.Create(Self) do
+     try
+       qrlTitle.Caption := laTitle.Caption;
+       qrlPeriode.Caption := 'Periode : '+FormatDateTime('dd/MM/yyyy',dt1.date)+' s/d '+FormatDateTime('dd/MM/yyyy',dt2.date);
+
+       with qu001,sql do
+       begin
+           Close;Clear;
+           add('  SELECT DISTINCT K.Transdate,K.Tgl,K.Tgl2,K.Transdate as Transdate2 FROM '
+              +' (SELECT DISTINCT Transdate,CONVERT(VARCHAR(10),Transdate,103) as Tgl,CONVERT(VARCHAR(10),Transdate,112) as Tgl2'
+              +' FROM APTrPurchaseHd WHERE'
+              +' CONVERT(VARCHAR(8),TransDate,112) BETWEEN '''+FormatDateTime('yyyyMMdd',dt1.Date)+''' AND '''+FormatDateTime('yyyyMMdd',dt2.Date)+'''');
+           add(' ) as K ORDER BY K.Tgl2');
+           Open;
+          if IsEmpty then
+          begin
+             MsgInfo('No Data !');
+             Abort;
+          end;
+       end;
+
+       with qu002,sql do
+       begin
+          Close;Clear;
+          add(' SELECT DISTINCT K.PurchaseId,K.PurchaseId as PurchaseId2,K.SuppId,K.SuppId as SuppId2,K.TransDate,K.Supp,K.CurrId,'
+             +' K.TTLPb,CASE WHEN K.CurrID=''USD'' THEN K.Rate ELSE 1 END as Rate,K.PPN,K.TTLPb-K.PPN as SubTotal FROM'
+             +' (SELECT distinct A.PurchaseId,A.SuppId,A.Transdate,(A.SuppId+''-''+B.SuppName) as Supp,CurriD,TTLPb,Rate,ISNULL(PPN,0) as PPN'
+             +' FROM APTrPurchaseHd A INNER JOIN APMsSupplier B ON A.SuppId=B.SuppId'
+             +' WHERE A.Transdate=:Transdate AND A.PurchaseId<>''STOCKFISIK'''
+             +' ) as K ORDER BY K.PurchaseId');
+          Parameters.ParamByName('Transdate').DataType  := ftDateTime;
+          Open;
+       end;
+
+       if rcNota.Checked then
+       Begin
+           with qu003,sql do
+           begin
+              Close;Clear;
+              add(' SELECT distinct A.ItemId,B.ItemName,A.Qty,A.Price,(A.Price*A.Disc/100) as Disc,'
+                 +' (A.Qty*A.Price)-(A.Qty*A.Price*A.Disc/100) as Total'
+                 +' FROM APTrPurchasedt A INNER JOIN INMsItem B ON A.ItemId=B.ItemId'
+                 +' WHERE A.PurchaseId=:PurchaseId AND SuppId=:SuppId');
+              add(' ORDER by A.ItemID ');
+              Parameters.ParamByName('PurchaseId').DataType := ftString;
+              Parameters.ParamByName('SuppId').DataType := ftString;
+              Open;
+           end;
+       End else bnd002.Height := 0;
+
+
+       if Sender=bbPreview then
+          MyReport.PreviewModal
+       else
+          MyReport.Print;
+
+     finally
+        free;
+     end;
+  end else
+  begin
+    with TfmCFQrRptLabaRugi.Create(Self) do
+     try
+       qrlTitle.Caption := laTitle.Caption;
+       qrlPeriode.Caption := 'Periode : '+FormatDateTime('dd/MM/yyyy',dt1.date)+' s/d '+FormatDateTime('dd/MM/yyyy',dt2.date);
+       dari := FormatDateTime('yyyyMMdd',dt1.date);
+       sampai := FormatDateTime('yyyyMMdd',dt2.date);
+       with qu001,SQL do
+       begin
+         Close;Clear;
+         Add('SELECT DISTINCT K.Kode,K.Komponen,'''+FormatDateTime('yyyyMMdd',dt1.date)+''' as tgl1,'''+FormatDateTime('yyyyMMdd',dt2.date)+''' as tgl2 '
+            +'FROM( '
+            +'SELECT ''4'' as Kode,''PENDAPATAN'' as Komponen UNION ALL '
+            +'SELECT ''5'',''PEMBELIAN & PENGELUARAN'' '
+            +') as K order By K.Kode ');
+         Open;
+       end;
+
+       with qu002,SQL do
+       begin
+         Close;Clear;
+         add('SELECT K.RekeningID as GroupRekID,K.RekeningName as GroupRekName,SUM(K.Jumlah) as Jumlah,K.Kode, '
+            +'CASE WHEN K.Kode IN (4) THEN ''A'' ELSE ''B'' END as Flag FROM ( ( '
+            +'SELECT DISTINCT '''' as ItemID,A.RekeningID,A.RekeningName,ISNULL((SELECT SUM(CASE WHEN X.Jenis=''K'' THEN X.Amount ELSE X.Amount*-1 END) FROM ('
+
+            +'SELECT RekeningID,Transdate,Jenis,Amount,3 as urut FROM CFTrKKBBHd A INNER JOIN CFTrKKBBDt B ON A.VoucherID=B.VoucherID UNION ALL '
+
+            +'SELECT RekeningK,Transdate,''K'',ISNULL(CASE WHEN FGForm=''AR'' THEN StPj ELSE DP END,0),1 FROM ARTrPenjualanHd UNION ALL '
+            +'SELECT RekeningP,Transdate,''K'',ISNULL(CASE WHEN FgTax=''T'' THEN 0 ELSE PPN END,0),1 FROM ARTrPenjualanHd UNION ALL '
+            +'SELECT RekeningU,Transdate,''D'',ISNULL(TTLPj,0),1 FROM ARTrPenjualanHd UNION ALL '
+            +'SELECT RekHPP,Transdate,''D'',ISNULL(HPP,0),1 FROM ARTrPenjualanHd UNION ALL '
+            +'SELECT RekPersediaan,Transdate,''K'',ISNULL(HPP,0),1 FROM ARTrPenjualanHd UNION ALL '
+
+            +'SELECT RekPersediaan,Transdate,''D'',ISNULL(StPb,0),2 FROM APTrPurchaseHd UNION ALL '
+            +'SELECT RekHPP,Transdate,''K'',ISNULL(StPb,0),2 FROM APTrPurchaseHd UNION ALL '
+            +'SELECT RekeningK,TransDate,''D'',ISNULL(StPb,0),2 FROM APTrPurchaseHd UNION ALL '
+            +'SELECT RekeningP,Transdate,''D'',ISNULL(CASE WHEN FgTax=''T'' THEN 0 ELSE PPN END,0),2 FROM APTrPurchaseHd UNION All '
+            +'SELECT RekeningU,Transdate,''K'',ISNULL(TTLPb,0),2 FROM APTrPurchaseHd '
+
+            +') as X '
+            +'WHERE CONVERT(VARCHAR(8),X.Transdate,112) BETWEEN '''+FormatDateTime('yyyyMMdd',dt1.Date)+''' AND '''+FormatDateTime('yyyyMMdd',dt2.Date)+''' '
+            +'AND X.RekeningID=A.RekeningID),0) as Jumlah,B.Kode '
+            +'FROM CFMsRekening A INNER JOIN CFMsGroupRek B ON A.GroupRekID=B.GroupRekID '
+            +') ) as K WHERE K.Kode=:Kode AND K.Kode IN (4,5) AND K.Jumlah<>0 GROUP BY K.Kode,K.RekeningID,K.RekeningName order By K.Kode,K.RekeningID');
+         Parameters.ParamByName('Kode').DataType := ftString;
+         Open;
+       end;
+
+       if Sender=bbPrint then
+          MyReport.Print
+       else
+          MyReport.PreviewModal;
+     finally
+        free;
+     end;
+  end;
+end;
+
+procedure TfmAPRptPembPerTglDlg.FormShow(Sender: TObject);
+begin
+  inherited;
+  dt1.Date:=EncodeDate(GetYear(Date),GetMonth(Date),1);
+  dt2.date := date;
+  if Status = 'RugiLaba' then
+  begin
+    laTitle.Caption := 'Laporan Laba Rugi';
+    rcNota.Visible := False;
+  end;
+end;
+
+end.

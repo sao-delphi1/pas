@@ -1,0 +1,162 @@
+inherited fmARMsKdSeriPajak: TfmARMsKdSeriPajak
+  Left = 277
+  Top = 135
+  Caption = 'Master Kode Seri Faktur Pajak'
+  ClientWidth = 794
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited paLeft: TdxContainer
+    inherited pa3: TdxContainer
+      object dxButton1: TdxButton
+        Tag = 5555
+        Left = 24
+        Top = 12
+        Width = 135
+        Height = 26
+        Cursor = crHandPoint
+        Hint = 'Find Record'
+        About = 'Design eXperience. '#169' 2002 M. Hoffmann'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -13
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold]
+        ParentFont = False
+        ParentShowHint = False
+        ShowHint = True
+        Version = '1.0.2e'
+        OnClick = dxButton1Click
+        Caption = 'GENERATE'
+        Colors.FocusedFrom = 16750383
+        Colors.FocusedTo = 16763799
+        Colors.HighlightFrom = clWhite
+        Colors.HighlightTo = clWhite
+        HotTrack = True
+        TabOrder = 0
+      end
+    end
+    inherited paOperation: TdxContainer
+      inherited bbFind: TdxButton
+        OnClick = bbFindClick
+      end
+    end
+  end
+  inherited paBottom: TdxContainer
+    Width = 794
+  end
+  object dbgKodePajak: TdxDBGrid [4]
+    Left = 193
+    Top = 37
+    Width = 601
+    Height = 487
+    Bands = <
+      item
+      end>
+    DefaultLayout = True
+    HeaderPanelRowCount = 1
+    KeyField = 'UOMId'
+    SummaryGroups = <>
+    SummarySeparator = ', '
+    Align = alClient
+    TabOrder = 4
+    DataSource = dsMain
+    Filter.Criteria = {00000000}
+    HideFocusRect = True
+    HideSelection = True
+    LookAndFeel = lfFlat
+    OptionsView = [edgoBandHeaderWidth, edgoIndicator, edgoRowAutoHeight, edgoUseBitmap]
+    object dbgKodePajakTaxID: TdxDBGridColumn
+      Caption = 'No Seri Faktur Pajak'
+      Width = 184
+      BandIndex = 0
+      RowIndex = 0
+      FieldName = 'TaxID'
+    end
+    object dbgKodePajakNote: TdxDBGridColumn
+      Caption = 'No Surat'
+      Width = 181
+      BandIndex = 0
+      RowIndex = 0
+      FieldName = 'Note'
+    end
+    object dbgKodePajakFgStatus: TdxDBGridImageColumn
+      Alignment = taLeftJustify
+      Caption = 'Status'
+      MinWidth = 16
+      Width = 53
+      BandIndex = 0
+      RowIndex = 0
+      FieldName = 'FgActive'
+      Descriptions.Strings = (
+        'Ya'
+        'Tidak')
+      ImageIndexes.Strings = (
+        '0'
+        '1')
+      ShowDescription = True
+      Values.Strings = (
+        'Y'
+        'T')
+    end
+    object dbgKodePajakUpdDate: TdxDBGridColumn
+      Width = 112
+      BandIndex = 0
+      RowIndex = 0
+      FieldName = 'UpdDate'
+    end
+    object dbgKodePajakUpdUser: TdxDBGridColumn
+      Width = 124
+      BandIndex = 0
+      RowIndex = 0
+      FieldName = 'UpdUser'
+    end
+  end
+  inherited paToolBar: TdxContainer
+    Width = 794
+    inherited sbLast: TSpeedButton
+      Left = 757
+    end
+    inherited sbNext: TSpeedButton
+      Left = 730
+    end
+    inherited sbPrev: TSpeedButton
+      Left = 703
+    end
+    inherited sbFirst: TSpeedButton
+      Left = 676
+    end
+    inherited sbPeriod: TSpeedButton
+      Left = 650
+    end
+    inherited BvlPeriod: TBevel
+      Left = 404
+    end
+    inherited laPeriod: TLabel
+      Left = 408
+    end
+  end
+  inherited quMain: TADOQuery
+    BeforeDelete = quMainBeforeDelete
+    OnNewRecord = quMainNewRecord
+    SQL.Strings = (
+      'SELECT * FROM ARMsKdPajak')
+    object quMainTaxID: TStringField
+      FieldName = 'TaxID'
+      Size = 30
+    end
+    object quMainUpdDate: TDateTimeField
+      FieldName = 'UpdDate'
+    end
+    object quMainUpdUser: TStringField
+      FieldName = 'UpdUser'
+    end
+    object quMainNote: TStringField
+      FieldName = 'Note'
+      Size = 100
+    end
+    object quMainFgActive: TStringField
+      FieldName = 'FgActive'
+      Size = 1
+    end
+  end
+end

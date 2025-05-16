@@ -1,0 +1,154 @@
+unit RptAPKartuHutangDetilDlg;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, RptDlg, DB, dxExEdtr, dxCntner, ADODB, StdCtrls, Buttons,
+  ExtCtrls, dxTL, dxDBCtrl, dxDBGrid, dxEditor, dxEdLib, dxCore, dxButton;
+
+type
+  TfmAPRptKartuHutangDetilDlg = class(TfmRptDlg)
+    GroupBox1: TGroupBox;
+    dt1: TdxDateEdit;
+    rbAll: TRadioButton;
+    rbSelect: TRadioButton;
+    dbgList: TdxDBGrid;
+    dbgListSupp: TdxDBGridMaskColumn;
+    dbgListSuppName: TdxDBGridMaskColumn;
+    cbxOuts: TCheckBox;
+    bbCancel: TdxButton;
+    procedure rbAllClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure bbPreviewClick(Sender: TObject);
+    procedure bbCancelClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  fmAPRptKartuHutangDetilDlg: TfmAPRptKartuHutangDetilDlg;
+
+implementation
+
+uses StdLv0, QRRptAPKartuHutang, UnitGeneral, QRRptAPKartuHutangDetil,
+  Search;
+
+{$R *.dfm}
+
+procedure TfmAPRptKartuHutangDetilDlg.rbAllClick(Sender: TObject);
+begin
+  inherited;
+  if Sender=rbAll then
+  begin
+     dbgList.OptionsBehavior := dbgList.OptionsBehavior - [edgoMultiSelect];
+  end else
+  if Sender=rbSelect then
+  begin
+     dbgList.OptionsBehavior := dbgList.OptionsBehavior + [edgoMultiSelect];
+     if dbgList.FocusedNode <> nil then
+       dbgList.FocusedNode.Selected := TRUE;
+  end;
+end;
+
+procedure TfmAPRptKartuHutangDetilDlg.FormShow(Sender: TObject);
+begin
+  inherited;
+  quAct.Open;        
+  dt1.Date:=date;
+End;
+
+procedure TfmAPRptKartuHutangDetilDlg.bbPreviewClick(Sender: TObject);
+begin
+  inherited;
+   with TfmAPQRRptKartuHutangDetil.Create(Self) do
+  try
+    tglDari:=dt1.Date;
+    qrlTitle.Caption := laTitle.Caption;
+    qrlPeriode.Caption := 'Periode : '+FormatDateTime('dd/MM/yyyy',dt1.date);
+
+    if cbxOuts.Checked then
+      bCheckced := True
+    else
+      bCheckced := False;
+
+    With qu001,SQL do
+    Begin
+       Close;Clear;
+       add('SELECT DISTINCT K.SuppID,L.SuppName,(K.SuppID+''-''+L.SuppName) as Supp FROM ('
+          +'SELECT A.Transdate,A.TTLPb, ISNULL((SELECT ISNULL(Sum(Price*Qty),0) FROM APTrReturnDt F INNER JOIN APTrReturnHd G  ON F.ReturnID=G.ReturnID '
+          +'WHERE G.FlagRetur=''B'' AND F.purchaseID=A.PurchaseID  AND G.SuppID=A.SuppID AND '
+          +'CONVERT(VARCHAR(8),G.TransDate,112) <= '''+FormatDateTime('yyyyMMdd',dt1.Date)+'''),0) as Retur,'
+          +'ISNULL((SELECT ISNULL(Sum(Amount),0) FROM CFTRkkbbdt N INNER JOIN CfTrKKBBHD M ON M.VoucherID=N.VoucherID '
+          +'WHERE N.Note=A.PurchaseID AND CONVERT(VARCHAR(8),M.TransDate,112) <= '''+FormatDateTime('yyyyMMdd',dt1.Date)+'''),0) as Bayar,'
+          +'A.SuppID FROM APTrPurchaseHd A '
+          +') as K '
+          +'INNER JOIN APMsSupplier L ON K.SuppID=L.SuppID '
+          +'WHERE CONVERT(VARCHAR(8),K.TransDate,112) <= '''+FormatDateTime('yyyyMMdd',dt1.Date)+''' '
+          +'AND ISNULL(K.TTLPb-K.Retur ');
+         if bCheckced then
+           Add('-K.Bayar');
+         Add(',0) >0 ');
+       if rbSelect.Checked then
+       Add(' AND K.SuppID IN '+SelGrid(quAct,dbgList,'SuppID'));
+       Add('ORDER BY K.SuppId');
+       Open;
+       if IsEmpty then
+       begin
+          MsgInfo('No Data !');
+          Abort;
+       end;
+    End;
+
+    With qu002,SQL do
+    Begin
+       Close;Clear;
+       add('SELECT DISTINCT K.SuppID,K.CurrID,L.CurrName,(K.CurrID+''-''+L.CurrName) as Valuta FROM ('
+          +'SELECT B.SuppID,B.CurrID,B.TTLPb,B.Transdate,ISNULL((SELECT ISNULL(SUM(Price*Qty),0) FROM APTrReturnDt F '
+          +'INNER JOIN APTrReturnHd G  ON F.ReturnID=G.ReturnID WHERE G.FlagRetur=''B'' AND F.purchaseID=B.PurchaseID  AND G.SuppID=B.SuppID '
+          +'AND CONVERT(VARCHAR(8),G.TransDate,112) <= '''+FormatDateTime('yyyyMMdd',dt1.Date)+'''),0) as Retur,'
+          +'ISNULL((SELECT ISNULL(SUM(Amount),0) FROM CFTrKKBBDt M INNER JOIN CFTrKKBBHd N ON M.VoucherID=N.VoucherID '
+          +'WHERE M.Note=B.PurchaseID AND CONVERT(VARCHAR(8),N.TransDate,112) <= '''+FormatDateTime('yyyyMMdd',dt1.Date)+'''),0) as Bayar '
+          +'FROM APTrPurchaseHd B '
+          +') as K '
+          +'INNER JOIN SAMsValuta L ON K.CurrID=L.CurrID '
+          +'WHERE K.SuppID=:SuppID AND CONVERT(VARCHAR(8),K.TransDate,112) <= '''+FormatDateTime('yyyyMMdd',dt1.Date)+''' '
+          +'AND ISNULL(K.TTLPb-K.Retur');
+       if bCheckced then
+          Add('-K.Bayar');
+       Add(',0) >0 ORDER By K.SuppID');
+       Parameters.ParamByName('SuppId').DataType := ftString;
+       Open;
+    End;
+    qu003.Open;
+    qu004.Open;
+    if Sender=bbPreview then
+       MyReport.Previewmodal
+    else
+       MyReport.Print;
+  finally
+     free;
+  end;
+end;
+
+procedure TfmAPRptKartuHutangDetilDlg.bbCancelClick(Sender: TObject);
+begin
+  inherited;
+  with TfmSearch.Create(Self) do
+    try
+       Title := 'Supplier';
+       SQLString := ' SELECT SuppName as Nama_Supplier ,SuppId as Kode_Supplier'
+                   +' FROM APMsSupplier A '
+                   +' ORDER BY SuppID';
+       if ShowModal = MrOK then
+       begin
+         Self.quAct.Locate('SuppID',Res[1],[]);
+       end;
+    finally
+       free;
+    end;
+end;
+
+end.

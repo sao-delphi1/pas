@@ -1,0 +1,201 @@
+unit ARQRRptKartuPiutangDetil;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, RptLv4, DB, ADODB, QuickRpt, StdCtrls, QRCtrls, ExtCtrls, DateUtils;
+
+type
+  TfmARQRRptKartuPiutangDetil = class(TfmRptLv4)
+    QRDBText1: TQRDBText;
+    QRDBText2: TQRDBText;
+    QRLabel1: TQRLabel;
+    QRLabel2: TQRLabel;
+    QRLabel4: TQRLabel;
+    QRDBText3: TQRDBText;
+    QRDBText4: TQRDBText;
+    SummaryBand1: TQRBand;
+    ds003: TDataSource;
+    qu004: TADOQuery;
+    QRSubDetail1: TQRSubDetail;
+    QRLabel5: TQRLabel;
+    QRLabel6: TQRLabel;
+    QRLabel7: TQRLabel;
+    QRDBText5: TQRDBText;
+    QRDBText7: TQRDBText;
+    GroupFooterBand1: TQRBand;
+    QRLabel9: TQRLabel;
+    QRLabel8: TQRLabel;
+    QRLabel11: TQRLabel;
+    QRLabel10: TQRLabel;
+    QRLabel12: TQRLabel;
+    QRLabel13: TQRLabel;
+    QRLabel14: TQRLabel;
+    QRDBText8: TQRDBText;
+    QRLabel15: TQRLabel;
+    QRDBText9: TQRDBText;
+    QRShape2: TQRShape;
+    QRLabel3: TQRLabel;
+    qlbTelat: TQRLabel;
+    QRLabel16: TQRLabel;
+    QRDBText6: TQRDBText;
+    procedure MyReportBeforePrint(Sender: TCustomQuickRep;
+      var PrintReport: Boolean);
+    procedure QRLabel8Print(sender: TObject; var Value: String);
+    procedure bnd002AfterPrint(Sender: TQRCustomBand;
+      BandPrinted: Boolean);
+    procedure QRSubDetail1AfterPrint(Sender: TQRCustomBand;
+      BandPrinted: Boolean);
+    procedure QRLabel9Print(sender: TObject; var Value: String);
+    procedure QRDBText7Print(sender: TObject; var Value: String);
+    procedure QRDBText5Print(sender: TObject; var Value: String);
+    procedure QRLabel13Print(sender: TObject; var Value: String);
+    procedure QRLabel12Print(sender: TObject; var Value: String);
+    procedure bnd001AfterPrint(Sender: TQRCustomBand;
+      BandPrinted: Boolean);
+    procedure QRSubDetail1BeforePrint(Sender: TQRCustomBand;
+      var PrintBand: Boolean);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    tglDari : TDateTime;
+    tglsmp  : TDateTime;
+    TotalIDR : Currency;
+    TotalUSD : Currency;
+    TotalPI : Currency;
+    bCheckced : boolean;
+  end;
+
+var
+  fmARQRRptKartuPiutangDetil: TfmARQRRptKartuPiutangDetil;
+
+implementation
+
+uses UnitGeneral, MyUnit;
+
+{$R *.dfm}
+
+procedure TfmARQRRptKartuPiutangDetil.MyReportBeforePrint(
+  Sender: TCustomQuickRep; var PrintReport: Boolean);
+begin
+  inherited;
+   TotalIDR := 0;
+   TotalUSD := 0;
+   TotalPI :=0;
+end;
+
+procedure TfmARQRRptKartuPiutangDetil.QRLabel8Print(sender: TObject;
+  var Value: String);
+begin
+  inherited;
+  Value := 'Sisa Piutang Invoice Penjualan '+qu003.FieldByName('SaleId').AsString+' Valuta '+qu002.FieldByName('Currid').AsString +' :';
+end;
+
+procedure TfmARQRRptKartuPiutangDetil.bnd002AfterPrint(
+  Sender: TQRCustomBand; BandPrinted: Boolean);
+begin
+  inherited;
+   With qu004,sql do
+    Begin
+       Close;Clear;
+       Add('SELECT K.SaleID,L.PiutangID,CONVERT(VARCHAR(10),K.Transdate,103) as Tanggal,ISNULL(L.ValuePayment,0) as Amount,'
+          +'K.Transdate as TglBayar FROM (SELECT SaleID,CustID,CurrID,Transdate FROM ARTrPenjualanHd) as K '
+          +'INNER JOIN CFTrKKBBDt L ON K.SaleID=L.Note INNER JOIN CFTrKKBBHd M ON L.VoucherID=M.VoucherID '
+          +'WHERE K.SaleID='''+qu003.Fieldbyname('SaleId').AsString+''' '
+          +'ORDER BY CONVERT(VARCHAR(8),K.Transdate,112)');
+       Open;
+    End;
+  TotalPI:=0;
+  TotalPI:=qu003.FieldByName('TTLPI').AsCurrency;
+end;
+
+procedure TfmARQRRptKartuPiutangDetil.QRSubDetail1AfterPrint(
+  Sender: TQRCustomBand; BandPrinted: Boolean);
+begin
+  inherited;
+  TotalPI:=TotalPI-qu004.FieldByname('Amount').AsCurrency;
+end;
+
+procedure TfmARQRRptKartuPiutangDetil.QRLabel9Print(sender: TObject;
+  var Value: String);
+begin
+  inherited;
+  Value:=FormatRptkurung(Currtostr(TotalPI));
+  if UpperCase(qu002.FieldByName('CurrId').AsString)='IDR' then
+     TotalIDR:=TotalIDR+TotalPI
+  else
+     TotalUSD:=TotalUSD+TotalPI;
+  TotalPI := 0;
+end;
+
+procedure TfmARQRRptKartuPiutangDetil.QRDBText7Print(sender: TObject;
+  var Value: String);
+begin
+  inherited;
+  Value:=FormatRptkurung(Value)
+end;
+
+procedure TfmARQRRptKartuPiutangDetil.QRDBText5Print(sender: TObject;
+  var Value: String);
+begin
+  inherited;
+   Value:=FormatRptkurung(Value);
+end;
+
+procedure TfmARQRRptKartuPiutangDetil.QRLabel13Print(sender: TObject;
+  var Value: String);
+begin
+  inherited;
+  Value:=FormatRptkurung(CurrtoStr(TotalUSD));
+end;
+
+procedure TfmARQRRptKartuPiutangDetil.QRLabel12Print(sender: TObject;
+  var Value: String);
+begin
+  inherited;
+  Value:=FormatRptkurung(CurrtoStr(TotalIDR));
+end;
+
+procedure TfmARQRRptKartuPiutangDetil.bnd001AfterPrint(
+  Sender: TQRCustomBand; BandPrinted: Boolean);
+begin
+  inherited;
+  With qu003,sql do
+  Begin
+    Close;Clear;
+    Add('SELECT DISTINCT K.CustID,K.CurrID,K.SaleID,CONVERT(VARCHAR(10),K.Transdate,103) as Tanggal,'
+       +'ISNULL(K.TTLPj-K.Retur,0) as TTLPI,DATEADD(DAY,ISNULL(K.JatuhTempo,0),K.Transdate) as jth FROM ('
+       +'SELECT A.CustID,A.CurrID,A.SaleID,A.Transdate,A.JatuhTempo,ISNULL(A.TTLPj,0) as TTLPj,'
+       +'ISNULL((SELECT ISNULL(SUM(Price*Qty),0) FROM ARTrReturPenjualanDt F '
+       +'INNER JOIN ARTrReturPenjualanHd G  ON F.ReturnId=G.ReturnId WHERE G.FlagRetur=''B'' AND F.SaleId=A.SaleId '
+       +'AND CONVERT(varchar(8),G.TransDate,112) <= '''+FormatDateTime('yyyyMMdd',tglDari)+''' ),0) as Retur,'
+       +'ISNULL((SELECT ISNULL(SUM(P.Amount),0) FROM CFTrKKBBdt P INNER JOIN CFTrKKBBHd Q ON P.VoucherID=Q.VoucherID '
+       +'WHERE P.Note=A.SaleID AND CONVERT(varchar(8),Q.TransDate,112) <= '''+FormatDateTime('yyyyMMdd',tglDari)+'''),0) as Bayar '
+       +'FROM ARTrPenjualanHd A) as K WHERE ISNULL(K.TTLPj-K.Retur,0) <> 0 AND K.CustID='''+qu001.FieldByName('CustID').AsString+''' '
+       +'AND K.CurrID='''+qu002.FieldByName('CurrID').AsString+''' ');
+    if bCheckced then
+       Add(' AND ISNULL(K.TTLPj-K.Retur-K.Bayar,0) <> 0');
+    Add('ORDER BY K.SaleID');
+    Open;
+  End;
+end;
+
+procedure TfmARQRRptKartuPiutangDetil.QRSubDetail1BeforePrint(
+  Sender: TQRCustomBand; var PrintBand: Boolean);
+begin
+  inherited;
+   qlbTelat.Caption := '';
+  if Not qu004.IsEmpty then
+  Begin
+   if FormatDateTime('yyyy/MM/dd', qu003.FieldByName('jth').AsDateTime) >=
+      FormatDateTime('yyyy/MM/dd', qu004.FieldByName('TglBayar').AsDateTime) then
+      qlbTelat.Caption := ''
+   else
+    qlbTelat.Caption := inttostr(DaysBetween(qu003.FieldByName('jth').AsDateTime, qu004.FieldByName('TglBayar').AsDateTime))+' Hari';
+  End;
+
+end;
+
+end.

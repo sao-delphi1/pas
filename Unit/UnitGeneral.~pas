@@ -1,0 +1,552 @@
+unit UnitGeneral;
+
+interface
+
+uses StdCtrls,DBCtrls, Buttons,Graphics,dialogs,SysUtils
+     ,dxDBELib, dxEdLib, dxDBGrid, ADODB, DB, StrUtils, dxGrClms, dxButton;
+
+const ClAktif   = $00FFFFFF;
+const ClInAktif = clSilver;
+
+Procedure SetReadOnly(Obj:TObject;isReadOnly:Boolean);
+Procedure MsgInfo(Msg:String);
+Procedure MsgError(Msg:String);
+Procedure SetGrid(qu:TADOQuery;grid:TdxDBGrid);
+
+function DateToDDMMYY(dt:TDateTime):String;
+function YearOf(dt:TDateTime):Word;
+Function IfExists(SQLString:String):Boolean;
+Function RightJust(data : string; LEbar : integer) : string;
+Function LeftJust(data : string; LEbar : integer) : string;
+
+function SelGrid(qu:TADOQuery;dbg:TdxDBGrid;field:String):String;
+function ClearKutip(str:String):String;
+
+procedure FillLongMonthName(dxPE:TdxPickEdit);
+function GetServerDateTime:TDateTime;
+function GetServerTime:TDateTime;
+function  GetLastStokOpnameDate:TDateTime;
+procedure dropTempTable(const tableName:String);
+
+//--ini buat ambil nmmenu dari tabel sysmenu--/
+function GetMenuName(MenuId:Integer):String;
+function GetBtnCaption(MenuId:Integer):String;
+
+//---fungsi terbilang create by agus---/
+function Terbilang(bilangan : String):String;
+
+procedure SettingDxGrid(dbg:TdxDBGrid);
+
+Function GenerateSeqNumber(TableName:String;FieldSeq:String;PrimaryKey:String; PrimaryKeyValue:String):Byte;
+
+Function quExec(qu:TADOQuery; const str:string; showError:boolean = true):boolean; //true = success
+
+implementation
+
+uses ConMain, dxTL, dxDBTLCl, dxExEdtr;
+
+
+function  GetLastStokOpnameDate:TDateTime;
+begin
+   with dmMain.quUnit,SQL do
+   begin
+      Close; Clear;
+      Add('SELECT TOP 1 TransDate'
+         +' FROM INTrStokOpnameHd'
+         +' ORDER BY CONVERT(VARCHAR(8),TransDate,112) DESC');
+      Open;
+      if IsEmpty then
+         Result := EncodeDate(1980,4,18)
+      else
+         Result := Fields[0].AsDateTime;
+   end;
+end;
+
+function GenerateSeqNumber(TableName:String;FieldSeq:String;PrimaryKey:String; PrimaryKeyValue:String):Byte;
+begin
+   with dmMain.quUnit,SQL do
+   begin
+      Close; Clear;
+      Add('SELECT TOP 1 '+FieldSeq+' FROM '+TableName+' WHERE '+PrimaryKey+' = :PrimaryKey ORDER BY '+FieldSeq+' DESC');
+      Parameters.ParamByName('PrimaryKey').Value := PrimaryKeyValue;
+      Open;
+      if IsEmpty then
+         Result := 1
+      else
+         Result := Fields[0].AsInteger + 1;
+      Close;
+   end;
+end;
+
+procedure SettingDxGrid(dbg:TdxDBGrid);
+begin
+   with dbg do
+   begin
+      OptionsDB       := OptionsDB + [edgoCanAppend, edgoResetColumnFocus];
+      OptionsView     := OptionsView + [edgoIndicator];
+      OptionsBehavior := OptionsBehavior + [edgoEnterThrough];
+      OptionsBehavior := OptionsBehavior - [edgoAutoSort];
+      HeaderColor     := $00E6F8FF;
+   end;
+end;
+
+function Terbilang(bilangan : String):String;
+  function angka(bil : char): String;
+  var hsl : string;
+  begin
+    case bil of
+      '1' : hsl := 'satu ';
+      '2' : hsl := 'dua ';
+      '3' : hsl := 'tiga ';
+      '4' : hsl := 'empat ';
+      '5' : hsl := 'lima ';
+      '6' : hsl := 'enam ';
+      '7' : hsl := 'tujuh ';
+      '8' : hsl := 'delapan ';
+      '9' : hsl := 'sembilan ';
+    end;
+    angka := hsl;
+  end;
+
+var data,hsl,baca, pecahan : string;
+    pan, bagian, sisa, hbs, ctr : integer;
+begin
+   ctr := pos('.', bilangan);
+   pecahan := '';
+   if ctr > 0 then
+     begin
+       pecahan := copy(bilangan, ctr + 1, length(bilangan) - ctr);
+       bilangan := copy(bilangan, 1, ctr - 1);
+     end
+   else
+     begin
+       ctr := pos(',', bilangan);
+       if ctr > 0 then
+         begin
+           pecahan := copy(bilangan, ctr + 1, length(bilangan) - ctr);
+           bilangan := copy(bilangan, 1, ctr - 1);
+         end
+     end;
+   if bilangan <> '0' then
+     begin
+       bilangan := FormatFloat('##0', abs(strtofloat(bilangan)));
+       data := bilangan;
+       pan := length(data);
+       bagian := pan div 3;
+       sisa := pan mod 3;
+       if sisa=0 then
+         begin
+           bagian := bagian - 1;
+           sisa := 3;
+         end;
+       hsl := '';
+       while length(data)>0 do
+        begin
+           baca := copy(data,1,sisa);
+           if length(data)>3 then
+             data := copy(data,sisa+1,length(data)-sisa)
+           else
+             data := '';
+           hbs := StrToInt(baca);
+           while length(baca)>0 do
+             begin
+               if length(baca)=3 then
+                 begin
+                   if baca[1]='1' then
+                     hsl := hsl + 'seratus '
+                   else
+                     if baca[1]<>'0' then
+                       hsl := hsl + angka(baca[1]) +'ratus ';
+                 end
+               else
+                 if length(baca)=2 then
+                   begin
+                     if baca[1]='1' then  // belasan
+                       begin
+                         if baca[2]='0' then
+                           hsl := hsl + 'sepuluh '
+                         else
+                           if baca[2]='1' then
+                              hsl := hsl + 'sebelas '
+                           else
+                              hsl := hsl + angka(baca[2]) + 'belas ';
+                         baca := '';
+                       end
+                     else
+                       begin
+                          if baca[1]<>'0' then
+                            hsl := hsl + angka(baca[1]) + 'puluh ';
+                       end;
+                   end
+                 else
+                   begin // untuk seribu
+                     if (sisa=1) and (bagian=1) and (baca[1]='1')then
+                       hsl := hsl + 'se'
+                     else
+                       hsl := hsl + angka(baca[1]);
+                     baca := '';
+                   end;
+               if length(baca)>1 then // buat jaga jaga agar tidak error string
+                 baca := copy(baca,2,length(baca)-1);
+             end;
+           if hbs<>0 then
+             case bagian of
+               1 : hsl := hsl + 'ribu ';
+               2 : hsl := hsl + 'juta ';
+               3 : hsl := hsl + 'miliar ';
+               4 : hsl := hsl + 'triliun ';
+               5 : hsl := hsl + 'bilion ';
+             end;
+           sisa := 3;
+           bagian := bagian - 1;
+        end;
+      end
+    else
+      hsl := 'nol';
+//    StrPCopy(bil,hsl);
+    if pecahan <> '' then
+      begin
+        pan := strtoint(pecahan);
+        if pan > 0 then
+         begin
+           hsl := hsl + ' ' + inttostr(pan) + '/1';
+           for pan:= 1 to length(pecahan) do
+             hsl := hsl + '0';
+         end;
+      end;
+    Result := hsl;
+end;
+
+
+function GetMenuName(MenuId:Integer):String;
+begin
+   with dmMain.quUnit,SQL do
+   begin
+      Close; Clear;
+      Add('SELECT NmMenu FROM SysMenu WHERE KdMenu=:MenuId');
+      Parameters.ParamByName('MenuId').Value := MenuId;
+      Open;
+      Result := Fields[0].AsString;
+   end;
+end;
+
+function GetBtnCaption(MenuId:Integer):String;
+begin
+   with dmMain.quUnit,SQL do
+   begin
+      Close; Clear;
+      Add('SELECT BtnCaption FROM SysMenu WHERE KdMenu=:MenuId');
+      Parameters.ParamByName('MenuId').Value := MenuId;
+      Open;
+      Result := Fields[0].AsString;
+   end;
+end;
+
+procedure dropTempTable(const tableName:String);
+const dropTemplateStr =
+' if exists (select * from tempdb.dbo.sysobjects ' +
+'            where id = object_id(''tempdb.dbo.%TableName%'')) ' +
+'   drop table %TableName% ';
+begin
+  with dmMain.quUnit,SQL do
+  begin
+    Close; Clear;
+    Add(StringReplace(dropTemplateStr, '%TableName%', tableName, [rfReplaceAll, rfIgnoreCase]));
+    ExecSQL;
+  end;
+end;
+
+function GetServerTime:TDateTime;
+begin
+   with dmMain.quUnit,SQL do
+   begin
+      Close; Clear;
+      Add('SELECT CONVERT(VARCHAR(8),GetDate(),108)');
+      Open;
+      Result := Fields[0].AsDateTime;
+   end;
+end;
+
+function GetServerDateTime:TDateTime;
+begin
+   with dmMain.quUnit,SQL do
+   begin
+      Close; Clear;
+      Add('SELECT GetDate()');
+      Open;
+      Result := Fields[0].AsDateTime;
+   end;
+end;
+
+function ClearKutip(str:String):String;
+begin
+   Result := Trim(StringReplace(str, '''', '', [rfReplaceAll]));
+end;
+
+procedure FillLongMonthName(dxPE:TdxPickEdit);
+var i : byte;
+begin
+   dxPE.Clear;
+   for i := 1 to 12 do
+   begin
+      dxPE.Items.Add(LongMonthNames[i]);
+   end;
+end;
+
+function SelGrid(qu:TADOQuery;dbg:TdxDBGrid;field:String):String;
+var i : byte;
+begin
+  Result := '(';
+  for i := 0 to dbg.SelectedCount-1 do
+  begin
+     qu.Bookmark := dbg.SelectedRows[i];
+     Result := Result + QuotedStr(qu.fieldByName(field).AsString)+',';
+  end;
+  Delete(Result,length(Result),1);
+  Result := Result + ')';
+end;
+
+Function IfExists(SQLString:String):Boolean;
+begin
+   with TADOQuery.Create(nil) do
+   begin
+      try
+        Connection := dmMain.dbConn;
+        Close; SQL.Clear;
+        SQL.Add(SQLString);
+        Open;
+        Result := NOT IsEmpty;
+      finally
+        free;
+      end;
+   end;
+
+end;
+
+Function DateToDDMMYY(dt:TDateTime):String;
+var d,m,y : word;
+begin
+  DecodeDate(dt,y,m,d);
+  Result := RightStr(FormatFloat('0000',y),2)+FormatFloat('00',m)+FormatFloat('00',d); 
+end;
+
+Procedure SetGrid(qu:TADOQuery;grid:TdxDBGrid);
+begin
+  if qu.State in dsEditModes then
+  begin
+     grid.OptionsBehavior := grid.OptionsBehavior + [edgoTabs];
+  end else
+  if qu.State = dsBrowse then
+  begin
+     grid.OptionsBehavior := grid.OptionsBehavior - [edgoTabs];
+  end;
+end;
+
+Procedure SetReadOnly(Obj:TObject;isReadOnly:Boolean);
+begin
+   if (Obj is TdxDBEdit) then
+   begin
+      with (Obj as TdxDBEdit) do
+      begin
+          ReadOnly := isReadOnly;
+          TabStop  := NOT isReadOnly;
+          if isReadOnly then Color := ClInAktif else Color := ClAktif;
+      end;
+   end else
+   if (Obj is TdxButton) then
+   begin
+      with (Obj as TdxButton) do
+      begin
+          Enabled := NOT isReadOnly;
+      end;
+   end else
+   if (Obj is TdxDBGrid) then
+   begin
+      with (Obj as TdxDBGrid) do
+      begin
+          Enabled := NOT isReadOnly;
+      end;
+   end else
+   if (Obj is TdxDbGridColumn) then
+   begin
+      with (Obj as TdxDBGridColumn) do
+      begin
+         ReadOnly := isReadOnly;
+         TabStop := NOT isReadOnly;
+         DisableEditor := isReadOnly;
+         if isReadOnly then Color := ClInAktif else Color := ClAktif;
+      end;
+   end else
+   if (Obj is TdxDBGridImageColumn) then
+   begin
+      with (Obj as TdxDBGridImageColumn) do
+      begin
+         ReadOnly := isReadOnly;
+         TabStop := NOT isReadOnly;
+         DisableEditor := isReadOnly;
+         if isReadOnly then Color := ClInAktif else Color := ClAktif;
+      end;
+   end else
+   if (Obj is TdxDBGridButtonColumn) then
+   begin
+      with (Obj as TdxDBGridButtonColumn) do
+      begin
+         Buttons[0].Visible := NOT isReadOnly;
+         ReadOnly := isReadOnly;
+         TabStop  := NOT isReadOnly;
+         DisableEditor := isReadOnly;
+         if isReadOnly then Color := ClInAktif else Color := ClAktif;
+      end;
+   end else
+   if (Obj is TdxPickEdit) then
+   begin
+      with (Obj as TdxPickEdit) do
+      begin
+          ReadOnly := isReadOnly;
+          TabStop  := NOT isReadOnly;
+          if isReadOnly then Color := ClInAktif else Color := ClAktif;
+      end;
+   end else
+   if (Obj is TComboBox) then
+   begin
+      with (Obj as TComboBox) do
+      begin
+          Enabled := NOT isReadOnly;
+          TabStop  := NOT isReadOnly;
+          if isReadOnly then Color := ClInAktif else Color := ClAktif;
+      end;
+   end else
+   if (Obj is TdxDBSpinEdit) then
+   begin
+      with (Obj as TdxDBSpinEdit) do
+      begin
+          ReadOnly := isReadOnly;
+          TabStop  := NOT isReadOnly;
+          if isReadOnly then Color := ClInAktif else Color := ClAktif;
+      end;
+   end else
+   if (Obj is TdxDBMemo) then
+   begin
+      with (Obj as TdxDBMemo) do
+      begin
+          ReadOnly := isReadOnly;
+          TabStop  := NOT isReadOnly;
+          if isReadOnly then Color := ClInAktif else Color := ClAktif;
+      end;
+   end else
+   if (Obj is TdxDBDateEdit) then
+   begin
+      with (Obj as TdxDBDateEdit) do
+      begin
+          ReadOnly := isReadOnly;
+          TabStop  := NOT isReadOnly;
+          if isReadOnly then Color := ClInAktif else Color := ClAktif;
+      end;
+   end else
+   if (Obj is TdxDBCheckEdit) then
+   begin
+      with (Obj as TdxDBCheckEdit) do
+      begin
+         ReadOnly := isReadOnly;
+         TabStop := NOT isReadOnly;
+         if isReadOnly  then Color := ClInAktif else Color := Claktif;
+      end;
+   end else
+   if (Obj is TdxDBButtonEdit) then
+   begin
+      with (Obj as TdxDBButtonEdit) do
+      begin
+         ReadOnly := isReadOnly;
+         TabStop := NOT isReadOnly;
+         if isReadOnly then Color := ClInAktif else Color := ClAktif;
+         Buttons[0].Visible := NOT isReadOnly;
+         if Buttons.Count > 1 then Buttons[1].Visible := NOT isReadOnly;
+      end;
+   end else
+   if (Obj is TdxDBImageEdit) then
+   begin
+      with (Obj as TdxDBImageEdit) do
+      begin
+         ReadOnly := isReadOnly;
+         TabStop := NOT isReadOnly;
+         if isReadOnly then Color := ClInAktif else Color := ClAktif;
+      end;
+   end else
+    if (Obj is TDBRadioGroup) then
+   begin
+      with (Obj as TDBRadioGroup) do
+      begin
+         Enabled  :=true;
+         ReadOnly := isReadOnly;
+         TabStop := NOT isReadOnly;
+        // if isReadOnly then Color := ClInAktif else Color := ClAktif;
+      end;
+   end else
+   if (Obj is TdxDBLookupEdit) then
+   begin
+      with (Obj as TdxDBLookupEdit) do
+      begin
+          ReadOnly := isReadOnly;
+          TabStop  := NOT isReadOnly;
+          if isReadOnly then Color := ClInAktif else Color := ClAktif;
+      end;
+   end;
+end;
+
+Procedure MsgInfo(Msg:String);
+begin
+   MessageDlg(Msg,mtInformation,[mbOK],0);
+end;
+
+Procedure MsgError(Msg:String);
+begin
+   MessageDlg(Msg,mtError,[mbOK],0);
+end;
+
+
+function YearOf(dt:TDateTime):Word;
+var d,m,y : word;
+begin
+   decodeDate(dt,y,m,d);
+   Result := y;
+end;
+
+Function RightJust(data : string; LEbar : integer) : string;
+var i,j : integer;
+begin
+  j := length(data);
+  for i:= 1 to lebar - j do
+    data := ' ' + data;
+  RightJust := copy(data, 1, Lebar);
+end;
+
+Function LeftJust(data : string; LEbar : integer) : string;
+var i,j : integer;
+begin
+  j := length(data);
+  for i:= 1 to lebar - j do
+    data := data + ' ';
+  LeftJust := copy(data, 1, Lebar);
+end;
+
+Function quExec(qu:TADOQuery; const str:string; showError:boolean = true):boolean; //true = success
+begin
+  Result := true;
+  with qu, SQL do
+    try
+      Close; Clear;
+      Add(str);
+      ExecSQL;
+    except
+      on E: Exception do
+      begin
+        if showError then
+          MsgInfo(E.Message)
+        else
+          MsgInfo(str);
+        Result := false;
+      end;
+    end; //end quAct
+end;
+
+end.

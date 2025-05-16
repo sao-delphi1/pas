@@ -1,0 +1,342 @@
+inherited fmCheckSN: TfmCheckSN
+  Left = 173
+  Top = 71
+  Caption = 'Data Pembelian belum ada Penerimaan'
+  ClientWidth = 793
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited paToolBar: TdxContainer
+    Width = 793
+    inherited sbLast: TSpeedButton
+      Left = 756
+    end
+    inherited sbNext: TSpeedButton
+      Left = 729
+    end
+    inherited sbPrev: TSpeedButton
+      Left = 702
+    end
+    inherited sbFirst: TSpeedButton
+      Left = 675
+    end
+    inherited sbPeriod: TSpeedButton
+      Left = 649
+    end
+    inherited BvlPeriod: TBevel
+      Left = 403
+    end
+    inherited laPeriod: TLabel
+      Left = 407
+    end
+    object dxButton1: TdxButton
+      Left = 668
+      Top = 4
+      Width = 116
+      Height = 27
+      About = 'Design eXperience. '#169' 2002 M. Hoffmann'
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -12
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      ParentFont = False
+      Version = '1.0.2e'
+      Caption = 'PROSES'
+      TabOrder = 0
+      TabStop = False
+    end
+  end
+  object dbgData: TdxDBGrid [2]
+    Left = 0
+    Top = 37
+    Width = 793
+    Height = 180
+    Bands = <
+      item
+      end>
+    DefaultLayout = True
+    HeaderPanelRowCount = 1
+    SummaryGroups = <>
+    SummarySeparator = ', '
+    Align = alTop
+    TabOrder = 1
+    OnDblClick = dbgDataDblClick
+    DataSource = dsMain
+    Filter.Criteria = {00000000}
+    HideFocusRect = True
+    HideSelection = True
+    LookAndFeel = lfUltraFlat
+    OptionsView = [edgoBandHeaderWidth, edgoIndicator, edgoUseBitmap]
+    object dbgDataTanggal: TdxDBGridColumn
+      BandIndex = 0
+      RowIndex = 0
+      FieldName = 'Tanggal'
+    end
+    object dbgDataPurchaseID: TdxDBGridColumn
+      Caption = 'No Invoice'
+      Width = 132
+      BandIndex = 0
+      RowIndex = 0
+      FieldName = 'PurchaseID'
+    end
+    object dbgDataSuppName: TdxDBGridColumn
+      Caption = 'Supplier'
+      Width = 261
+      BandIndex = 0
+      RowIndex = 0
+      FieldName = 'SuppName'
+    end
+    object dbgDataTotal: TdxDBGridColumn
+      Width = 98
+      BandIndex = 0
+      RowIndex = 0
+      FieldName = 'Total'
+    end
+    object dbgDataUpdDate: TdxDBGridColumn
+      Width = 112
+      BandIndex = 0
+      RowIndex = 0
+      FieldName = 'UpdDate'
+    end
+    object dbgDataUpdUser: TdxDBGridColumn
+      Width = 97
+      BandIndex = 0
+      RowIndex = 0
+      FieldName = 'UpdUser'
+    end
+  end
+  object dbgDetail: TdxDBGrid [3]
+    Left = 0
+    Top = 296
+    Width = 793
+    Height = 240
+    Bands = <
+      item
+      end>
+    DefaultLayout = True
+    HeaderPanelRowCount = 1
+    KeyField = 'ItemID'
+    SummaryGroups = <>
+    SummarySeparator = ', '
+    Align = alBottom
+    TabOrder = 2
+    DataSource = dsDetil
+    Filter.Criteria = {00000000}
+    HideFocusRect = True
+    HideSelection = True
+    LookAndFeel = lfUltraFlat
+    OptionsView = [edgoBandHeaderWidth, edgoIndicator, edgoUseBitmap]
+    object dbgDetailPurchaseID: TdxDBGridColumn
+      Visible = False
+      Width = 364
+      BandIndex = 0
+      RowIndex = 0
+      FieldName = 'PurchaseID'
+    end
+    object dbgDetailItemID: TdxDBGridColumn
+      Caption = 'Kode Barang'
+      Width = 75
+      BandIndex = 0
+      RowIndex = 0
+      FieldName = 'ItemID'
+    end
+    object dbgDetailLuItemName: TdxDBGridColumn
+      Caption = 'Nama Barang'
+      Width = 200
+      BandIndex = 0
+      RowIndex = 0
+      FieldName = 'LuItemName'
+    end
+    object dbgDetailQty: TdxDBGridColumn
+      Width = 39
+      BandIndex = 0
+      RowIndex = 0
+      FieldName = 'Qty'
+    end
+    object dbgDetailWarehouseID: TdxDBGridColumn
+      Visible = False
+      Width = 147
+      BandIndex = 0
+      RowIndex = 0
+      FieldName = 'WarehouseID'
+    end
+    object dbgDetailPrice: TdxDBGridColumn
+      Width = 90
+      BandIndex = 0
+      RowIndex = 0
+      FieldName = 'Price'
+    end
+    object dbgDetailCTotal: TdxDBGridColumn
+      Caption = 'Total'
+      Width = 90
+      BandIndex = 0
+      RowIndex = 0
+      FieldName = 'CTotal'
+    end
+    object dbgDetailUpdDate: TdxDBGridColumn
+      Width = 129
+      BandIndex = 0
+      RowIndex = 0
+      FieldName = 'UpdDate'
+    end
+    object dbgDetailUpdUser: TdxDBGridColumn
+      Width = 130
+      BandIndex = 0
+      RowIndex = 0
+      FieldName = 'UpdUser'
+    end
+    object dbgDetailLWareHouse: TdxDBGridColumn
+      Visible = False
+      Width = 83
+      BandIndex = 0
+      RowIndex = 0
+      FieldName = 'LWareHouse'
+    end
+    object dbgDetailSuppId: TdxDBGridColumn
+      Visible = False
+      Width = 147
+      BandIndex = 0
+      RowIndex = 0
+      FieldName = 'SuppId'
+    end
+    object dbgDetailDisc: TdxDBGridColumn
+      Visible = False
+      Width = 76
+      BandIndex = 0
+      RowIndex = 0
+      FieldName = 'Disc'
+    end
+  end
+  inherited quMain: TADOQuery
+    CursorType = ctStatic
+    SQL.Strings = (
+      
+        'SELECT CONVERT(VARCHAR(10),A.Transdate,103) as Tanggal,A.Purchas' +
+        'eID,B.SuppName,'
+      'ISNULL(TTLPb,0) as Total,A.UpdDate,A.UpdUser,A.SuppID'
+      'FROM APTrPurchaseHd A'
+      'INNER JOIN APMsSupplier B ON A.SuppID=B.SuppID'
+      'WHERE ISNULL(KonsinyasiID,'#39#39')='#39#39
+      'ORDER BY CONVERT(VARCHAR(8),A.Transdate,112),A.PurchaseID')
+    object quMainTanggal: TStringField
+      FieldName = 'Tanggal'
+      ReadOnly = True
+      Size = 10
+    end
+    object quMainPurchaseID: TStringField
+      FieldName = 'PurchaseID'
+      Size = 50
+    end
+    object quMainSuppName: TStringField
+      FieldName = 'SuppName'
+      Size = 50
+    end
+    object quMainTotal: TBCDField
+      FieldName = 'Total'
+      ReadOnly = True
+      DisplayFormat = '#,0'
+      EditFormat = '#,0'
+      Precision = 18
+    end
+    object quMainUpdDate: TDateTimeField
+      FieldName = 'UpdDate'
+      DisplayFormat = 'dd/MM/yyyyy HH:MM:SS'
+      EditMask = 'dd/MM/yyyyy HH:MM:SS'
+    end
+    object quMainUpdUser: TStringField
+      FieldName = 'UpdUser'
+    end
+    object quMainSuppID: TStringField
+      FieldName = 'SuppID'
+    end
+  end
+  object quDetil: TADOQuery
+    Connection = dmMain.dbConn
+    CursorType = ctStatic
+    OnCalcFields = quDetilCalcFields
+    DataSource = dsMain
+    Parameters = <
+      item
+        Name = 'PurchaseID'
+        DataType = ftString
+        NumericScale = 255
+        Precision = 255
+        Size = 50
+        Value = '04 Juli 2019'
+      end
+      item
+        Name = 'SuppId'
+        Attributes = [paNullable]
+        DataType = ftString
+        NumericScale = 255
+        Precision = 255
+        Size = 20
+        Value = 'ST001'
+      end>
+    SQL.Strings = (
+      'select * from APTrPurchaseDt  WHERE PurchaseID=:PurchaseID '
+      'And SuppId=:SuppId')
+    Left = 324
+    Top = 4
+    object quDetilPurchaseID: TStringField
+      FieldName = 'PurchaseID'
+      Size = 50
+    end
+    object quDetilItemID: TStringField
+      DisplayWidth = 20
+      FieldName = 'ItemID'
+    end
+    object quDetilQty: TBCDField
+      FieldName = 'Qty'
+      DisplayFormat = '#,0'
+      EditFormat = '#,0'
+      Precision = 18
+    end
+    object quDetilWarehouseID: TStringField
+      FieldName = 'WarehouseID'
+    end
+    object quDetilPrice: TBCDField
+      FieldName = 'Price'
+      DisplayFormat = '#,0.00'
+      EditFormat = '#,0.00'
+      Precision = 18
+    end
+    object quDetilUpdDate: TDateTimeField
+      FieldName = 'UpdDate'
+    end
+    object quDetilUpdUser: TStringField
+      FieldName = 'UpdUser'
+    end
+    object quDetilLuItemName: TStringField
+      DisplayWidth = 100
+      FieldKind = fkCalculated
+      FieldName = 'LuItemName'
+      LookupKeyFields = 'ItemID'
+      LookupResultField = 'ItemName'
+      KeyFields = 'ItemID'
+      Size = 100
+      Calculated = True
+    end
+    object quDetilCTotal: TFloatField
+      FieldKind = fkCalculated
+      FieldName = 'CTotal'
+      DisplayFormat = '#,0.00'
+      EditFormat = '#,0.00'
+      Calculated = True
+    end
+    object quDetilSuppId: TStringField
+      FieldName = 'SuppId'
+    end
+    object quDetilDisc: TFloatField
+      FieldName = 'Disc'
+      DisplayFormat = '#,0.00'
+      EditFormat = '#,0.00'
+    end
+  end
+  object dsDetil: TDataSource
+    DataSet = quDetil
+    OnStateChange = dsDetilStateChange
+    Left = 352
+    Top = 4
+  end
+end

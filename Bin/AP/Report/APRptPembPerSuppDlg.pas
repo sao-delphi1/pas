@@ -1,0 +1,144 @@
+unit APRptPembPerSuppDlg;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, RptDlg, DB, dxExEdtr, dxCntner, ADODB, StdCtrls, Buttons,
+  ExtCtrls, dxEditor, dxEdLib, dxTL, dxDBCtrl, dxDBGrid, dxCore, dxButton;
+
+type
+  TfmAPRptPembPerSuppDlg = class(TfmRptDlg)
+    GroupBox1: TGroupBox;
+    Label2: TLabel;
+    quActSuppID: TStringField;
+    quActSuppName: TStringField;
+    dt1: TdxDateEdit;
+    dt2: TdxDateEdit;
+    rbAll: TRadioButton;
+    rbSelect: TRadioButton;
+    dbgList: TdxDBGrid;
+    dbgListSuppID: TdxDBGridMaskColumn;
+    dbgListSuppName: TdxDBGridMaskColumn;
+    bbCancel: TdxButton;
+    procedure bbPreviewClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure rbSelectClick(Sender: TObject);
+    procedure bbCancelClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  fmAPRptPembPerSuppDlg: TfmAPRptPembPerSuppDlg;
+
+implementation
+
+uses INQRRptAdjusment, UnitGeneral,  
+  StdLv0, APQRRptPembPerBrg, APQRRptPembPerSupp, Search, UnitDate;
+
+{$R *.dfm}
+
+procedure TfmAPRptPembPerSuppDlg.bbPreviewClick(Sender: TObject);
+begin
+  inherited;
+  with TfmAPQRRptPembPerSupp.Create(Self) do
+     try
+       qrlTitle.Caption := laTitle.Caption;
+       qrlPeriode.Caption := 'Periode : '+FormatDateTime('dd/MM/yyyy',dt1.date)+' s/d '+FormatDateTime('dd/MM/yyyy',dt2.date);
+       with qu001,sql do
+       begin
+         Close;Clear;
+         add(' SELECT DISTINCT K.SuppId,K.Supplier,K.SuppId as SuppId2 FROM '
+            +' (select Distinct A.SuppId,(A.SuppId+''-''+B.SuppName) as Supplier'
+            +' FROM APTrPurchaseHd A INNER JOIN APMsSupplier B ON A.SuppId=B.SuppId WHERE'
+            +' CONVERT(VARCHAR(8),TransDate,112) BETWEEN '''+FormatDateTime('yyyyMMdd',dt1.Date)+''' AND '''+FormatDateTime('yyyyMMdd',dt2.Date)+'''');
+         if rbSelect.Checked then
+            Add(' AND A.SuppId IN '+SelGrid(quAct,dbgList,'SuppID'));
+         Add(' ) as K ORDER BY K.SuppId');
+         Open;
+         if IsEmpty then
+         begin
+           MsgInfo('No Data !');
+           Abort;
+         end;
+       end;
+
+       with qu002,sql do
+       begin
+          Close;Clear;
+          add(' SELECT DISTINCT K.PurchaseId,K.PurchaseId as PurchaseId2,K.SuppId,K.SuppId as SuppId2,K.Tgl,K.Tgl2,K.CurrId,K.TTlPb,K.PPN,K.SubTotal,K.Rate FROM'
+             +' (SELECT DISTINCT A.PurchaseId,A.SuppId,Convert(VARCHAR(10),Transdate,103) as Tgl,Convert(VARCHAR(8),TransDate,112) as Tgl2,ISNULL(A.Rate,0) as Rate,'
+             +' CurriD,ISNULL(TTLPb,0) as TTLPb,ISNULL(PPN,0) as PPN,ISNULL(TTLPb-PPN,0) as SubTotal FROM APTrPurchaseHd A WHERE A.SuppId=:SuppId '
+             +' AND CONVERT(VARCHAR(8),TransDate,112) BETWEEN '''+FormatDateTime('yyyyMMdd',dt1.Date)+''' AND '''+FormatDateTime('yyyyMMdd',dt2.Date)+'''');
+          Add(' ) as K ORDER BY K.PurchaseId');
+          Parameters.ParamByName('SuppId').DataType := ftString;
+          Open;
+       end;
+
+
+       with qu003,SQL do
+       begin
+          Close;Clear;
+          add(' SELECT DISTINCT A.ItemId,B.ItemName,A.Qty,A.Price,(A.Qty*A.Price) as Total'
+             +' FROM APTrPurchasedt A INNER JOIN INMsItem B ON A.ItemId=B.ItemId'
+             +' WHERE A.PurchaseId=:PurchaseId AND SuppId=:SuppId');
+          add(' ORDER by A.ItemID ');
+          Parameters.ParamByName('PurchaseId').DataType := ftString;
+          Parameters.ParamByName('SuppId').DataType := ftString;
+          Open;
+       end;
+       if Sender=bbPreview then
+          MyReport.PreviewModal
+       else
+          MyReport.Print;
+     finally
+        free;
+     end;
+end;
+
+procedure TfmAPRptPembPerSuppDlg.FormShow(Sender: TObject);
+begin
+  inherited;
+  dt1.Date:=EncodeDate(GetYear(Date),GetMonth(Date),1);
+  dt2.date := date;
+  quAct.Open;
+end;
+
+procedure TfmAPRptPembPerSuppDlg.rbSelectClick(Sender: TObject);
+begin
+  inherited;
+  if Sender=rbAll then
+  begin
+     dbgList.OptionsBehavior := dbgList.OptionsBehavior - [edgoMultiSelect];
+  end else
+  if Sender=rbSelect then
+  begin
+     dbgList.OptionsBehavior := dbgList.OptionsBehavior + [edgoMultiSelect];
+     if dbgList.FocusedNode <> nil then
+       dbgList.FocusedNode.Selected := TRUE;
+  end;
+end;
+
+procedure TfmAPRptPembPerSuppDlg.bbCancelClick(Sender: TObject);
+begin
+  inherited;
+   with TfmSearch.Create(Self) do
+    try
+       Title := 'Supplier';
+       SQLString := ' SELECT SuppName as Nama_Supplier ,SuppId as Kode_Supplier'
+                   +' FROM APMsSupplier A '
+                   +' ORDER BY SuppID';
+
+       if ShowModal = MrOK then
+       begin
+         Self.quAct.Locate('SuppID',Res[1],[]);
+       end;
+    finally
+       free;
+    end;
+end;
+
+end.

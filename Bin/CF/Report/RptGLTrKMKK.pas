@@ -1,0 +1,173 @@
+unit RptGLTrKMKK;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, RptLv2, QRCtrls, DB, ADODB, StdCtrls, jpeg, QuickRpt, ExtCtrls;
+
+type
+  TfmCFQRRptTrKKBB = class(TfmRptLv2)
+    qlbTTerBayar: TQRLabel;
+    QRLabel8: TQRLabel;
+    qlbterimaDari: TQRLabel;
+    QRLabel9: TQRLabel;
+    QRLabel11: TQRLabel;
+    qlbTerbilang: TQRLabel;
+    QRLabel3: TQRLabel;
+    QRLabel19: TQRLabel;
+    qlbKeterangan: TQRLabel;
+    qlbTitle: TQRLabel;
+    qlbTitleV: TQRLabel;
+    qlb: TQRLabel;
+    QRShape2: TQRShape;
+    QRLabel1: TQRLabel;
+    QRLabel2: TQRLabel;
+    QRShape6: TQRShape;
+    QRShape7: TQRShape;
+    QRShape8: TQRShape;
+    qlbJourTransID: TQRLabel;
+    qlbTanggal: TQRLabel;
+    QRLabel10: TQRLabel;
+    qlbKas: TQRLabel;
+    qlbBank: TQRLabel;
+    QRShape10: TQRShape;
+    QRLabel4: TQRLabel;
+    QRLabel5: TQRLabel;
+    QRLabel7: TQRLabel;
+    QRShape3: TQRShape;
+    QRShape5: TQRShape;
+    QRShape4: TQRShape;
+    QRShape12: TQRShape;
+    QRShape13: TQRShape;
+    QRDBText1: TQRDBText;
+    QRDBText2: TQRDBText;
+    QRDBText3: TQRDBText;
+    SummaryBand1: TQRBand;
+    QRShape15: TQRShape;
+    QRShape14: TQRShape;
+    QRLabel6: TQRLabel;
+    QRLabel12: TQRLabel;
+    QRLabel13: TQRLabel;
+    QRLabel14: TQRLabel;
+    QRLabel15: TQRLabel;
+    QRLabel16: TQRLabel;
+    QRLabel17: TQRLabel;
+    QRLabel18: TQRLabel;
+    QRShape16: TQRShape;
+    QRShape17: TQRShape;
+    QRShape18: TQRShape;
+    QRShape19: TQRShape;
+    QRShape20: TQRShape;
+    QRShape22: TQRShape;
+    QRShape23: TQRShape;
+    QRShape24: TQRShape;
+    qlbTotal: TQRLabel;
+    QRShape21: TQRShape;
+    QRShape11: TQRShape;
+    QRShape26: TQRShape;
+    QRShape27: TQRShape;
+    QRLabel20: TQRLabel;
+    QRLabel21: TQRLabel;
+    QRShape9: TQRShape;
+    QRDBText4: TQRDBText;
+    QRShape28: TQRShape;
+    QRShape29: TQRShape;
+    QRShape30: TQRShape;
+    qlbTotalDebit: TQRLabel;
+    qlbNote: TQRLabel;
+    quAwal: TADOQuery;
+    procedure QRDBText3Print(sender: TObject; var Value: String);
+    procedure BndDetailBeforePrint(Sender: TQRCustomBand;
+      var PrintBand: Boolean);
+    procedure MyReportBeforePrint(Sender: TCustomQuickRep;
+      var PrintReport: Boolean);
+    procedure qlbTotalDebitPrint(sender: TObject; var Value: String);
+    procedure qlbTotalPrint(sender: TObject; var Value: String);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    TDebit,TKredit : currency;
+    Flag : string;
+  end;
+
+var
+  fmCFQRRptTrKKBB: TfmCFQRRptTrKKBB;
+
+implementation
+
+uses MyUnit;
+
+{$R *.dfm}
+
+procedure TfmCFQRRptTrKKBB.QRDBText3Print(sender: TObject;
+  var Value: String);
+begin
+  inherited;
+  Value := FormatRptkurung(Value)
+  {  if qu001.FieldByName('DK').AsString = 'D' then
+    value := FormatRpt(value)
+  else
+    value := '(' + FormatRpt(value) + ')';     }
+end;
+
+procedure TfmCFQRRptTrKKBB.BndDetailBeforePrint(Sender: TQRCustomBand;
+  var PrintBand: Boolean);
+var Note : string;
+begin
+  inherited;
+  if qu001.FieldByName('Jenis').AsString = 'D' then
+  begin
+    QRDBText3.Left := 517;
+    TDebit := TDebit + qu001.FieldByName('Amount').AsCurrency;
+  end else
+  begin
+    QRDBText3.Left := 636;
+    TKredit := TKredit + qu001.FieldByName('Amount').AsCurrency;
+  end;
+  if Flag = 'BELI' then
+  begin
+    with quAwal,SQL do
+    begin
+      Close;Clear;
+      Add('SELECT DISTINCT B.GroupID,C.GroupDesc FROM APTrPurchaseDt A INNER JOIN INMsItem B ON A.ItemID=B.ItemID '
+         +'INNER JOIN INMsGroup C ON B.GroupID=C.GroupID WHERE PurchaseID='''+qu001.FieldByName('PurchaseID').AsString+''' ORDER BY B.GroupID');
+      Open;
+    end;
+    while not quAwal.Eof do
+    begin
+      if quAwal.RecNo = 1 then
+        Note := quAwal.FieldByName('GroupDesc').AsString
+      else
+        Note := Note + '; ' + quAwal.FieldByName('GroupDesc').AsString;
+      quAwal.Next;
+    end;
+    qlbNote.Caption := Note;
+    Note := '';
+  end;
+end;
+
+procedure TfmCFQRRptTrKKBB.MyReportBeforePrint(Sender: TCustomQuickRep;
+  var PrintReport: Boolean);
+begin
+  inherited;
+  TDebit := 0;
+  TKredit := 0;
+end;
+
+procedure TfmCFQRRptTrKKBB.qlbTotalDebitPrint(sender: TObject;
+  var Value: String);
+begin
+  inherited;
+  Value := FormatRptkurung(CurrToStr(TDebit))
+end;
+
+procedure TfmCFQRRptTrKKBB.qlbTotalPrint(sender: TObject;
+  var Value: String);
+begin
+  inherited;
+  Value := FormatRptkurung(CurrToStr(TKredit))
+end;
+
+end.

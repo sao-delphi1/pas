@@ -1,0 +1,103 @@
+unit ARQRRptBuktiBayar;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, RptLv0, DB, ADODB, StdCtrls, QRCtrls, QuickRpt, ExtCtrls;
+
+type
+  TfmQRRptBuktiBayar = class(TfmRptLv0)
+    qu002: TADOQuery;
+    bnd001: TQRSubDetail;
+    QRLabel1: TQRLabel;
+    QRDBText1: TQRDBText;
+    qlbNamaInvoice: TQRLabel;
+    QRLabel5: TQRLabel;
+    QRDBText5: TQRDBText;
+    QRDBText7: TQRDBText;
+    GroupHeaderBand1: TQRBand;
+    QRLabel6: TQRLabel;
+    QRLabel8: TQRLabel;
+    GroupFooterBand1: TQRBand;
+    QRShape1: TQRShape;
+    QRShape2: TQRShape;
+    QRShape3: TQRShape;
+    QRLabel18: TQRLabel;
+    QRLabel19: TQRLabel;
+    QRLabel21: TQRLabel;
+    QRLabel16: TQRLabel;
+    QRDBText2: TQRDBText;
+    lbSuppCust: TQRLabel;
+    QRDBText6: TQRDBText;
+    QRDBText8: TQRDBText;
+    QRLabel2: TQRLabel;
+    QRDBText3: TQRDBText;
+    QRLabel3: TQRLabel;
+    QRLabel4: TQRLabel;
+    QRLabel7: TQRLabel;
+    QRExpr1: TQRExpr;
+    QRLabel9: TQRLabel;
+    qlbTerbilang: TQRLabel;
+    qu003: TADOQuery;
+    ds002: TDataSource;
+    qlbBankName: TQRLabel;
+    procedure QRDBText7Print(sender: TObject; var Value: String);
+    procedure bnd001BeforePrint(Sender: TQRCustomBand;
+      var PrintBand: Boolean);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  fmQRRptBuktiBayar: TfmQRRptBuktiBayar;
+
+implementation
+
+uses UnitGeneral, MyUnit;
+
+{$R *.dfm}
+
+procedure TfmQRRptBuktiBayar.QRDBText7Print(sender: TObject;
+  var Value: String);
+begin
+  inherited;
+  Value:= FormatRptkurung(Value);
+end;
+
+procedure TfmQRRptBuktiBayar.bnd001BeforePrint(Sender: TQRCustomBand;
+  var PrintBand: Boolean);
+begin
+  inherited;
+{  with qu003,SQL do
+  begin
+    Close;Clear;
+    Add('SELECT CASE WHEN A.BankID IS NULL THEN '''' ELSE (SELECT B.BankName FROM CFMsBank B WHERE A.BankID=B.BankID) END as BankName '
+       +'FROM APTrPayMentDt A WHERE A.PurchaseId='''+qu002.FieldByName('NoInvoice').AsString+''' AND '
+       +'A.PaymentID='''+qu001.FieldByName('BuktiBayar').AsString+''' UNION ALL '
+       +'SELECT CASE WHEN A.BankID IS NULL THEN '''' ELSE (SELECT B.BankName FROM CFMsBank B WHERE A.BankID=B.BankID) END as BankName '
+       +'FROM APTrPayMentKonsDt A WHERE A.KonsinyasiInvId='''+qu002.FieldByName('NoInvoice').AsString+''' AND '
+       +'A.PaymentKonsId='''+qu001.FieldByName('BuktiBayar').AsString+''' UNION ALL '
+       +'SELECT CASE WHEN A.BankID IS NULL THEN '''' ELSE (SELECT B.BankName FROM CFMsBank B WHERE A.BankID=B.BankID) END as BankName '
+       +'FROM ARTrKonPiutangDt A WHERE A.KonInvPelId='''+qu002.FieldByName('NoInvoice').AsString+''' AND '
+       +'A.KonPiutangID='''+qu001.FieldByName('BuktiBayar').AsString+''' UNION ALL '
+       +'SELECT CASE WHEN A.BankID IS NULL THEN '''' ELSE (SELECT B.BankName FROM CFMsBank B WHERE A.BankID=B.BankID) END as BankName '
+       +'FROM ARTrPiutangDt A WHERE A.SaleID='''+qu002.FieldByName('NoInvoice').AsString+''' AND '
+       +'A.PiutangID='''+qu001.FieldByName('BuktiBayar').AsString+'''UNION ALL '
+       +'SELECT CASE WHEN A.BankID IS NULL THEN '''' ELSE (SELECT B.BankName FROM CFMsBank B WHERE A.BankID=B.BankID) END as BankName '
+       +'FROM ARTrPiutInvServiceDt A WHERE A.InvServiceId='''+qu002.FieldByName('NoInvoice').AsString+''' AND '
+       +'A.PiutInvServiceId='''+qu001.FieldByName('BuktiBayar').AsString+''' UNION ALL '
+       +'SELECT CASE WHEN A.BankID IS NULL THEN '''' ELSE (SELECT B.BankName FROM CFMsBank B WHERE A.BankID=B.BankID) END as BankName '
+       +'FROM APTrPayReturnRepDt A WHERE A.ReturnRepId='''+qu002.FieldByName('NoInvoice').AsString+''' AND '
+       +'A.PayReturnRepId='''+qu001.FieldByName('BuktiBayar').AsString+'''UNION ALL '
+       +'SELECT CASE WHEN A.BankID IS NULL THEN '''' ELSE (SELECT B.BankName FROM CFMsBank B WHERE A.BankID=B.BankID) END as BankName '
+       +'FROM ARTrPayReturnRepDt A WHERE A.ReturnRepId='''+qu002.FieldByName('NoInvoice').AsString+''' AND '
+       +'A.PayReturnRepId='''+qu001.FieldByName('BuktiBayar').AsString+'''');
+    Open;
+  end;}
+  qlbBankName.Caption := '';
+end;
+
+end.

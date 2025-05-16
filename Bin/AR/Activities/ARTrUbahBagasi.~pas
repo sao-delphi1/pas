@@ -1,0 +1,160 @@
+unit ARTrUbahBagasi;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdLv2, ActnList, DB, dxExEdtr, dxCntner, ADODB, StdCtrls,
+  ExtCtrls, dxCore, dxContainer, Buttons, dxEditor, dxEdLib, dxButton;
+
+type
+  TfmARTrUbahBagasi = class(TfmStdLv2)
+    Label1: TLabel;
+    dxButton2: TdxButton;
+    Label2: TLabel;
+    Edit1: TEdit;
+    Label3: TLabel;
+    Label4: TLabel;
+    Edit2: TEdit;
+    Label5: TLabel;
+    Edit3: TEdit;
+    Label6: TLabel;
+    Edit4: TEdit;
+    Label7: TLabel;
+    Edit5: TEdit;
+    Label8: TLabel;
+    Edit6: TEdit;
+    Label9: TLabel;
+    Label10: TLabel;
+    Label11: TLabel;
+    dxButton1: TdxButton;
+    Label12: TLabel;
+    Label13: TLabel;
+    Label14: TLabel;
+    Label15: TLabel;
+    Label16: TLabel;
+    Label17: TLabel;
+    procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure dxButton2Click(Sender: TObject);
+    procedure dxButton1Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    NomorSO, KodeBarang, NamaBarang, SaleID : string;
+  end;
+
+var
+  fmARTrUbahBagasi: TfmARTrUbahBagasi;
+
+implementation
+
+{$R *.dfm}
+
+uses Search, MyUnit, UnitGeneral, ConMain;
+
+procedure TfmARTrUbahBagasi.FormCreate(Sender: TObject);
+begin
+  inherited;
+  UsePeriod := False;
+end;
+
+procedure TfmARTrUbahBagasi.FormShow(Sender: TObject);
+begin
+  inherited;
+  Label1.Caption := NomorSO;
+  Label2.Caption := NamaBarang;
+  Label11.Caption := SaleID;
+end;
+
+procedure TfmARTrUbahBagasi.dxButton2Click(Sender: TObject);
+begin
+  inherited;
+  with TfmSearch.Create(Self) do
+  try
+     Title := 'Cari Barang';
+     SQLString :='select A.ItemID as Kode_Barang,A.ItemName as Nama_Barang,ISNULL(A.Price,0) as Harga_Jual,'
+                +'ISNULL(A.Modal,0) as Harga_Modal,ISNULL(A.Bagasi,0) As Bagasi '
+                +'from ARTrPurchaseOrderDT A Where A.POID='''+NomorSO+''' ORDER BY A.ItemID ';
+     if ShowModal = MrOK then
+     begin
+        KodeBarang := res[0];
+        NamaBarang := res[1];
+        Self.Label2.Caption := res[1];
+        Edit1.Text := res[2];
+        Edit2.Text := res[3];
+        Edit3.Text := res[4];
+     end;
+  finally
+     free;
+  end;
+
+  with quAct,SQL do
+  begin
+    Close;Clear;
+    Add('select A.SaleID,ISNULL(A.Price,0) as Price,ISNULL(A.Modal,0) as Modal,ISNULL(A.Komisi,0) as Komisi '
+       +'from ARTrPenjualanDt A inner join ARTrPenjualanHd B on A.SaleID=B.SaleID '
+       +'where B.soid='''+NomorSO+''' AND A.ItemID='''+KodeBarang+''' ');
+       //showmessage(sql.text);
+    Open;
+  end;
+  SaleID := quAct.FieldByName('SaleId').AsString;
+  Label11.Caption := SaleID;
+  Edit4.Text := quAct.FieldByName('Price').AsString;
+  Edit5.Text := quAct.FieldByName('Modal').AsString;
+  Edit6.Text := quAct.FieldByName('Komisi').AsString;
+end;
+
+procedure TfmARTrUbahBagasi.dxButton1Click(Sender: TObject);
+begin
+  inherited;
+  if TRIM(KodeBarang)='' then
+  begin
+    ShowMessage('Kode Barang Belum Dipilih');
+    Abort;
+  end;
+
+  if TRIM(Edit1.Text)='' then Edit1.Text := '0';
+  if TRIM(Edit2.Text)='' then Edit2.Text := '0';
+  if TRIM(Edit3.Text)='' then Edit3.Text := '0';
+  if TRIM(Edit4.Text)='' then Edit4.Text := '0';
+  if TRIM(Edit5.Text)='' then Edit5.Text := '0';
+  if TRIM(Edit6.Text)='' then Edit6.Text := '0';
+
+  if (MessageDlg('Anda Yakin Untuk Mengubah Nilai Transaksi Ini ?', mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
+  begin
+
+    with quAct,SQL do
+    begin
+      Close;Clear;
+      Add('Update ARTrPurchaseOrderDT SET '
+         +'Price='+(Edit1.Text)+','
+         +'Modal='+(Edit2.Text)+','
+         +'Bagasi='+(Edit3.Text)+' '
+         +'Where POID='''+NomorSO+''' '
+         +'AND ItemID='''+KodeBarang+''' ');
+      ExecSQL;
+    end;
+
+    if TRIM(SaleID)<>'' then
+    begin
+      with quAct,SQL do
+      begin
+        Close;Clear;
+        Add('Update ARTrPenjualandt SET '
+           +'Price='+(Edit4.Text)+','
+           +'Modal='+(Edit5.Text)+','
+           +'Komisi='+(Edit6.Text)+' '
+           +'Where SaleID='''+SaleID+''' '
+           +'AND ItemID='''+KodeBarang+''' ');
+        ExecSQL;
+      end;
+    end;
+
+    ShowMessage('Data Sudah Diubah');
+
+  end;
+end;
+
+end.

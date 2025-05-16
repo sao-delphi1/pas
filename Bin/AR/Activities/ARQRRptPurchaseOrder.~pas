@@ -1,0 +1,199 @@
+unit ARQRRptPurchaseOrder;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, RptLv0, DB, ADODB, StdCtrls, QRCtrls, QuickRpt, ExtCtrls, jpeg;
+
+type
+  TfmARQRRptPurchaseOrder = class(TfmRptLv0)
+    QRLabel1: TQRLabel;
+    QRLabel2: TQRLabel;
+    QRLabel3: TQRLabel;
+    QRLabel4: TQRLabel;
+    QRLabel5: TQRLabel;
+    QRLabel6: TQRLabel;
+    QRLabel7: TQRLabel;
+    QRLabel8: TQRLabel;
+    QRLabel9: TQRLabel;
+    QRDBText1: TQRDBText;
+    QRDBText2: TQRDBText;
+    QRDBText3: TQRDBText;
+    QRDBText4: TQRDBText;
+    QRDBText5: TQRDBText;
+    qu002: TADOQuery;
+    QRLabel10: TQRLabel;
+    QRDBText6: TQRDBText;
+    QRLabel11: TQRLabel;
+    QRLabel12: TQRLabel;
+    QRSubDetail1: TQRSubDetail;
+    QRDBText7: TQRDBText;
+    QRDBText8: TQRDBText;
+    QRDBText9: TQRDBText;
+    QRDBText10: TQRDBText;
+    QRDBText11: TQRDBText;
+    QRBand1: TQRBand;
+    QRDBText12: TQRDBText;
+    QRDBText13: TQRDBText;
+    QRDBText14: TQRDBText;
+    QRLabel191: TQRLabel;
+    QRLabel19: TQRLabel;
+    QRLabel20: TQRLabel;
+    QRLabel21: TQRLabel;
+    QRLabel22: TQRLabel;
+    QRLabel23: TQRLabel;
+    QRShape2: TQRShape;
+    QRLabel18: TQRLabel;
+    QRLabel25: TQRLabel;
+    QRLabel26: TQRLabel;
+    qlbNote: TQRLabel;
+    QRLabel14: TQRLabel;
+    QRLabel27: TQRLabel;
+    QRLabel28: TQRLabel;
+    QRDBText15: TQRDBText;
+    QRLabel30: TQRLabel;
+    QRLabel31: TQRLabel;
+    QRDBText16: TQRDBText;
+    QRDBText17: TQRDBText;
+    QRLabel32: TQRLabel;
+    QRLabel33: TQRLabel;
+    QRLabel34: TQRLabel;
+    QRLabel35: TQRLabel;
+    QRLabel36: TQRLabel;
+    QRLabel37: TQRLabel;
+    QRLabel38: TQRLabel;
+    QRShape3: TQRShape;
+    QRShape1: TQRShape;
+    QRLabel13: TQRLabel;
+    QRLabel15: TQRLabel;
+    QRLabel17: TQRLabel;
+    QRLabel29: TQRLabel;
+    QRLabel16: TQRLabel;
+    QRDBText18: TQRDBText;
+    QRLabel39: TQRLabel;
+    quStock: TADOQuery;
+    QRExpr1: TQRExpr;
+    qlbPrice: TQRLabel;
+    qlbTotal: TQRLabel;
+    quCalc: TADOQuery;
+    ChildBand1: TQRChildBand;
+    qlbKeterangan: TQRLabel;
+    QRLabel40: TQRLabel;
+    QRDBText19: TQRDBText;
+    QRLabel41: TQRLabel;
+    QRLabel42: TQRLabel;
+    QRDBText20: TQRDBText;
+    QRLabel43: TQRLabel;
+    QRLabel44: TQRLabel;
+    QRLabel45: TQRLabel;
+    QRDBText21: TQRDBText;
+    QRLabel46: TQRLabel;
+    QRDBText22: TQRDBText;
+    QRLabel47: TQRLabel;
+    qlbDiscP: TQRLabel;
+    QRLabel48: TQRLabel;
+    qlbStock: TQRLabel;
+    QRDBText23: TQRDBText;
+    QRLabel24: TQRLabel;
+    QRLabel49: TQRLabel;
+    procedure QRDBText10Print(sender: TObject; var Value: String);
+    procedure QRDBText8Print(sender: TObject; var Value: String);
+    procedure QRSubDetail1BeforePrint(Sender: TQRCustomBand;
+      var PrintBand: Boolean);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    FormatAngka,Status : Boolean;
+  end;
+
+var
+  fmARQRRptPurchaseOrder: TfmARQRRptPurchaseOrder;
+
+implementation
+
+uses MyUnit;
+
+{$R *.dfm}
+
+procedure TfmARQRRptPurchaseOrder.QRDBText10Print(sender: TObject;
+  var Value: String);
+begin
+  inherited;
+  Value := FormatRptqtykurung(Value);
+end;
+
+procedure TfmARQRRptPurchaseOrder.QRDBText8Print(sender: TObject;
+  var Value: String);
+begin
+  inherited;
+  if FormatAngka then
+    Value := FormatRptqtykurung(Value)
+  else
+    Value := FormatRptkurung(Value);
+end;
+
+procedure TfmARQRRptPurchaseOrder.QRSubDetail1BeforePrint(
+  Sender: TQRCustomBand; var PrintBand: Boolean);
+var SatB,SatK : String;
+    StockB,StockK : Integer;
+    Price : Currency;
+begin
+  inherited;
+  SatB := qu002.FieldByName('SatB').AsString;
+  SatK := qu002.FieldByName('SatK').AsString;
+  with quStock,SQL do
+  begin
+    Close;Clear;
+    Add('SELECT ISNULL(SUM(CASE WHEN K.FgTrans < 50 THEN K.Qty Else K.Qty*-1 END),0) as Stock '
+       +'FROM AllItem K WHERE K.ItemID='''+qu002.FieldByName('ItemID').AsString+''' ');
+    Open;
+  end;
+
+  StockB := quStock.FieldByName('Stock').AsInteger DIV qu002.FieldByName('Konversi').AsInteger ;
+  StockK := quStock.FieldByName('Stock').AsInteger MOD qu002.FieldByName('Konversi').AsInteger;
+  if Status = True then
+  begin
+    if qu002.FieldByName('Qty').AsInteger <= quStock.FieldByName('Stock').AsInteger then
+      qlbStock.Caption := 'Ok'
+    else
+      qlbStock.Caption := 'N/A';
+  end else
+  begin
+    if StockB = 0 then
+      qlbStock.Caption := FormatRptqtykurung(IntToStr(StockK))+ ' '+SatK
+    else
+    if StockK = 0 then
+      qlbStock.Caption := FormatRptqtykurung(IntToStr(StockB))+ ' '+SatB
+    else
+      qlbStock.Caption := FormatRptqtykurung(IntToStr(StockB))+ ' '+SatB+' '+FormatRptqtykurung(IntToStr(StockK))+' '+SatK;
+  end;
+  with quCalc,SQL do
+  begin
+    Close;Clear;
+    Add('SELECT TOP 1 ISNULL(CASE WHEN C.FgPPN=''Y'' THEN A.Price+(A.Price*0.1) ELSE A.Price END,0) as Price,A.UOMID,C.SuppName '
+       +'FROM APTrPurchaseDt A INNER JOIN APTrPurchaseHd B ON A.PurchaseID=B.PurchaseID INNER JOIN APMsSupplier C ON B.SuppID=C.SuppID '
+       +'WHERE A.ItemID='''+qu002.FieldByName('ItemID').AsString+''' AND C.City=''BALIKPAPAN'' AND C.SuppID<>''Cash'' '
+       +'ORDER BY CONVERT(VARCHAR(8),B.Transdate,112) DESC ');
+    Open;
+  end;
+  if quCalc.FieldByName('UOMID').AsString = qu002.FieldByName('UOMID').AsString then
+    Price := quCalc.FieldByName('Price').AsCurrency
+  else
+    Price := quCalc.FieldByName('Price').AsCurrency*qu002.FieldByName('Konversi').AsInteger;
+  qlbPrice.Caption := FormatRptkurung(CurrToStr(Price));
+
+  qlbTotal.Caption := FormatRptkurung(CurrToStr(qu002.FieldByName('Jumlah').AsInteger * qu002.FieldByName('Harga').AsCurrency));
+
+    if qu002.FieldByName('D4').AsCurrency <> 0 then
+      qlbDiscP.Caption := FormatRptqtykurung(CurrToStr(qu002.FieldByName('D1').AsCurrency))+'+'+FormatRptqtykurung(CurrToStr(qu002.FieldByName('D2').AsCurrency))+'+'+FormatRptqtykurung(CurrToStr(qu002.FieldByName('D3').AsCurrency))+'+'+FormatRptqtykurung(CurrToStr(qu002.FieldByName('D4').AsCurrency)) else
+    if qu002.FieldByName('D3').AsCurrency <> 0 then
+      qlbDiscP.Caption := FormatRptqtykurung(CurrToStr(qu002.FieldByName('D1').AsCurrency))+'+'+FormatRptqtykurung(CurrToStr(qu002.FieldByName('D2').AsCurrency))+'+'+FormatRptqtykurung(CurrToStr(qu002.FieldByName('D3').AsCurrency)) else
+    if qu002.FieldByName('D2').AsCurrency <> 0 then
+      qlbDiscP.Caption := FormatRptqtykurung(CurrToStr(qu002.FieldByName('D1').AsCurrency))+'+'+FormatRptqtykurung(CurrToStr(qu002.FieldByName('D2').AsCurrency)) else
+      qlbDiscP.Caption := FormatRptqtykurung(CurrToStr(qu002.FieldByName('D1').AsCurrency));
+
+end;
+
+end.

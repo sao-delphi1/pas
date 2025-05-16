@@ -1,0 +1,472 @@
+unit INMsItem;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdLv4, dxExEdtr, ActnList, DB, dxCntner, ADODB, dxTL, dxDBCtrl,
+  dxDBGrid, dxPageControl, dxEdLib, dxButton, StdCtrls, ExtCtrls, Buttons,
+  dxCore, dxContainer, dxDBELib, dxEditor, DBCtrls;
+
+type
+  TfmINMSItem = class(TfmStdLv4)
+    Label1: TLabel;
+    Label2: TLabel;
+    Label7: TLabel;
+    Label8: TLabel;
+    DBText2: TDBText;
+    Label4: TLabel;
+    DBText1: TDBText;
+    Label9: TLabel;
+    Label10: TLabel;
+    Label12: TLabel;
+    quMainItemID: TStringField;
+    quMainItemName: TStringField;
+    quMainProductID: TStringField;
+    quMainGroupID: TStringField;
+    quMainUOMID: TStringField;
+    quMainGarantee: TStringField;
+    quMainUserPrice: TBCDField;
+    quMainDealerPrice: TBCDField;
+    quMainUpdDate: TDateTimeField;
+    quMainUpdUser: TStringField;
+    DBText8: TDBText;
+    Label3: TLabel;
+    Label5: TLabel;
+    Label6: TLabel;
+    Label11: TLabel;
+    Label17: TLabel;
+    Label13: TLabel;
+    quProduct: TADOQuery;
+    quGroup: TADOQuery;
+    quMainLProduct: TStringField;
+    quMainLGroup: TStringField;
+    dbgListItemID: TdxDBGridColumn;
+    dbgListItemName: TdxDBGridColumn;
+    dbgListProduct: TdxDBGridColumn;
+    dbgListGroup: TdxDBGridColumn;
+    dbgListGaransi: TdxDBGridColumn;
+    dbgListValuta: TdxDBGridColumn;
+    dbgListUserPrice: TdxDBGridColumn;
+    dbgListDealerPrice: TdxDBGridColumn;
+    quMainGaransi: TStringField;
+    quMainCurrID: TStringField;
+    quTemp: TADOQuery;
+    Label14: TLabel;
+    quUOM: TADOQuery;
+    quMainLUOMID: TStringField;
+    Label15: TLabel;
+    Label16: TLabel;
+    quMainJangkaGarantee: TBCDField;
+    Label18: TLabel;
+    quMainMinimumStok: TBCDField;
+    DBText4: TDBText;
+    ADOQuery1: TADOQuery;
+    Label19: TLabel;
+    quMainKomisi: TBCDField;
+    bbSave: TdxButton;
+    bbCancel: TdxButton;
+    dxDBEdit4: TdxDBEdit;
+    DBRadioGroup1: TDBRadioGroup;
+    dxDBEdit3: TdxDBEdit;
+    DBRadioGroup2: TDBRadioGroup;
+    dxDBEdit5: TdxDBEdit;
+    quMainCtk: TStringField;
+    DBRadioGroup3: TDBRadioGroup;
+    quMainFgActive: TStringField;
+    quMainStock: TIntegerField;
+    dbgListStock: TdxDBGridColumn;
+    Label20: TLabel;
+    quMainPartNo: TStringField;
+    Label21: TLabel;
+    dxDBButtonEdit8: TdxDBButtonEdit;
+    dxDBButtonEdit1: TdxDBButtonEdit;
+    dxDBEdit1: TdxDBEdit;
+    dxDBEdit8: TdxDBEdit;
+    dxDBEdit2: TdxDBEdit;
+    dxDBMemo2: TdxDBMemo;
+    dxDBButtonEdit3: TdxDBButtonEdit;
+    dxDBEdit7: TdxDBEdit;
+    dxDBEdit6: TdxDBEdit;
+    quMainNote: TStringField;
+    procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure dsMainStateChange(Sender: TObject);
+    procedure dxDBEdit1KeyPress(Sender: TObject; var Key: Char);
+    procedure quMainBeforePost(DataSet: TDataSet);
+    procedure bbFindClick(Sender: TObject);
+    procedure dxDBButtonEdit8ButtonClick(Sender: TObject;
+      AbsoluteIndex: Integer);
+    procedure dxDBButtonEdit1ButtonClick(Sender: TObject;
+      AbsoluteIndex: Integer);
+    procedure quMainNewRecord(DataSet: TDataSet);
+    procedure dxDBButtonEdit2ButtonClick(Sender: TObject;
+      AbsoluteIndex: Integer);
+    procedure quMainBeforeDelete(DataSet: TDataSet);
+    procedure dxDBButtonEdit3ButtonClick(Sender: TObject;
+      AbsoluteIndex: Integer);
+    procedure quMainCalcFields(DataSet: TDataSet);
+  private
+    { Private declarations }
+    procedure CekStatus;
+  public
+    { Public declarations }
+  end;
+
+var
+  fmINMSItem: TfmINMSItem;
+
+implementation
+
+uses StdLv2, StdLv1, StdLv0, UnitGeneral, ConMain, Search, MyUnit;
+
+{$R *.dfm}
+procedure TfmINMSItem.CekStatus;
+Begin
+ With quAct,sql do
+ Begin
+  Close;Clear;
+  Add(' SELECT top 1 1 as kode FROM APTrPurchaseDt WHERE ItemId=:kdbrg1'+
+      ' union select top 1 2 as kode from ARTrPenjualanDt where ItemId=:kdbrg2'+
+      ' union select top 1 3 as kode from INTrTransferItemDt where ItemId=:kdbrg3'+
+      ' union select top 1 4 as kode from INTrAdjustmentDt where ItemID=:kdbrg4');
+      Parameters.ParamByName('kdbrg1').Value := quMainItemID.AsString;
+      Parameters.ParamByName('kdbrg2').Value := quMainItemID.AsString;
+      Parameters.ParamByName('kdbrg3').Value := quMainItemID.AsString;
+      Parameters.ParamByName('kdbrg4').Value := quMainItemID.AsString;
+      Open;
+      if Not IsEmpty then
+      begin
+        case quAct.FieldByName('kode').AsInteger of
+          1 : pesan('Kode Barang sedang digunakan di transaksi PEMBELIAN');
+          2 : pesan('Kode Barang sedang digunakan di transaksi PENJUALAN');
+          3 : pesan('Kode Barang sedang digunakan di transaksi TRANSFER Antar Cabang');
+          4 : pesan('Kode Barang sedang digunakan di transaksi Adjusment');
+          5 : pesan('Kode Barang sedang digunakan di transaksi TRANSFER Konsiyasi');
+          6 : pesan('Kode Barang sedang digunakan di transaksi Terima Barang Konsiyasi');
+          7 : pesan('Kode Barang sedang digunakan di transaksi Service');
+          8 : pesan('Kode Barang sedang digunakan di transaksi Penggunaan SparePart');
+        end;
+        Abort;
+     end;
+  End;   
+End;
+
+
+procedure TfmINMSItem.FormCreate(Sender: TObject);
+begin
+  inherited;
+  UsePeriod := FALSE;
+  quMainUserPrice.DisplayFormat:= sDisFormat;
+  quMainUserPrice.EditFormat := sEditformat;
+  quMainDealerPrice.DisplayFormat := sDisFormat;
+  quMainDealerPrice.EditFormat := sEditformat;
+  quMainKomisi.DisplayFormat:= sDisFormat;
+  quMainKomisi.EditFormat:= sEditformat;
+end;
+
+procedure TfmINMSItem.FormShow(Sender: TObject);
+begin
+  inherited;
+  quMain.Active := TRUE;
+end;
+
+procedure TfmINMSItem.dsMainStateChange(Sender: TObject);
+begin
+  inherited;
+  SetReadOnly(dxDBEdit1,TRUE);
+  SetReadOnly(dxDBButtonEdit1,quMain.State <> dsInsert);
+  SetReadOnly(dxDBButtonEdit3,quMain.State <> dsInsert);
+  SetReadOnly(dxDBButtonEdit8,quMain.State <> dsInsert);
+  SetReadOnly(dxDBEdit8,quMain.State <> dsInsert);
+  SetBtnOperationVisible(bbSave,bbCancel,FActDS);
+end;
+
+procedure TfmINMSItem.dxDBEdit1KeyPress(Sender: TObject;
+  var Key: Char);
+begin
+  inherited;
+  if Key=#13 then PostMessage(Self.Handle,WM_NEXTDLGCTL,0,0)
+end;
+
+procedure TfmINMSItem.quMainBeforePost(DataSet: TDataSet);
+var ST : String;
+begin
+   inherited;
+   If Trim(quMainItemName.Value)='' then
+   begin
+    MsgInfo('Nama Barang tidak boleh kosong');
+    quMainItemName.FocusControl;
+    Abort;
+   end;
+
+   if Trim(quMainProductID.AsString)='' then
+   begin
+     MsgInfo('Kode Product tidak boleh kosong');
+     quMainProductID.FocusControl;
+     abort;
+   end;
+
+   if Trim(quMainLProduct.AsString)='' then
+   begin
+     MsgInfo('Kode Product tidak ada dalam Master Product');
+     quMainProductID.FocusControl;
+     abort;
+   end;
+
+   if Trim(quMainGroupID.AsString)='' then
+   begin
+     MsgInfo('Kode Group tidak boleh kosong');
+     quMainGroupID.FocusControl;
+     abort;
+   end;
+
+   if Trim(quMainLGroup.AsString)='' then
+   begin
+     MsgInfo('Kode Group tidak ada dalam Master Group');
+     quMainGroupID.FocusControl;
+     abort;
+   end;
+
+   if Trim(quMainUOMID.AsString)='' then
+   begin
+     MsgInfo('satuan tidak boleh kosong');
+     quMainUOMID.FocusControl;
+     abort;
+   end;
+
+   if Trim(quMainLUOMID.AsString)='' then
+   begin
+     MsgInfo('Satuan tidak ada dalam Master');
+     quMainUOMID.FocusControl;
+     abort;
+   end;
+
+   if TRIM(quMainMinimumStok.AsString)='' then
+   Begin
+     MsgInfo('Minimum stok harus diisi');
+     quMainMinimumStok.FocusControl;
+     Abort;
+   End;
+
+   if quMainMinimumStok.Value < 0 then
+   Begin
+     MsgInfo('Minimum Stok Harus lebih besar sama dengan 0');
+     quMainMinimumStok.FocusControl;
+     Abort;
+   End;
+
+   if TRIM(quMainGarantee.AsString)='' then
+   Begin
+      MsgInfo('Lama Jangka Garantee harus diisi');
+      quMainGarantee.FocusControl;
+      Abort;
+   End;
+
+   If quMainGarantee.AsString='1' then
+   Begin
+     if quMainJangkaGarantee.Value<= 0  then
+     Begin
+       MsgInfo('Lama jangka Garantee belum di isi');
+       quMainJangkaGarantee.FocusControl;
+       Abort;
+     End;
+   End;
+
+   If quMainGarantee.AsString='0' then
+   Begin
+     if (quMainJangkaGarantee.Value > 0 ) OR (quMainJangkaGarantee.Value < 0 ) then
+     Begin
+       quMainJangkaGarantee.Value:=0;
+     End;
+   End;
+
+   if UpperCase(quMainCurrID.Value)='IDR' then
+   Begin
+    quMainUserPrice.Value:= Round(quMainUserPrice.Value);
+    quMainDealerPrice.Value := Round(quMainDealerPrice.Value);
+   End;
+
+   if TRIM(quMainKomisi.AsString)='' then
+   Begin
+     MsgInfo('Komisi tidak boleh kosong');
+     quMainKomisi.FocusControl;
+     Abort;
+   End;
+
+   if quMain.State=dsInsert then
+   Begin
+     if TRIM(quMainPartNo.AsString) = '' then
+     begin
+       pesan('Part No tidak boleh kosong');
+       quMainPartNo.FocusControl;
+       Abort;
+     end;
+     with quAct,SQL do
+     begin
+       Close;Clear;
+       Add('SELECT PartNo FROM INMsItem WHERE PartNo='''+quMainPartNo.AsString+''' ');
+       Open;
+       If Not IsEmpty then
+       begin
+         pesan('Kode ini sudah dipakai');
+         quMainPartNo.FocusControl;
+         Abort;
+       end;
+     end;
+     ST := quMainGroupID.AsString+'.'+quMainProductID.AsString+'.';
+     quMainItemID.Value  := ST + FormatFloat('000', RunNumberGL(quAct, 'INMsItem', 'ItemID', ST, '0') + 1);
+   End;
+
+   quMainUpdDate.AsDateTime := GetServerDateTime;
+   quMainUpdUser.AsString := dmMain.UserId;
+end;
+
+procedure TfmINMSItem.bbFindClick(Sender: TObject);
+begin
+  inherited;
+  with TfmSearch.Create(Self) do
+      begin
+       try
+         Title := 'Master Barang';
+         SQLString := ' SELECT ItemName as Nama_Barang,FgActive, '
+                     +'(SELECT ISNULL(SUM(Case WHEN F.FgTrans < 50  THEN F.QTy ELSE F.Qty * - 1 END),0) '
+                     +'   FROM ALLITEM F WHERE CONVERT(VARCHAR(8),F.TransDate,112)<='''+FormatDateTime('YYYYMMDD',date)+''''
+                     +'   AND F.ItemID=A.ItemID) as Stock,'
+                     +' ItemID as Kode_Barang,CurrID as Valuta,'
+                     +' UserPRice Harga_User,DealerPrice as Harga_Dealer,'
+                     +' CASE Garantee WHEN ''1'' THEN ''Garansi'' WHEN ''0'' THEN ''Non'' END AS Garansi,'
+                     +' B.ProductDesc as Product, C.GroupDesc as Group_Barang From INMSItem A '
+                     +' INNER JOIN INMSProduct B ON A.ProductID = B.ProductID '
+                     +' INNER JOIN INMsGroup C ON A.GroupID = C.GroupID '
+                     +' order by A.GroupID, A.ProductID, A.ItemID ';
+         if ShowModal = MrOk then
+         begin
+            qumain.Locate('ItemId',Res[3],[]);
+         end;
+       finally
+         free;
+       end;
+    end;
+end;
+
+procedure TfmINMSItem.dxDBButtonEdit8ButtonClick(Sender: TObject;
+  AbsoluteIndex: Integer);
+begin
+  inherited;
+  with TfmSearch.Create(Self) do
+      begin
+       try
+         Title := 'Produk';
+         SQLString := 'SELECT ProductDesc as Nama_Produk,ProductID as Kode_Produk'
+                     +' FROM INMsProduct ORDER BY PRoductID';
+         if ShowModal = MrOk then
+         begin
+           if quMain.State = dsBrowse then quMain.edit;
+              quMainProductID.Value:= res[1];
+         end;
+       finally
+         free;
+       end;
+  end;
+end;
+
+procedure TfmINMSItem.dxDBButtonEdit1ButtonClick(Sender: TObject;
+  AbsoluteIndex: Integer);
+begin
+  inherited;
+  with TfmSearch.Create(Self) do
+      begin
+       try
+         Title := 'Group';
+         SQLString := 'SELECT GroupDesc as Description,GroupID as Kode_Group'
+                     +' FROM INMsGroup ORDER BY GroupID';
+         if ShowModal = MrOk then
+         begin
+           if quMain.State = dsBrowse then quMain.edit;
+              quMainGroupID.Value:= res[1];
+         end;
+       finally
+         free;
+       end;
+  end;
+end;
+
+procedure TfmINMSItem.quMainNewRecord(DataSet: TDataSet);
+begin
+  inherited;
+  quMainGarantee.AsString :='0';
+  quMainMinimumStok.AsInteger := 0;
+  quMainJangkaGarantee.AsInteger:=0;
+  quMainCurrID.AsString :='IDR';
+  quMainDealerPrice.AsInteger:=0;
+  quMainUserPrice.AsInteger:=0;
+  quMainKomisi.AsInteger :=0;
+  quMainFgActive.AsString := 'Y';
+  quMainProductID.FocusControl;
+end;
+
+procedure TfmINMSItem.dxDBButtonEdit2ButtonClick(Sender: TObject;
+  AbsoluteIndex: Integer);
+begin
+  inherited;
+  with TfmSearch.Create(Self) do
+      begin
+       try
+         Title := 'Satuan';
+         SQLString := 'SELECT UOMID as Kode_Satuan'
+                     +' FROM INMsUOM'
+                     +' ORDER BY UOMID';
+         if ShowModal = MrOk then
+         begin
+           if quMain.State = dsBrowse then quMain.edit;
+              quMainUOMID.Value:= res[0];
+         end;
+       finally
+         free;
+       end;
+  end;
+end;
+
+procedure TfmINMSItem.quMainBeforeDelete(DataSet: TDataSet);
+begin
+  inherited;
+  CekStatus;
+end;
+
+procedure TfmINMSItem.dxDBButtonEdit3ButtonClick(Sender: TObject;
+  AbsoluteIndex: Integer);
+begin
+  inherited;
+  with TfmSearch.Create(Self) do
+      begin
+       try
+         Title := 'Group';
+         SQLString := 'SELECT UOMID as Kode_Satuan'
+                     +' FROM INMsUOM'
+                     +' ORDER BY UOMID';
+         if ShowModal = MrOk then
+         begin
+           if quMain.State = dsBrowse then quMain.edit;
+              quMainUOMID.Value:= res[0];
+         end;
+       finally
+         free;
+       end;
+  end;
+end;
+
+procedure TfmINMSItem.quMainCalcFields(DataSet: TDataSet);
+begin
+  inherited;
+  with quAct,SQL do
+  begin
+    Close;Clear;
+    Add('SELECT A.ItemID,(SELECT ISNULL(SUM(CASE WHEN F.FgTrans < 50  THEN F.QTy ELSE F.Qty * - 1 END),0) '
+       +'FROM ALLITEM F WHERE F.ItemID=A.ItemID) as Stock FROM INMsItem A WHERE A.ItemID='''+quMainItemID.AsString+''' ');
+    Open;
+  end;
+  quMainStock.AsInteger := quAct.FieldByName('Stock').AsInteger;
+end;
+
+end.

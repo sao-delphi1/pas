@@ -1,0 +1,1114 @@
+unit ARTrPengReturPenj;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdLv41, dxExEdtr, dxEdLib, dxDBELib, dxEditor, ActnList, DB,
+  dxCntner, ADODB, dxTL, dxDBCtrl, dxDBGrid, dxPageControl, dxButton,
+  StdCtrls, ExtCtrls, Buttons, dxCore, dxContainer, DBCtrls, dxDBTLCl,
+  dxGrClms, Printers;
+
+type
+  TfmARTrPengReturPenj = class(TfmStdLv41)
+    Label2: TLabel;
+    Label3: TLabel;
+    Label5: TLabel;
+    quMainReturnRepID: TStringField;
+    quMainTransDate: TDateTimeField;
+    quMainCustID: TStringField;
+    quMainNote: TStringField;
+    quMainUpdDate: TDateTimeField;
+    quMainUpdUser: TStringField;
+    quCustomer: TADOQuery;
+    quCustomerCustID: TStringField;
+    quCustomerCustName: TStringField;
+    quCustomerAddress: TStringField;
+    quCustomerCity: TStringField;
+    quCustomerPhone: TStringField;
+    quCustomerFax: TStringField;
+    quCustomerEmail: TStringField;
+    quCustomerNote: TStringField;
+    quCustomerCustType: TStringField;
+    quCustomerUpdDate: TDateTimeField;
+    quCustomerUpdUser: TStringField;
+    ADOQuery1: TADOQuery;
+    quWareHouse: TADOQuery;
+    quSN: TADOQuery;
+    quSNSNID: TStringField;
+    quSNReturnRepID: TStringField;
+    quSNReturnID: TStringField;
+    quSNItemID: TStringField;
+    quSNWareHouseID: TStringField;
+    quSNUpdDate: TDateTimeField;
+    quSNUpdUser: TStringField;
+    dsSN: TDataSource;
+    quMainLCustName: TStringField;
+    DBText3: TDBText;
+    Label4: TLabel;
+    Label7: TLabel;
+    GroupBox2: TGroupBox;
+    Label10: TLabel;
+    DBText2: TDBText;
+    Label11: TLabel;
+    DBText1: TDBText;
+    quDetilReturnRepID: TStringField;
+    quDetilReturnID: TStringField;
+    quDetilItemID: TStringField;
+    quDetilWareHouseID: TStringField;
+    quDetilQty: TIntegerField;
+    quDetilLastPrice: TBCDField;
+    quDetilPrice: TBCDField;
+    quDetilUpdDate: TDateTimeField;
+    quDetilUpdUser: TStringField;
+    quDetilItemRepID: TStringField;
+    quDetilStatus: TStringField;
+    quItem: TADOQuery;
+    quAct1: TADOQuery;
+    quDetilLItemName: TStringField;
+    quDetilLwarehouseName: TStringField;
+    quDetilLItemRepName: TStringField;
+    GroupBox1: TGroupBox;
+    DBText7: TDBText;
+    Label14: TLabel;
+    quTotal: TADOQuery;
+    quTotalTotal: TBCDField;
+    dsTotal: TDataSource;
+    quMainTTLReturRep: TBCDField;
+    Label12: TLabel;
+    DBText4: TDBText;
+    DBText6: TDBText;
+    quValuta: TADOQuery;
+    quMainCurrId: TStringField;
+    quMainLCurrName: TStringField;
+    txtPgtReturPenjID: TdxDBEdit;
+    txtTransDate: TdxDBDateEdit;
+    txtCustID: TdxDBButtonEdit;
+    dxDBButtonEdit2: TdxDBButtonEdit;
+    dxDBEdit2: TdxDBEdit;
+    dxdbgrid1: TdxDBGrid;
+    dxdbgrid1Status: TdxDBGridImageColumn;
+    dxdbgrid1ItemID: TdxDBGridButtonColumn;
+    dxdbgrid1ItemName: TdxDBGridColumn;
+    dxdbgrid1ReturnID: TdxDBGridButtonColumn;
+    dxdbgrid1WareHouseID: TdxDBGridButtonColumn;
+    dxdbgrid1Qty: TdxDBGridColumn;
+    dxdbgrid1Harga: TdxDBGridColumn;
+    dxdbgrid1ItemRepID: TdxDBGridButtonColumn;
+    dxdbgrid1ItemRepName: TdxDBGridColumn;
+    dxDBGrid2: TdxDBGrid;
+    dxDBGrid2ReturnRepID: TdxDBGridMaskColumn;
+    dxDBGrid2ReturnID: TdxDBGridMaskColumn;
+    dxDBGrid2ItemID: TdxDBGridMaskColumn;
+    dxDBGrid2WareHouseID: TdxDBGridMaskColumn;
+    dxDBGrid2UpdDate: TdxDBGridDateColumn;
+    dxDBGrid2UpdUser: TdxDBGridMaskColumn;
+    rbCetak: TRadioGroup;
+    dxButton1: TdxButton;
+    dbgListReturnRepID: TdxDBGridMaskColumn;
+    dbgListTransDate: TdxDBGridDateColumn;
+    dbgListCustID: TdxDBGridMaskColumn;
+    dbgListLCustName: TdxDBGridLookupColumn;
+    dbgListCurrId: TdxDBGridMaskColumn;
+    dxButton2: TdxButton;
+    TmbBrg: TdxButton;
+    KrgBrg: TdxButton;
+    bbSimpanDetil: TdxButton;
+    BtlBrg: TdxButton;
+    DBText15: TDBText;
+    quMainFlagOK: TStringField;
+    Label1: TLabel;
+    quMainFgOK: TStringField;
+    dxDBGrid2SNID: TdxDBGridButtonColumn;
+    procedure txtPgtReturPenjIDKeyPress(Sender: TObject; var Key: Char);
+    procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure quMainNewRecord(DataSet: TDataSet);
+    procedure quMainBeforePost(DataSet: TDataSet);
+    procedure dsMainStateChange(Sender: TObject);
+    procedure txtCustIDButtonClick(Sender: TObject;
+      AbsoluteIndex: Integer);
+    procedure dsDetilStateChange(Sender: TObject);
+    procedure dxdbgrid1Enter(Sender: TObject);
+    procedure quDetilNewRecord(DataSet: TDataSet);
+    procedure quDetilBeforePost(DataSet: TDataSet);
+    procedure dxdbgrid1WareHouseIDButtonClick(Sender: TObject;
+      AbsoluteIndex: Integer);
+    procedure dxdbgrid1ItemRepIDButtonClick(Sender: TObject;
+      AbsoluteIndex: Integer);
+    procedure dxdbgrid1ReturnIDButtonClick(Sender: TObject;
+      AbsoluteIndex: Integer);
+    procedure quDetilItemIDChange(Sender: TField);
+    procedure dxdbgrid1ItemIDButtonClick(Sender: TObject;
+      AbsoluteIndex: Integer);
+    procedure quSNBeforePost(DataSet: TDataSet);
+    procedure quSNBeforeInsert(DataSet: TDataSet);
+    procedure quSNNewRecord(DataSet: TDataSet);
+    procedure dxButton1Click(Sender: TObject);
+    procedure quSNAfterPost(DataSet: TDataSet);
+    procedure dsSNStateChange(Sender: TObject);
+    procedure quDetilAfterPost(DataSet: TDataSet);
+    procedure bbFindClick(Sender: TObject);
+    procedure quDetilAfterDelete(DataSet: TDataSet);
+    procedure dxDBButtonEdit2ButtonClick(Sender: TObject;
+      AbsoluteIndex: Integer);
+    procedure quDetilBeforeDelete(DataSet: TDataSet);
+    procedure quMainBeforeDelete(DataSet: TDataSet);
+    procedure dxButton2Click(Sender: TObject);
+    procedure TmbBrgClick(Sender: TObject);
+    procedure BtlBrgClick(Sender: TObject);
+    procedure bbSimpanDetilClick(Sender: TObject);
+    procedure KrgBrgClick(Sender: TObject);
+    procedure quDetilBeforeEdit(DataSet: TDataSet);
+    procedure quDetilBeforeInsert(DataSet: TDataSet);
+    procedure quSNBeforeEdit(DataSet: TDataSet);
+    procedure quSNBeforeDelete(DataSet: TDataSet);
+    procedure quMainBeforeEdit(DataSet: TDataSet);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure dxDBGrid2SNIDButtonClick(Sender: TObject;
+      AbsoluteIndex: Integer);
+  private
+    { Private declarations }
+    sPrintBO : string;    
+    procedure UpdateTTlH;
+    Procedure CekStatusRetur;
+    Procedure CekForm;
+    Procedure UpdateSerialNumber;    
+  public
+    { Public declarations }
+  end;
+
+var
+  fmARTrPengReturPenj: TfmARTrPengReturPenj;
+
+implementation
+
+uses ConMain, UnitGeneral, MyUnit, Search, ARQRRptInvPR, ARQRRptSuratJalan,
+  Allitem, ARTrPayReturnRep, StdLv0, StdLv1;
+
+{$R *.dfm}
+
+Procedure TfmARTrPengReturPenj.UpdateSerialNumber;
+Begin //ubah FgJual serialnumber
+  with quAct,SQL do
+  begin
+    Close;Clear;
+    Add('SELECT K.Status FROM ('
+       +'SELECT SNID,ItemID,''A'' as Status FROM APTrPurchaseDtSN UNION ALL '
+       +'SELECT SNID,ItemID,''B'' FROM APTrKonsinyasiDtSN UNION ALL '
+       +'SELECT SNID,ItemID,''C'' FROM APTrReturnRepSN) as K '
+       +'WHERE K.ItemID='''+quDetilItemID.AsString+''' AND K.SNID='''+quSNSNID.AsString+''' ');
+    Open;
+  end;
+  if quAct.FieldByName('Status').AsString = 'A' then
+  begin
+    with quAct,SQL do
+    begin
+      Close;Clear;
+      Add('UPDATE APTrPurchaseDtSN SET FgJual=''T'' WHERE ItemID='''+quDetilItemRepID.AsString+''' AND SNID='''+quSNSNID.AsString+''' ');
+      ExecSQL;
+    end;
+  end;
+  if quAct.FieldByName('Status').AsString = 'B' then
+  begin
+    with quAct,SQL do
+    begin
+      Close;Clear;
+      Add('UPDATE APTrKonsinyasiDtSN SET FgJual=''T'' WHERE ItemID='''+quDetilItemRepID.AsString+''' AND SNID='''+quSNSNID.AsString+''' ');
+      ExecSQL;
+    end;
+  end;
+  if quAct.FieldByName('Status').AsString = 'C' then
+  begin
+    with quAct,SQL do
+    begin
+      Close;Clear;
+      Add('UPDATE APTrReturnRepSN SET FgJual=''T'' WHERE ItemID='''+quDetilItemRepID.AsString+''' AND SNID='''+quSNSNID.AsString+''' ');
+      ExecSQL;
+    end;
+  end;
+End;
+
+procedure TfmARTrPengReturPenj.UpdateTTlH;
+Begin
+ With quAct,sql do
+ Begin
+   Close;Clear;
+   add(' Update ARTrPenggantiReturPenjHd SET TTLReturRep='''+Formatcurr('0.00',quTotalTotal.AsCurrency)+''''
+      +' WHERE ReturnRepID='''+quMainReturnRepID.AsString+'''');
+   ExecSQL;
+ End;
+  //ShowMessage(quTotalPerValutaTotal.AsString);
+End;
+
+procedure TfmARTrPengReturPenj.txtPgtReturPenjIDKeyPress(Sender: TObject;
+  var Key: Char);
+begin
+  inherited;
+  if Key=#13 then PostMessage(Self.Handle,WM_NEXTDLGCTL,0,0)
+end;
+
+procedure TfmARTrPengReturPenj.FormCreate(Sender: TObject);
+begin
+  inherited;
+  FFieldOrder := 'CONVERT(VARCHAR(8),Transdate,112), ReturnRepID';
+  FFieldTgl   := 'TransDate';
+  with quAct,SQL do
+  begin
+    close;clear;
+    Add('SELECT sDPB FROM SAMsSET');
+    Open;
+  end;
+  sPrintBO := quAct.FieldByName('sDPB').AsString;  
+  
+end;
+
+procedure TfmARTrPengReturPenj.FormShow(Sender: TObject);
+begin
+  inherited;
+  quMain.Active  := TRUE;
+  quDetil.Active := TRUE;
+  quSN.Active := TRUE;
+  qutotal.Open;
+  quTotalTotal.DisplayFormat := sDisFormat;
+  quDetilPrice.DisplayFormat:= sDisFormat;
+  quDetilPrice.EditFormat := sEditformat;
+  SettingDxGrid(dxDBGrid1);
+  SettingDxGrid(dxDBGrid2);
+end;
+
+procedure TfmARTrPengReturPenj.quMainNewRecord(DataSet: TDataSet);
+begin
+  inherited;
+  quMainTransDate.Value:= Date;
+  quMainCurrID.Value:='IDR';
+  quMainTransDate.FocusControl;
+  quMainFlagOK.AsString:='T';
+end;
+
+procedure TfmARTrPengReturPenj.quMainBeforePost(DataSet: TDataSet);
+Var ST : String;
+begin
+  inherited;
+  CekStatusRetur;
+  if Trim(quMainTransDate.AsString)='' then
+  begin
+    MsgInfo('Tanggal transaksi tidak boleh kosong');
+    quMainTransDate.FocusControl;
+    Abort;
+  End;
+
+  if Trim(quMainCustID.Value)='' then
+  begin
+    MsgInfo('Kode Pelanggan tidak boleh kosong');
+    quMainCustID.FocusControl;
+    Abort;
+  End;
+
+  if Trim(quMainLCustName.Value)='' then
+  begin
+    MsgInfo('Kode Pelanggan tidak ada dalam Master');
+    quMainCustID.FocusControl;
+    Abort;
+  End;
+
+  if Trim(quMainCurrID.Value)='' then
+  begin
+    MsgInfo('Valuta tidak boleh kosong');
+    quMainCurrID.FocusControl;
+    Abort;
+  End;
+
+  if Trim(quMainLCurrName.Value)='' then
+  begin
+    MsgInfo('Valuta tidak ada dalam Master');
+    quMainCurrID.FocusControl;
+    Abort;
+  End;
+
+  if qumain.State=dsinsert then
+  Begin
+    ST := 'PRJR/'+PT+ FormatDateTime('/YY/MM/', quMainTransDate.AsDateTime);
+    quMainReturnRepID.AsString  := ST + FormatFloat('0000', RunNumberGL(quAct,'ARTrPenggantiReturPenjHd', 'ReturnRepID',ST, '0') + 1);
+  End;
+
+  quMainUpdDate.Value := GetServerDateTime;
+  quMainUpdUser.Value := dmMain.UserId;
+end;
+
+procedure TfmARTrPengReturPenj.dsMainStateChange(Sender: TObject);
+begin
+  inherited;
+  SetBtnOperationVisible(bbSave,bbCancel,FActDS);
+  SetReadOnly(txtPgtReturPenjID,TRUE);
+  SetReadOnly(txtTransDate,quMain.State<>dsInsert);
+  SetReadOnly(txtCustID,qumain.State<>dsinsert);
+  SetReadOnly(dxDBButtonEdit2,quMain.State<>dsInsert);
+end;
+
+procedure TfmARTrPengReturPenj.txtCustIDButtonClick(Sender: TObject;
+  AbsoluteIndex: Integer);
+begin
+  inherited;
+  with TfmSearch.Create(Self) do
+    try
+       Title := 'Pelanggan';
+       SQLString := 'SELECT CustId as Kode_Pelanggan, CustName as Nama_Pelanggan'
+                   +',Address '
+                   +' FROM ARMsCustomer'
+                   +' ORDER BY CustId';
+       if ShowModal = MrOK then
+       begin
+           if quMain.State = dsBrowse then quMain.Edit;
+           quMainCustID.Value := Res[0];
+       end;
+    finally
+       Free;
+    end;
+end;
+
+procedure TfmARTrPengReturPenj.dsDetilStateChange(Sender: TObject);
+begin
+  inherited;
+  SetReadOnly(dxDBGrid1ItemID,quDetil.State<>dsInsert);
+  SetReadOnly(dxDBGrid1ReturnID,quDetil.State<>dsInsert);
+  SetReadOnly(dxDBGrid1Status,qudetil.State<>dsinsert);
+  SetReadOnly(dxDBGrid1ItemID,qudetil.State<>dsinsert);
+  SetReadOnly(dxDBGrid1ItemRepID,quDetil.State<>dsinsert);
+  SetReadOnly(dxDBGrid1WareHouseID,quDetil.State<>dsinsert);
+  SetReadOnly(dxDBGrid1ItemName,TRUE);
+  SetReadOnly(dxDBGrid1ItemRepName,TRUE);
+end;
+
+procedure TfmARTrPengReturPenj.dxdbgrid1Enter(Sender: TObject);
+begin
+  inherited;
+   if quMain.State in dsEditModes then quMain.Post;
+   if quDetil.IsEmpty then quDetil.Append;
+end;
+
+procedure TfmARTrPengReturPenj.quDetilNewRecord(DataSet: TDataSet);
+begin
+  inherited;
+  quDetilQty.AsFloat := 1;
+  quDetilPrice.AsFloat := 0;
+  quDetilStatus.AsString := 'G';
+  quDetilWareHouseID.AsString:=sDGPR;
+  quDetilStatus.FocusControl;
+end;
+
+procedure TfmARTrPengReturPenj.quDetilBeforePost(DataSet: TDataSet);
+begin
+  inherited;
+  CekStatusRetur;  
+  if TRIM(quDetilItemID.Value)='' then
+  begin
+     MsgInfo('Kode Item tidak boleh kosong !');
+     quDetilItemID.FocusControl;
+     Abort;
+  end;
+
+  if TRIM(quDetilLItemName.Value)='' then
+  begin
+     MsgInfo('Kode Item tidak ada dalam Master !');
+     quDetilItemID.FocusControl;
+     Abort;
+  end;
+
+  if TRIM(quDetilReturnID.Value)='' then
+  begin
+     MsgInfo('Nota Retur tidak boleh kosong !');
+     quDetilReturnID.FocusControl;
+     Abort;
+  end;
+
+  if TRIM(quDetilWareHouseID.value) = ''  then
+  begin
+     MsgInfo('Gudang tidak boleh kosong');
+     quDetilWareHouseID.FocusControl;
+     Abort;
+  end;
+
+  if TRIM(quDetilLWareHouseName.value) = ''  then
+  begin
+     MsgInfo('Gudang tidak ada dalam Master');
+     quDetilWareHouseID.FocusControl;
+     Abort;
+  end;
+
+  if TRIM(quDetilItemRepID.Value)='' then
+  begin
+     MsgInfo('Kode Item Pengganti tidak boleh kosong !');
+     quDetilItemRepID.FocusControl;
+     Abort;
+  end;
+
+  if TRIM(quDetilLItemRepName.Value)='' then
+  begin
+     MsgInfo('Kode Item Pengganti tidak ada dalam Master !');
+     quDetilItemRepID.FocusControl;
+     Abort;
+  end;
+
+  if quDetil.State = dsInsert then
+  begin
+     with quAct, SQL do
+     begin
+        Close; Clear;
+        Add(' SELECT ItemID FROM ARTrPenggantiReturPenjDt WHERE ReturnRepID='''+quMainReturnRepID.Value+''''
+           +' AND ReturnID='''+quDetilReturnID.Value+'''AND ItemID='''+quDetilItemID.Value+''''
+           +' AND WareHouseID='''+quDetilWareHouseID.Value+''' ');
+        Open;
+        if not IsEmpty then
+        begin
+           MsgInfo('Item sudah ada dalam List');
+           quDetilItemID.FocusControl;
+           abort;
+        end;
+     end;
+  end;
+
+
+  if TRIM(quDetilQty.AsString) = ''  then
+  begin
+     MsgInfo('Jumlah Barang tidak boleh kosong');
+     quDetilQty.FocusControl;
+     Abort;
+  end    ;
+
+
+  if quDetilQty.value <= 0  then
+  begin
+     MsgInfo('Jumlah Barang harus lebih besar dari 0');
+     quDetilQty.FocusControl;
+     Abort;
+  end else
+  begin
+    with quAct,sql do
+    Begin
+      Close;Clear;
+      Add('  SELECT  Isnull(Sum(Qty),0) '
+         +' -(SELECT isnull(Sum(Qty),0) FROM ARTrPenggantiReturPenjDt E WHERE ReturnID=''' +quDetilReturnID.AsString +''''
+         +'    AND E.ItemID='''+quDetilItemID.Value+''''
+         +'    AND ReturnRepID<>'''+quMainReturnRepID.Value+''') as PegRetur'
+         +'  FROM ARTrReturPenjualanDt A INNER JOIN ARTrReturPenjualanHd B ON A.ReturnId=B.ReturnId WHERE A.ReturnId=''' +quDetilReturnID.AsString +''''
+         +'  AND B.CustId='''+quMainCustID.Value+''' AND A.ItemId='''+quDetilItemID.Value+''' AND B.FlagRetur=''R'''
+         +'  ');
+      Open;
+     if IsEmpty then
+     Begin
+        MsgInfo('Data tidak ada pada Nota Retur');
+        quDetilItemID.FocusControl;
+        Abort;
+     End;
+    End;
+
+    if quDetilQty.Value > quAct.FieldByName ('PegRetur').AsInteger  then
+    begin
+      MsgInfo('Jumlah barang melebihi Jumlah yang di Retur'+#13+'jumlah/sisa diretur adalah '
+             +'['+quAct.FieldByName ('PegRetur').AsString+']');
+      quDetilQty.FocusControl;
+      Abort;
+    end;
+  end;
+
+  if quDetilStatus.Value ='G' Then
+  Begin
+    if quDetilItemID.Value <> quDetilItemRepID.Value then
+    Begin
+      quDetilItemRepID.Value:=quDetilItemID.Value;
+      MsgInfo('Karena Status Ganti Maka Barang Pengganti sama dengan barang yang di ganti');
+    End;
+  End;
+
+  quDetilUpdUser.Value := dmMain.UserId;
+  quDetilUpdDate.Value := GetServerDateTime;
+end;
+
+procedure TfmARTrPengReturPenj.dxdbgrid1WareHouseIDButtonClick(
+  Sender: TObject; AbsoluteIndex: Integer);
+begin
+  inherited;
+  with TfmSearch.Create(Self) do
+    try
+       Title := 'Gudang';
+       SQLString := ' SELECT Distinct A.WareHouseID as Kode_Gudang, WareHouseName as Nama_Gudang ' +
+                    ' FROM INMsWareHouse A INNER JOIN ARTrReturPenjualanDt B ON A.WareHouseId=B.WareHouseId ' +
+                    ' INNER JOIN  ARTrReturPenjualanHd C ON B.ReturnID=C.ReturnID ' +
+                    ' WHERE B.ItemId='''+quDetilItemID.Value+''' And B.ReturnId='''+quDetilReturnID.Value+''''+
+                    ' AND C.FlagRetur=''R'''+
+                    ' ORDER BY A.WareHouseID';
+       if ShowModal = MrOK then
+       begin
+          if quDetil.State = dsBrowse then quDetil.Edit;
+             quDetilwarehouseID.Value := Res[0];
+       end;
+    finally
+       free;
+    end;
+end;
+
+procedure TfmARTrPengReturPenj.dxdbgrid1ItemRepIDButtonClick(
+  Sender: TObject; AbsoluteIndex: Integer);
+begin
+  inherited;
+   with TfmSearch.Create(self) do
+    try
+       Title := 'Item';
+       SQLString := ' SELECT ItemName as Nama_Item,ItemID as Kode_Item,'
+                   +' UserPrice FROM INMsItem'
+                   +' ORDER BY ItemID';
+       if ShowModal = MrOK then
+       begin
+          if quDetil.State = dsBrowse then quDetil.Edit;
+          quDetilItemRepID.Value := Res[1];
+       end;
+    finally
+       Free;
+    end;
+end;
+
+procedure TfmARTrPengReturPenj.dxdbgrid1ReturnIDButtonClick(
+  Sender: TObject; AbsoluteIndex: Integer);
+begin
+  inherited;
+  with TfmSearch.Create(Self) do
+    try                                                              //AND E.Price=B.Price
+       Title := 'Nota Pengganti Retur Penjualan';
+       SQLString := ' SELECT distinct A.ReturnID as Nota_Pengganti_Retur, '
+                   +' Convert(Varchar(10),Transdate,103) as Tgl_Retur,B.WareHouseId as Kode_Gudang,'
+                   +' isnull(Sum(Qty),0)-(Select isnull(SUM(QTy),0) FROM ARTrPenggantiReturPenjDt E INNER JOIN ARTrPenggantiReturPenjHd D'
+                   +' ON E.ReturnRepId=D.ReturnRepId  WHERE ItemId='''+quDetilItemID.Value+''' And CustID='''+quMainCustID.Value+''''
+                   +' AND E.ReturnId=A.ReturnId ) as Sisa'
+                   +' FROM ARTrReturPenjualanHd A INNER JOIN ARTrReturPenjualanDt B ON A.ReturnId=B.ReturnId '
+                   +' WHERE B.ItemID = ''' + quDetilItemID.Value + ''' AND A.CustId='''+quMainCustID.Value+''' '
+                   +' AND FlagRetur=''R'''
+                   +' GROUP BY A.ReturnID,A.TransDate,B.WareHouseID ';
+       if ShowModal = MrOK then
+       begin
+          if quDetil.State = dsBrowse then quDetil.Edit;
+             quDetilReturnID.Value := Res[0];
+       end;
+    finally
+       free;
+    end;
+end;
+
+procedure TfmARTrPengReturPenj.quDetilItemIDChange(Sender: TField);
+begin
+  inherited;
+  if quDetilStatus.Value='G' then
+     quDetilItemRepID.Value:=quDetilItemID.Value;
+end;
+
+procedure TfmARTrPengReturPenj.dxdbgrid1ItemIDButtonClick(Sender: TObject;
+  AbsoluteIndex: Integer);
+begin
+  inherited;
+  with TfmSearch.Create(Self) do
+    try
+       Title := 'Item';
+       SQLString := ' SELECT distinct E.ItemName as Nama_Barang,A.ItemID as Kode_Barang,'
+                   +' ProductDesc as Product, GroupDesc as Group_Barang '
+                   +' FROM ARTrReturPenjualanDt A INNER JOIN ARTrReturPenjualanHd B ON A.ReturnId=B.ReturnId'
+                   +' INNER JOIN INMsItem E ON A.ItemID=E.ItemID '
+                   +' INNER JOIN INMsGroup C ON E.GroupID=C.GroupID '
+                   +' INNER JOIN INMsProduct D ON E.ProductID=D.ProductID '
+                   +' WHERE B.CustID = ''' + quMainCustID.Value + ''' AND B.FlagRetur=''R'' '
+                   +' ORDER BY A.ItemID';
+       if ShowModal = MrOK then
+       begin
+          if quDetil.State = dsBrowse then quDetil.Edit;
+            quDetilItemID.Value := Res[1];
+          if quDetilStatus.Value='G' then
+            quDetilItemRepID.Value:= res[1];
+       end;
+    finally
+       free;
+    end;
+end;
+
+procedure TfmARTrPengReturPenj.quSNBeforePost(DataSet: TDataSet);
+begin
+  inherited;
+   if Trim(quSNSNID.Value)='' then
+  Begin
+   MsgInfo('Kode Serial Number tidak boleh kosong');
+   quSNSNID.FocusControl;
+   Abort;
+  End;
+
+  If quSN.State= dsinsert then
+  Begin
+    With quAct,Sql do
+    Begin
+       Close;Clear;
+       add(' SELECT SNID from ARTrPenggantiReturPenjDtSN WHERE ReturnRepId='''+quMainReturnRepID.Value+''''
+          +' AND ReturnID='''+quDetilReturnID.Value+''' and SNID='''+quSNSNID.Value+''''
+          +' and ItemID='''+quDetilItemID.Value+''''
+          +' AND WareHouseId='''+quDetilWareHouseId.Value+'''');
+       Open;
+       If not IsEmpty then
+       Begin
+          MsgInfo('Serial Number sudah ada');
+          quSNSNID.FocusControl;
+          Abort;
+       End;
+    End;
+  End;
+  quSNUpdUser.Value := dmMain.UserId;
+  quSNUpdDate.Value := GetServerDateTime;
+end;
+
+procedure TfmARTrPengReturPenj.quSNBeforeInsert(DataSet: TDataSet);
+begin
+  inherited;
+  CekStatusRetur;
+  with quAct,SQL do
+  begin
+   Close;Clear;
+   Add(' Select Count(SNId) as jumlah From ARTrPenggantiReturPenjDtSN WHERE ReturnRepId ='''+quMainReturnRepID.Value+''''
+      +' AND ItemId='''+quDetilItemID.Value+''''
+      +' AND ReturnId='''+quDetilReturnID.Value+''' And WareHouseId='''+quDetilWarehouseID.Value+''''
+      +' ');
+   Open;
+  End;
+  if quAct.FieldByName('jumlah').AsInteger >= quDetilQty.Value then Abort;
+end;
+
+procedure TfmARTrPengReturPenj.quSNNewRecord(DataSet: TDataSet);
+begin
+  inherited;
+  quSNSNID.FocusControl;
+end;
+
+procedure TfmARTrPengReturPenj.dxButton1Click(Sender: TObject);
+var stotalRetur,stotalReturMin : Currency;
+    iPrint : Integer;
+begin
+  inherited;
+  CekForm;
+  with quAct,SQL do
+  begin
+     Close;Clear;
+     Add(' Select isnull(TTLReturRep,0) as TTLReturRep FROM ARTrPenggantiReturPenjHd Where ReturnRepID='''+quMainReturnRepID.AsString+'''');
+     Open;
+  end;
+  stotalRetur := quAct.FieldByName('TTLReturRep').AsCurrency;
+  iPrint := Printer.Printers.IndexOf(sPrintBO);
+  if RbCetak.ItemIndex = 0 then
+  Begin
+     with TfmQRRptInvPR.Create(Self) do
+     try
+       MyReport.PrinterSettings.PrinterIndex := iPrint;
+       if stotalRetur >= 0 then
+       begin
+         qlbTerbilang.Caption :=  '* Terbilang '+ convert(FormatFloat(sEditFormat, stotalRetur))+'rupiah #';
+       end else
+       begin
+         stotalReturMin := stotalRetur * -1;
+         qlbTerbilang.Caption := 'Pengembalian Uang '+ convert(FormatFloat(sEditFormat, stotalReturMin))+'rupiah #';
+       end;
+       with qu001,SQL do
+       Begin
+         Close;Clear;
+         add(' Select ReturnRepId ,CurrId,isnull(TTLReturRep,0) as Total,Convert(varchar(10),getdate(),103) as Tgl,A.CustId,C.CustName,C.Address,C.City '
+            +' FROM ARTrPenggantiReturPenjHd A INNER JOIN ARMsCustomer C ON A.CustId=C.CustId'
+            +' WHERE A.ReturnRepId='''+quMainReturnRepID.Value+'''');
+         Open;
+       End;
+
+       With qu002,sql do
+       Begin
+         Close;Clear;
+         add(' Select A.ItemRepId,B.ItemName, D.ItemName as BrgRet, B.UOMId,C.Productdesc, Sum(Qty) as Qty,A.Price FROM ARTrPenggantiReturPenjDt A'
+            +' INNER JOIN INMsItem B ON A.Itemrepid=B.Itemid'
+            +' INNER JOIN INMsItem D ON A.ItemId=D.ItemId'
+            +' INNER JOIN INMsProduct C ON B.ProductId=C.ProductId WHERE A.ReturnRepId=:ReturnRepId'
+//            +' AND A.Status <> ''G'' '
+            +' GROUP BY A.ItemRepId,B.ItemName,D.ItemName,B.UOMId,C.Productdesc,A.Price');
+         Parameters.ParamByName('ReturnRepId').DataType := ftString;
+         Open;
+       End;
+
+       laGT.Caption := quTotalTotal.AsString;
+
+       if quMainNote.AsString <> '' then
+          qlbKet.Caption := quMainNote.AsString
+       else
+       begin
+          qlbKet.Caption := '';
+          QRShape9.Enabled := False;
+       end;
+
+       if sCetak = '0' then
+         MyReport.PreviewModal
+       else
+         MyReport.Print;
+
+     finally
+        free;
+     end;
+  End;
+
+  if RbCetak.ItemIndex = 1 then
+  Begin
+      with TfmQRRptSuratJalan.Create(Self) do
+     try
+       with qu001,SQL do
+       Begin
+         Close;Clear;
+         add(' Select ReturnRepId as SaleId,ReturnRepId ,CurrId,isnull(TTLReturRep,0) as Total,Convert(varchar(10),getdate(),103) as Tgl,A.CustId,C.CustName,C.Address '
+            +' FROM ARTrPenggantiReturPenjHd A INNER JOIN ARMsCustomer C ON A.CustId=C.CustId'
+            +' WHERE A.ReturnRepId='''+quMainReturnRepID.Value+'''');
+         Open;
+       End;
+
+       With qu002,sql do
+       Begin
+         Close;Clear;
+         add(' Select A.ItemRepId ,B.ItemName,B.UOMId,C.Productdesc, Sum(Qty) as Qty,A.Price FROM ARTrPenggantiReturPenjDt A'
+            +' INNER JOIN INMsItem B ON A.Itemrepid=B.Itemid'
+            +' INNER JOIN INMsProduct C ON B.ProductId=C.ProductId WHERE A.ReturnRepId=:ReturnRepId '
+            +' GROUP BY A.ItemRepId,B.ItemName,B.UOMId,C.Productdesc,A.Price');
+      //    Parameters.ParamByName('ReturnRepId').DataType := ftString;
+         Open;
+       End;
+         QRLabel9.Enabled := False;
+         qlbJatuhTempo.Caption :='';
+         qlbTempo.Caption :='';
+         qlbKet.Caption :='';
+       MyReport.PreviewModal;
+
+     finally
+        free;
+     end;
+
+  End;
+  with quAct,SQL do
+  begin
+    close;clear;
+    Add('Update ARTrPenggantiReturPenjHd Set FlagOK=''Y'' where ReturnRepID=:ReturnRepID');
+    with Parameters do
+    begin
+       ParamByName('ReturnRepID').Value  := quMainReturnRepID.AsString;
+    end;
+    ExecSQL;
+  end;
+  quMain.Requery();
+  
+end;
+
+procedure TfmARTrPengReturPenj.quSNAfterPost(DataSet: TDataSet);
+begin
+  inherited;
+  with quAct,SQL do
+  begin
+    Close;Clear;
+    Add('SELECT K.Status FROM ('
+       +'SELECT SNID,ItemID,''A'' as Status FROM APTrPurchaseDtSN UNION ALL '
+       +'SELECT SNID,ItemID,''B'' FROM APTrKonsinyasiDtSN UNION ALL '
+       +'SELECT SNID,ItemID,''C'' FROM APTrReturnRepSN) as K '
+       +'WHERE K.ItemID='''+quDetilItemID.AsString+''' AND K.SNID='''+quSNSNID.AsString+''' ');
+    Open;
+  end;
+  if quAct.FieldByName('Status').AsString = 'A' then
+  begin
+    with quAct,SQL do
+    begin
+      Close;Clear;
+      Add('UPDATE APTrPurchaseDtSN SET FgJual=''Y'' WHERE ItemID='''+quDetilItemRepID.AsString+''' AND SNID='''+quSNSNID.AsString+''' ');
+      ExecSQL;
+    end;
+  end;
+  if quAct.FieldByName('Status').AsString = 'B' then
+  begin
+    with quAct,SQL do
+    begin
+      Close;Clear;
+      Add('UPDATE APTrKonsinyasiDtSN SET FgJual=''Y'' WHERE ItemID='''+quDetilItemRepID.AsString+''' AND SNID='''+quSNSNID.AsString+''' ');
+      ExecSQL;
+    end;
+  end;
+  if quAct.FieldByName('Status').AsString = 'C' then
+  begin
+    with quAct,SQL do
+    begin
+      Close;Clear;
+      Add('UPDATE APTrReturnRepSN SET FgJual=''Y'' WHERE ItemID='''+quDetilItemRepID.AsString+''' AND SNID='''+quSNSNID.AsString+''' ');
+      ExecSQL;
+    end;
+  end;
+
+  with quAct,SQL do
+  begin
+   Close;Clear;
+   add(' SELECT Count(SNID) as jumlah from ARTrPenggantiReturPenjDtSN WHERE ReturnRepId='''+quMainReturnRepID.Value+''''
+          +' AND ReturnID='''+quDetilReturnID.Value+''''
+          +' and ItemID='''+quDetilItemID.Value+''''
+          +' AND WareHouseId='''+quDetilWareHouseId.Value+'''');
+   Open;
+  End;
+  if quact.FieldByName('jumlah').AsInteger = quDetilQty.Value then
+  begin
+   quDetil.Last;
+   qudetil.Append;
+   abort;
+  End
+  else
+  begin
+   quSN.Append;
+  // quSNSNID.FocusControl;
+  end;
+end;
+
+procedure TfmARTrPengReturPenj.dsSNStateChange(Sender: TObject);
+begin
+  inherited;
+  SetReadOnly(dxDBGrid2SNID,quSN.State<>dsinsert);
+end;
+
+procedure TfmARTrPengReturPenj.quDetilAfterPost(DataSet: TDataSet);
+begin
+  inherited;
+  quTotal.Requery();
+  UpdateTTlH;
+  DeleteFromAllItem(quMainReturnRepID.Value,quDetilReturnID.Value,quDetilItemID.Value,quDetilWareHouseID.Value,58);
+  InsertToAllItem1(quMainReturnRepID.Value,quDetilReturnID.Value,quDetilItemID.Value,quMainTransDate.Value,
+                   quDetilWareHouseID.Value,quDetilItemRepID.Value,58,abs(quDetilQty.Value),'AR',quMainLCustName.Value);
+
+  if MessageDlg('Apakah anda akan menginput serial number ? ', mtInformation, [mbYes, mbNo], 0) = mrYes then
+  begin
+     quSN.Last;
+     quSN.Append;
+     Abort;
+  end else
+  begin
+    quDetil.Append;
+  end;
+end;
+
+procedure TfmARTrPengReturPenj.bbFindClick(Sender: TObject);
+begin
+  inherited;
+  with TfmSearch.Create(Self) do
+    try
+       Title := 'Pengganti Retur Penjualan';
+       SQLString := ' SELECT ReturnRepID as Kode_Pengganti_Retur '
+                   +' ,Convert(varchar(10),TransDate,103) as Tanggal  '
+                   +' ,A.CustID as Kode_Pelanggan '
+                   +' ,B.Custname as Nama_Pelanggan '
+                   +' FROM ARTrPenggantiReturPenjHd A '
+                   +' INNER JOIN ARMsCustomer B ON A.CustId=B.CustID '
+                   +' WHERE '+FSQLWhere
+                   +' ORDER BY ReturnRepID ';
+       if ShowModal = MrOK then
+       begin
+         quMain.Locate('ReturnRepID',Res[0],[]);
+       end;
+    finally
+       free;
+    end;
+end;
+
+procedure TfmARTrPengReturPenj.quDetilAfterDelete(DataSet: TDataSet);
+begin
+  inherited;
+  quTotal.Requery();
+  UpdateTTlH;
+end;
+
+procedure TfmARTrPengReturPenj.dxDBButtonEdit2ButtonClick(Sender: TObject;
+  AbsoluteIndex: Integer);
+begin
+  inherited;
+   with TfmSearch.Create(Self) do
+    try
+       Title := 'Valuta';
+       SQLString := 'SELECT CurrId as Kode_Valuta, CurrName as Nama_Valuta'
+               +' FROM SAMsValuta'
+               +' ORDER BY CurrId';
+       if ShowModal = MrOk then
+       begin
+          if quMain.State = dsBrowse then quMain.Edit;
+             quMainCurrID.Value := Res[0];
+       end;
+    finally
+       free;
+    end;
+end;
+
+procedure TfmARTrPengReturPenj.CekStatusRetur;
+Begin //cek apakah sudah ada Pembayaran kalo sudah ada tidak bisa di utak atik
+with quAct, SQL do
+     begin
+        Close; Clear;
+        Add('SELECT top 1 PayReturnRepID,ReturnRepID FROM ARTrPayReturnRepDt WHERE ReturnRepID='''+quMainReturnRepID.Value+'''');
+        Open;
+        if not IsEmpty then
+        begin
+           MsgInfo('Sudah ada Pembayaran ['+quAct.fieldbyname('PayReturnRepId').AsString+'], tidak bisa edit/Delete lagi');
+           Abort;
+        end;
+     end;
+End;
+
+
+procedure TfmARTrPengReturPenj.quDetilBeforeDelete(DataSet: TDataSet);
+begin
+  inherited;
+  CekStatusRetur;
+  DeleteFromAllItem(quMainReturnRepID.Value,quDetilReturnID.Value,quDetilItemID.Value,quDetilWareHouseID.Value,58);
+ // DeleteFromAllMoney1(quMainReturnRepID.Value,quDetilReturnID.Value,quDetilItemID.Value,'33');
+end;
+
+procedure TfmARTrPengReturPenj.quMainBeforeDelete(DataSet: TDataSet);
+begin
+  inherited;
+  CekStatusRetur;
+  DeleteFromAllItem(quMainReturnRepID.Value,58);
+  with quAct,SQL do
+  begin
+    close;clear;
+    add('SELECT * FROM ARTrPenggantiReturPenjDtSN WHERE ReturnRepID='''+quMainReturnRepID.AsString+''' ');
+    open;
+    if not IsEmpty then
+    begin
+       ShowMessage('Hapus dulu data serial numbernya');
+       abort;
+    end;
+  end;
+//  DeleteFromAllMoney(quMainReturnRepID.Value,'33');
+end;
+
+Procedure TfmARTrPengReturPenj.CekForm;
+begin
+  If (Self.quMain.State = dsEdit) or (Self.quMain.State = dsInsert) then
+  begin
+    ShowMessage('Data Belum disimpan');
+    Abort;
+  end;
+  If (Self.quDetil.State = dsEdit) or (Self.quDetil.State = dsInsert) then
+  begin
+    ShowMessage('Data Detil Penjualan Belum disimpan');
+    Abort;
+  end;
+  If (Self.quSN.State = dsEdit) or (Self.quSN.State = dsInsert) then
+  begin
+    ShowMessage('Data Serial Number Belum disimpan');
+    Abort;
+  end;
+end;
+
+procedure TfmARTrPengReturPenj.dxButton2Click(Sender: TObject);
+begin
+  inherited;
+   CekForm;
+   with TfmARTrPayReturnRep.Create (Application) do
+    try
+      ShowModal;
+    finally
+     Free;
+    end;
+end;
+
+procedure TfmARTrPengReturPenj.TmbBrgClick(Sender: TObject);
+begin
+  inherited;
+  quDetil.Append;
+end;
+
+procedure TfmARTrPengReturPenj.BtlBrgClick(Sender: TObject);
+begin
+  inherited;
+  quDetil.Cancel;
+end;
+
+procedure TfmARTrPengReturPenj.bbSimpanDetilClick(Sender: TObject);
+begin
+  inherited;
+  if Self.quDetil.State = dsInsert then
+  begin
+   Self.quDetil.Edit;
+   Self.quDetil.Post;
+   Self.quDetil.Requery();
+  end;
+  if Self.quDetil.State = dsEdit then
+  begin
+   quDetil.Post;
+  end;
+end;
+
+procedure TfmARTrPengReturPenj.KrgBrgClick(Sender: TObject);
+begin
+  inherited;
+  if (dsdetil <> nil) and (dsDetil.DataSet <> nil) and
+     (MessageDlg('Hapus Barang ?', mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
+        dsDetil.DataSet.Delete;
+end;
+
+procedure TfmARTrPengReturPenj.quDetilBeforeEdit(DataSet: TDataSet);
+begin
+  inherited;
+  CekStatusRetur;
+end;
+
+procedure TfmARTrPengReturPenj.quDetilBeforeInsert(DataSet: TDataSet);
+begin
+  inherited;
+  CekStatusRetur;
+end;
+
+procedure TfmARTrPengReturPenj.quSNBeforeEdit(DataSet: TDataSet);
+begin
+  inherited;
+  CekStatusRetur;
+end;
+
+procedure TfmARTrPengReturPenj.quSNBeforeDelete(DataSet: TDataSet);
+begin
+  inherited;
+  CekStatusRetur;
+  UpdateSerialNumber;
+end;
+
+procedure TfmARTrPengReturPenj.quMainBeforeEdit(DataSet: TDataSet);
+begin
+  inherited;
+  CekStatusRetur;
+end;
+
+procedure TfmARTrPengReturPenj.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+  inherited;
+  CekForm;
+end;
+
+procedure TfmARTrPengReturPenj.dxDBGrid2SNIDButtonClick(Sender: TObject;
+  AbsoluteIndex: Integer);
+begin
+  inherited;
+  with TfmSearch.Create(Self) do
+    try
+       Title := 'Serial Number ';
+       SQLString := 'SELECT K.SNID as Serial_Number,K.PurchaseID as Nota,CONVERT(VARCHAR(10),K.Transdate,103) as Tgl,L.SuppName FROM ('
+                   +'SELECT A.SNID,A.PurchaseID,B.Transdate,A.SuppID,A.ItemID,A.FgJual FROM APTrPurchaseDtSN A '
+                   +'INNER JOIN APTrPurchaseHd B ON A.PurchaseID=B.PurchaseID AND A.SuppID=B.SuppID UNION ALL '
+                   +'SELECT A.SNID,A.KonsinyasiID,B.Transdate,B.SuppID,A.ItemID,A.FgJual FROM APTrKonsinyasiDtSN A '
+                   +'INNER JOIN APTrKonsinyasiHd B ON A.KonsinyasiID=B.KonsinyasiID UNION ALL '
+                   +'SELECT A.SNID,A.ReturnRepID,B.Transdate,B.SuppID,A.ItemID,A.FgJual FROM APTrReturnRepSN A '
+                   +'INNER JOIN APTrReturnRepHd B ON A.ReturnRepID=B.ReturnRepID) as K '
+                   +'INNER JOIN APMsSupplier L ON K.SuppID=L.SuppID '
+                   +'WHERE K.FgJual<>''Y'' AND K.ItemID='''+quDetilItemRepID.AsString+''' ORDER BY K.SNID';
+       if ShowModal = MrOK then
+       begin
+          if quSN.State = dsBrowse then quSN.Edit;
+             quSNSNID.Value :=Res[0];
+       end;
+    finally
+       free;
+    end;
+end;
+
+end.

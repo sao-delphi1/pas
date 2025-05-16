@@ -1,0 +1,214 @@
+unit APMsSupplier;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdLv4, dxExEdtr, ActnList, DB, dxCntner, ADODB, dxTL, dxDBCtrl,
+  dxDBGrid, dxPageControl, dxEdLib, dxButton, StdCtrls, ExtCtrls, Buttons,
+  dxCore, dxContainer, dxDBELib, dxEditor, DBCtrls;
+
+type
+  TfmAPMsSupplier = class(TfmStdLv4)
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label5: TLabel;
+    Label6: TLabel;
+    Label7: TLabel;
+    Label8: TLabel;
+    bbSave: TdxButton;
+    bbCancel: TdxButton;
+    dbgListKdSupplier: TdxDBGridColumn;
+    dbgListNmSupplier: TdxDBGridColumn;
+    dbgListContactPerson: TdxDBGridColumn;
+    dbgListPhone: TdxDBGridColumn;
+    dbgListAlamat: TdxDBGridColumn;
+    dbgListKota: TdxDBGridColumn;
+    dbgListFax: TdxDBGridColumn;
+    DBText2: TDBText;
+    Label4: TLabel;
+    DBText1: TDBText;
+    Label9: TLabel;
+    dxDBEdit1: TdxDBEdit;
+    dxDBEdit2: TdxDBEdit;
+    dxDBMemo1: TdxDBMemo;
+    dxDBEdit3: TdxDBEdit;
+    dxDBEdit5: TdxDBEdit;
+    dxDBEdit7: TdxDBEdit;
+    dxDBEdit6: TdxDBEdit;
+    Label10: TLabel;
+    Label12: TLabel;
+    Label11: TLabel;
+    Label13: TLabel;
+    quMainSuppID: TStringField;
+    quMainSuppName: TStringField;
+    quMainAddress: TStringField;
+    quMainCity: TStringField;
+    quMainContactPerson: TStringField;
+    quMainPhone: TStringField;
+    quMainFax: TStringField;
+    quMainEmail: TStringField;
+    quMainNote: TStringField;
+    quMainUpdDate: TDateTimeField;
+    quMainUpdUser: TStringField;
+    dxDBEdit4: TdxDBEdit;
+    dxDBMemo2: TdxDBMemo;
+    dbgListEmail: TdxDBGridColumn;
+    dbgListNote: TdxDBGridColumn;
+    quCek: TADOQuery;
+    quMainTerm: TIntegerField;
+    Label14: TLabel;
+    dxDBEdit8: TdxDBEdit;
+    Label15: TLabel;
+    procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure dsMainStateChange(Sender: TObject);
+    procedure dxDBEdit1KeyPress(Sender: TObject; var Key: Char);
+    procedure quMainBeforePost(DataSet: TDataSet);
+    procedure bbFindClick(Sender: TObject);
+    procedure quMainNewRecord(DataSet: TDataSet);
+    procedure ActDeleteExecute(Sender: TObject);
+  private
+    { Private declarations }
+    Procedure Status;
+  public
+    { Public declarations }
+    CallAnotherForm : Boolean;
+    TempSupp : string;
+  end;
+
+var
+  fmAPMsSupplier: TfmAPMsSupplier;
+
+implementation
+
+uses StdLv2, StdLv1, StdLv0, UnitGeneral, ConMain, Search, MyUnit;
+
+{$R *.dfm}
+Procedure TfmAPMsSupplier.Status;
+Begin
+  with quAct,sql do
+  Begin
+    Close;Clear;
+    Add('Select SuppId FROM APTrPurchaseHd WHERE SuppId='''+quMainSuppID.Value+'''');
+    Open;
+    if not IsEmpty then
+    Begin
+       MsgInfo('Kode Supplier sudah di pakai');
+       Abort;
+    End;
+ End;
+End;
+procedure TfmAPMsSupplier.FormCreate(Sender: TObject);
+begin
+  inherited;
+  UsePeriod := FALSE;
+end;
+
+procedure TfmAPMsSupplier.FormShow(Sender: TObject);
+begin
+  inherited;
+  quMain.Open 
+end;
+
+procedure TfmAPMsSupplier.dsMainStateChange(Sender: TObject);
+begin
+  inherited;
+  SetBtnOperationVisible(bbSave,bbCancel,FActDS);
+  SetReadOnly(dxDBEdit1,TRUE);
+
+end;
+
+procedure TfmAPMsSupplier.dxDBEdit1KeyPress(Sender: TObject;
+  var Key: Char);
+begin
+  inherited;
+  if Key=#13 then PostMessage(Self.Handle,WM_NEXTDLGCTL,0,0)
+end;
+
+procedure TfmAPMsSupplier.quMainBeforePost(DataSet: TDataSet);
+var ST : string;
+begin
+  inherited;
+  with quAct,SQL do
+  begin
+    Close;Clear;
+    Add('SELECT UPPER(LEFT('''+dxDBEdit2.Text+''',1)) as A');
+    OPen;
+  end;
+  if quMain.State = dsInsert then
+  begin
+    ST := 'S'+quAct.FieldByName('A').AsString;
+    quMainSuppID.AsString := ST+ FormatFloat('000', RunNumberGL(quAct, 'APMsSupplier','SuppID',ST,'0') + 1);
+  end;
+
+  if Trim(quMainSuppID.Value)='' then
+  begin
+    MsgInfo('Kode Supplier tidak boleh kosong');
+    quMainSuppID.FocusControl;
+    Abort;
+  end;
+
+  if quMain.State = dsInsert then
+  Begin
+    With quAct,Sql do
+    Begin
+      Close;Clear;
+      add('Select SuppId from APMsSupplier Where SuppId='''+quMainSuppID.Value+''' ');
+      Open;
+      If Not IsEmpty then
+      Begin
+        MsgInfo('Kode Supplier sudah dipakai Kode Supplier lain');
+        quMainSuppID.FocusControl;
+        Abort;
+      End;
+    End;
+  End;
+
+  If Trim(quMainSuppName.Value)='' then
+  begin
+    MsgInfo('Nama Supplier tidak boleh kosong');
+    quMainSuppName.FocusControl;
+    Abort;
+  end;
+
+  quMainUpdDate.AsDateTime := Now;
+  quMainUpdUser.AsString := dmMain.UserId;
+end;
+
+procedure TfmAPMsSupplier.bbFindClick(Sender: TObject);
+begin
+  inherited;
+  with TfmSearch.Create(Self) do
+      begin
+       try
+         Title := 'Master Supplier';
+         SQLString := ' Select SuppId as Kode_Supplier,SuppName as Nama_Supplier,Address as Alamat,'
+                     +' City as Kota,Phone as Telepon,'
+                     +' Contactperson as Kontak_Person,Fax from APMsSupplier ';
+         if ShowModal = MrOk then
+         begin
+            qumain.Locate('SuppId',Res[0],[]);
+         end;
+       finally
+         free;
+       end;
+    end;
+end;
+
+procedure TfmAPMsSupplier.quMainNewRecord(DataSet: TDataSet);
+begin
+  inherited;
+  quMainTerm.AsCurrency := 30;
+  quMainSuppName.FocusControl;
+end;
+
+procedure TfmAPMsSupplier.ActDeleteExecute(Sender: TObject);
+begin
+   Status;
+  inherited;
+
+end;
+
+end.

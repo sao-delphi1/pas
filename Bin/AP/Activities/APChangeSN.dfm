@@ -1,0 +1,44 @@
+inherited fmAPChangeSN: TfmAPChangeSN
+  Left = 509
+  Top = 273
+  Caption = 'fmAPChangeSN'
+  PixelsPerInch = 96
+  TextHeight = 13
+  object dbg: TdxDBGrid [2]
+    Left = 0
+    Top = 149
+    Width = 661
+    Height = 172
+    Bands = <
+      item
+        Alignment = taLeftJustify
+        Caption = 'List Item(s)'
+      end>
+    DefaultLayout = True
+    HeaderPanelRowCount = 1
+    SummaryGroups = <>
+    SummarySeparator = ', '
+    TabOrder = 1
+    DataSource = dsMain
+    Filter.Criteria = {00000000}
+    HideFocusRect = True
+    HideSelection = True
+    LookAndFeel = lfFlat
+    OptionsDB = [edgoCanAppend, edgoCancelOnExit, edgoCanDelete, edgoCanInsert, edgoCanNavigation, edgoConfirmDelete, edgoUseBookmarks]
+    OptionsView = [edgoBandHeaderWidth, edgoIndicator, edgoUseBitmap]
+    object dbgColumn1: TdxDBGridColumn
+      BandIndex = 0
+      RowIndex = 0
+      FieldName = 'TesterField'
+    end
+  end
+  inherited quMain: TADOQuery
+    SQL.Strings = (
+      'select '#39#39' as TesterField')
+    object quMainTesterField: TStringField
+      FieldName = 'TesterField'
+      ReadOnly = True
+      Size = 1
+    end
+  end
+end

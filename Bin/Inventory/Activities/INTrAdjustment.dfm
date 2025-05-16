@@ -1,0 +1,561 @@
+inherited fmINTrAdjustment: TfmINTrAdjustment
+  Left = 53
+  Top = 94
+  Caption = 'Transaksi Stok Opname'
+  ClientHeight = 590
+  ClientWidth = 908
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited paLeft: TdxContainer
+    Height = 541
+    inherited pa3: TdxContainer
+      Height = 362
+    end
+    inherited paOperation: TdxContainer
+      inherited bbFind: TdxButton
+        OnClick = bbFindClick
+      end
+    end
+  end
+  inherited paBottom: TdxContainer
+    Top = 578
+    Width = 908
+  end
+  inherited pa2: TdxContainer
+    Height = 541
+  end
+  inherited pcMain: TdxPageControl
+    Width = 715
+    Height = 541
+    inherited ts01: TdxTabSheet
+      inherited dbgList: TdxDBGrid
+        Width = 718
+        Height = 525
+        Bands = <
+          item
+            Fixed = bfLeft
+          end>
+        DefaultLayout = False
+        Filter.Criteria = {00000000}
+        object dbgListTransID: TdxDBGridColumn
+          Caption = 'Kode Trans'
+          DisableEditor = True
+          BandIndex = 0
+          RowIndex = 0
+          FieldName = 'TransID'
+        end
+        object dbgListTransDate: TdxDBGridColumn
+          Caption = 'Tgl Trans'
+          DisableEditor = True
+          BandIndex = 0
+          RowIndex = 0
+          FieldName = 'TransDate'
+        end
+        object dbgListNote: TdxDBGridColumn
+          DisableEditor = True
+          BandIndex = 0
+          RowIndex = 0
+          FieldName = 'Note'
+        end
+      end
+    end
+    inherited ts02: TdxTabSheet
+      object Panel1: TPanel
+        Left = 0
+        Top = 0
+        Width = 715
+        Height = 125
+        Align = alTop
+        BevelInner = bvRaised
+        BevelOuter = bvLowered
+        Color = 14467152
+        TabOrder = 0
+        DesignSize = (
+          715
+          125)
+        object Label1: TLabel
+          Left = 8
+          Top = 21
+          Width = 117
+          Height = 13
+          Alignment = taRightJustify
+          AutoSize = False
+          Caption = 'Kode Trans :'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = []
+          ParentFont = False
+          Transparent = True
+        end
+        object Label2: TLabel
+          Left = 8
+          Top = 42
+          Width = 117
+          Height = 13
+          Alignment = taRightJustify
+          AutoSize = False
+          Caption = 'Tgl Trans :'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = []
+          ParentFont = False
+          Transparent = True
+        end
+        object Label3: TLabel
+          Left = 19
+          Top = 62
+          Width = 105
+          Height = 13
+          Alignment = taRightJustify
+          AutoSize = False
+          Caption = 'Gudang :'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = []
+          ParentFont = False
+          Transparent = True
+        end
+        object DBText1: TDBText
+          Left = 252
+          Top = 60
+          Width = 42
+          Height = 13
+          AutoSize = True
+          DataField = 'LWareHouseName'
+          DataSource = dsMain
+        end
+        object bbSave: TdxButton
+          Tag = 3333
+          Left = 558
+          Top = 97
+          Height = 19
+          About = 'Design eXperience. '#169' 2002 M. Hoffmann'
+          Anchors = [akRight, akBottom]
+          Color = 9609897
+          ParentColor = False
+          ParentShowHint = False
+          ShowHint = True
+          Version = '1.0.2e'
+          Action = ActSave
+          Colors.FocusedFrom = 16750383
+          Colors.FocusedTo = 16763799
+          Colors.HighlightFrom = clWhite
+          Colors.HighlightTo = clWhite
+          HotTrack = True
+          TabOrder = 0
+          TabStop = False
+        end
+        object bbCancel: TdxButton
+          Tag = 4444
+          Left = 634
+          Top = 97
+          Height = 19
+          About = 'Design eXperience. '#169' 2002 M. Hoffmann'
+          Anchors = [akRight, akBottom]
+          Color = 9609897
+          ParentColor = False
+          ParentShowHint = False
+          ShowHint = True
+          Version = '1.0.2e'
+          Action = ActCancel
+          Colors.FocusedFrom = 16750383
+          Colors.FocusedTo = 16763799
+          Colors.HighlightFrom = clWhite
+          Colors.HighlightTo = clWhite
+          HotTrack = True
+          TabOrder = 1
+          TabStop = False
+        end
+        object GroupBox2: TGroupBox
+          Left = 491
+          Top = 8
+          Width = 221
+          Height = 50
+          Ctl3D = False
+          ParentCtl3D = False
+          TabOrder = 2
+          object Label21: TLabel
+            Left = 16
+            Top = 10
+            Width = 28
+            Height = 13
+            Alignment = taRightJustify
+            Caption = 'User :'
+          end
+          object DBText8: TDBText
+            Left = 53
+            Top = 9
+            Width = 132
+            Height = 17
+            DataField = 'UpdUser'
+            DataSource = dsMain
+          end
+          object Label22: TLabel
+            Left = 7
+            Top = 30
+            Width = 38
+            Height = 13
+            Alignment = taRightJustify
+            Caption = 'Waktu :'
+          end
+          object DBText9: TDBText
+            Left = 54
+            Top = 30
+            Width = 132
+            Height = 17
+            DataField = 'UpdDate'
+            DataSource = dsMain
+          end
+        end
+        object dxDBEdit1: TdxDBEdit
+          Left = 128
+          Top = 16
+          Width = 139
+          TabOrder = 3
+          OnKeyPress = dxDBEdit1KeyPress
+          DataField = 'TransID'
+          DataSource = dsMain
+          StyleController = SCEdit
+        end
+        object dxDBDateEdit1: TdxDBDateEdit
+          Left = 128
+          Top = 37
+          Width = 89
+          TabOrder = 4
+          OnKeyPress = dxDBEdit1KeyPress
+          DataField = 'TransDate'
+          DataSource = dsMain
+          StyleController = SCEdit
+          UseEditMask = True
+          StoredValues = 4
+        end
+        object dxDBButtonEdit2: TdxDBButtonEdit
+          Left = 128
+          Top = 58
+          Width = 120
+          TabOrder = 5
+          OnKeyPress = dxDBEdit1KeyPress
+          DataField = 'WareHouseID'
+          DataSource = dsMain
+          StyleController = SCEdit
+          Buttons = <
+            item
+              Default = True
+            end>
+          OnButtonClick = dxDBButtonEdit2ButtonClick
+          ExistButtons = True
+        end
+      end
+      object dbg: TdxDBGrid
+        Left = 0
+        Top = 125
+        Width = 715
+        Height = 360
+        Bands = <
+          item
+            Fixed = bfLeft
+          end
+          item
+          end>
+        DefaultLayout = False
+        HeaderPanelRowCount = 1
+        SummaryGroups = <>
+        SummarySeparator = ', '
+        TabOrder = 1
+        OnEnter = dbgEnter
+        DataSource = dsDetil
+        Filter.Criteria = {00000000}
+        HideFocusRect = True
+        HideSelection = True
+        LookAndFeel = lfFlat
+        OptionsView = [edgoBandHeaderWidth, edgoIndicator, edgoUseBitmap]
+        object dbgItemID: TdxDBGridButtonColumn
+          Caption = 'Kode Barang'
+          Width = 100
+          BandIndex = 0
+          RowIndex = 0
+          FieldName = 'ItemID'
+          Buttons = <
+            item
+              Default = True
+            end>
+          OnButtonClick = dbgItemIDButtonClick
+        end
+        object dbgItemName: TdxDBGridColumn
+          Caption = 'Nama Barang'
+          Color = clWhite
+          MaxLength = 100
+          Width = 340
+          BandIndex = 0
+          RowIndex = 0
+          FieldName = 'LItemName'
+        end
+        object dbgFgStatus: TdxDBGridImageColumn
+          Alignment = taLeftJustify
+          Caption = 'Status'
+          MinWidth = 16
+          Width = 70
+          BandIndex = 1
+          RowIndex = 0
+          FieldName = 'FgStatus'
+          Descriptions.Strings = (
+            'Tambah'
+            'Kurang')
+          ImageIndexes.Strings = (
+            '0'
+            '1')
+          ShowDescription = True
+          Values.Strings = (
+            'T'
+            'K')
+        end
+        object dbgQty: TdxDBGridColumn
+          Caption = 'Jumlah'
+          Width = 80
+          BandIndex = 1
+          RowIndex = 0
+          FieldName = 'Qty'
+        end
+        object dbgAlasan: TdxDBGridBlobColumn
+          Width = 48
+          BandIndex = 1
+          RowIndex = 0
+          FieldName = 'Alasan'
+          BlobKind = bkMemo
+        end
+      end
+      object TmbBrg: TdxButton
+        Tag = 1111
+        Left = 5
+        Top = 491
+        Width = 85
+        Height = 23
+        About = 'Design eXperience. '#169' 2002 M. Hoffmann'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        Version = '1.0.2e'
+        OnClick = TmbBrgClick
+        Caption = '(+) Barang'
+        TabOrder = 2
+        TabStop = False
+      end
+      object KrgBrg: TdxButton
+        Tag = 2222
+        Left = 91
+        Top = 491
+        Width = 85
+        Height = 23
+        About = 'Design eXperience. '#169' 2002 M. Hoffmann'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        Version = '1.0.2e'
+        OnClick = KrgBrgClick
+        Caption = '(-) Barang'
+        TabOrder = 3
+        TabStop = False
+      end
+      object BtlBrg: TdxButton
+        Tag = 4444
+        Left = 263
+        Top = 491
+        Width = 85
+        Height = 23
+        About = 'Design eXperience. '#169' 2002 M. Hoffmann'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        Version = '1.0.2e'
+        OnClick = BtlBrgClick
+        Caption = 'Batal'
+        TabOrder = 4
+        TabStop = False
+      end
+      object bbSimpanDetil: TdxButton
+        Tag = 4444
+        Left = 177
+        Top = 491
+        Width = 85
+        Height = 23
+        About = 'Design eXperience. '#169' 2002 M. Hoffmann'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        Version = '1.0.2e'
+        OnClick = bbSimpanDetilClick
+        Caption = 'Simpan'
+        TabOrder = 5
+        TabStop = False
+      end
+    end
+  end
+  inherited paToolBar: TdxContainer
+    Width = 908
+    inherited sbLast: TSpeedButton
+      Left = 880
+    end
+    inherited sbNext: TSpeedButton
+      Left = 857
+    end
+    inherited sbPrev: TSpeedButton
+      Left = 834
+    end
+    inherited sbFirst: TSpeedButton
+      Left = 811
+    end
+    inherited sbPeriod: TSpeedButton
+      Left = 783
+    end
+    inherited BvlPeriod: TBevel
+      Left = 537
+    end
+    inherited laPeriod: TLabel
+      Left = 541
+    end
+  end
+  inherited quMain: TADOQuery
+    BeforeDelete = quMainBeforeDelete
+    OnNewRecord = quMainNewRecord
+    SQL.Strings = (
+      'SELECT * FROM INTrAdjustmentHd')
+    Left = 224
+    object quMainTransID: TStringField
+      FieldName = 'TransID'
+    end
+    object quMainTransDate: TDateTimeField
+      FieldName = 'TransDate'
+    end
+    object quMainWareHouseID: TStringField
+      FieldName = 'WareHouseID'
+    end
+    object quMainNote: TStringField
+      FieldName = 'Note'
+      Size = 100
+    end
+    object quMainUpdDate: TDateTimeField
+      FieldName = 'UpdDate'
+      DisplayFormat = 'DD MMMM YYYY HH:MM:SS'
+      EditMask = 'DD MMMM YYYY HH:MM:SS'
+    end
+    object quMainUpdUser: TStringField
+      FieldName = 'UpdUser'
+    end
+    object quMainLWareHouseName: TStringField
+      FieldKind = fkLookup
+      FieldName = 'LWareHouseName'
+      LookupDataSet = quWareHouse
+      LookupKeyFields = 'WareHouseID'
+      LookupResultField = 'WareHouseName'
+      KeyFields = 'WareHouseID'
+      Size = 50
+      Lookup = True
+    end
+  end
+  inherited quDetil: TADOQuery
+    BeforeDelete = quDetilBeforeDelete
+    OnNewRecord = quDetilNewRecord
+    Parameters = <
+      item
+        Name = 'TransID'
+        DataType = ftString
+        NumericScale = 255
+        Precision = 255
+        Size = 20
+        Value = Null
+      end>
+    SQL.Strings = (
+      'SELECT * FROM INTrAdjustmentDt WHERE TransID=:TransID'
+      'ORDER BY ItemID')
+    object quDetilTransID: TStringField
+      FieldName = 'TransID'
+    end
+    object quDetilItemID: TStringField
+      FieldName = 'ItemID'
+      Size = 100
+    end
+    object quDetilLItemName: TStringField
+      FieldKind = fkLookup
+      FieldName = 'LItemName'
+      LookupDataSet = quItem
+      LookupKeyFields = 'ItemID'
+      LookupResultField = 'ItemName'
+      KeyFields = 'ItemID'
+      Size = 50
+      Lookup = True
+    end
+    object quDetilFgStatus: TStringField
+      FieldName = 'FgStatus'
+      FixedChar = True
+      Size = 1
+    end
+    object quDetilQty: TBCDField
+      FieldName = 'Qty'
+      Precision = 18
+    end
+    object quDetilAlasan: TStringField
+      FieldName = 'Alasan'
+      Size = 150
+    end
+    object quDetilUpdDate: TDateTimeField
+      FieldName = 'UpdDate'
+    end
+    object quDetilUpdUser: TStringField
+      FieldName = 'UpdUser'
+    end
+  end
+  inherited dsDetil: TDataSource
+    OnStateChange = dsDetilStateChange
+  end
+  object quWareHouse: TADOQuery
+    Connection = dmMain.dbConn
+    Parameters = <>
+    SQL.Strings = (
+      'SELECT WareHouseID, WareHouseName FROM INMsWareHouse')
+    Left = 536
+    Top = 104
+    object quWareHouseWareHouseID: TStringField
+      FieldName = 'WareHouseID'
+    end
+    object quWareHouseWareHouseName: TStringField
+      FieldName = 'WareHouseName'
+      Size = 100
+    end
+  end
+  object quItem: TADOQuery
+    Connection = dmMain.dbConn
+    Parameters = <>
+    SQL.Strings = (
+      'SELECT ItemID, ItemName,UOMId FROM INMsItem')
+    Left = 312
+    Top = 304
+  end
+  object quAct1: TADOQuery
+    Connection = dmMain.dbConn
+    CursorType = ctStatic
+    DataSource = dsMain
+    Parameters = <>
+    SQL.Strings = (
+      'SELECT* FROM APMsSupplier')
+    Left = 396
+    Top = 4
+  end
+end

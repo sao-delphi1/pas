@@ -1,0 +1,1914 @@
+inherited fmAPPurchaseOrder: TfmAPPurchaseOrder
+  Left = 806
+  Top = 65
+  Caption = 'Pembelian'
+  ClientHeight = 642
+  ClientWidth = 937
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Label12: TLabel [0]
+    Left = 248
+    Top = 24
+    Width = 38
+    Height = 13
+    Caption = 'Label12'
+  end
+  inherited paLeft: TdxContainer
+    Height = 593
+    inherited pa3: TdxContainer
+      Height = 414
+      object Label23: TLabel
+        Left = 5
+        Top = 5
+        Width = 95
+        Height = 13
+        Alignment = taRightJustify
+        Caption = 'Rek Pembelian (D) :'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        ParentFont = False
+        Transparent = True
+      end
+      object Label24: TLabel
+        Left = 5
+        Top = 45
+        Width = 68
+        Height = 13
+        Alignment = taRightJustify
+        Caption = 'Rek PPN (D) :'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        ParentFont = False
+        Transparent = True
+      end
+      object Label25: TLabel
+        Left = 5
+        Top = 85
+        Width = 74
+        Height = 13
+        Alignment = taRightJustify
+        Caption = 'Rek Utang (K) :'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        ParentFont = False
+        Transparent = True
+      end
+      object Label26: TLabel
+        Left = 5
+        Top = 125
+        Width = 99
+        Height = 13
+        Alignment = taRightJustify
+        Caption = 'Rek Persediaan (D) :'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        ParentFont = False
+        Transparent = True
+      end
+      object Label27: TLabel
+        Left = 5
+        Top = 165
+        Width = 67
+        Height = 13
+        Alignment = taRightJustify
+        Caption = 'Rek HPP (K) :'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        ParentFont = False
+        Transparent = True
+      end
+      object Label28: TLabel
+        Left = 5
+        Top = 268
+        Width = 46
+        Height = 13
+        Caption = 'Otorisasi :'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        ParentFont = False
+        Transparent = True
+      end
+      object bbPembayaran: TdxButton
+        Tag = 4444
+        Left = -814
+        Top = -133
+        Width = 135
+        Height = 45
+        About = 'Design eXperience. '#169' 2002 M. Hoffmann'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold]
+        ParentFont = False
+        Version = '1.0.2e'
+        OnClick = bbPembayaranClick
+        Caption = 'Pembayaran'
+        TabOrder = 0
+        TabStop = False
+      end
+      object dxDBButtonEdit3: TdxDBButtonEdit
+        Left = -814
+        Top = -133
+        Width = 125
+        TabOrder = 1
+        OnKeyPress = dxDBEdit1KeyPress
+        DataField = 'RekeningK'
+        DataSource = dsMain
+        StyleController = SCEdit
+        Buttons = <
+          item
+            Default = True
+          end>
+        OnButtonClick = dxDBButtonEdit3ButtonClick
+        ExistButtons = True
+      end
+      object dxDBButtonEdit4: TdxDBButtonEdit
+        Left = -814
+        Top = -133
+        Width = 125
+        TabOrder = 2
+        OnKeyPress = dxDBEdit1KeyPress
+        DataField = 'RekeningP'
+        DataSource = dsMain
+        StyleController = SCEdit
+        Buttons = <
+          item
+            Default = True
+          end>
+        OnButtonClick = dxDBButtonEdit4ButtonClick
+        ExistButtons = True
+      end
+      object dxDBButtonEdit5: TdxDBButtonEdit
+        Left = -814
+        Top = -133
+        Width = 125
+        TabOrder = 3
+        OnKeyPress = dxDBEdit1KeyPress
+        DataField = 'RekeningU'
+        DataSource = dsMain
+        StyleController = SCEdit
+        Buttons = <
+          item
+            Default = True
+          end>
+        OnButtonClick = dxDBButtonEdit5ButtonClick
+        ExistButtons = True
+      end
+      object dxDBButtonEdit6: TdxDBButtonEdit
+        Left = -814
+        Top = -133
+        Width = 125
+        TabOrder = 4
+        OnKeyPress = dxDBEdit1KeyPress
+        DataField = 'RekPersediaan'
+        DataSource = dsMain
+        StyleController = SCEdit
+        Buttons = <
+          item
+            Default = True
+          end>
+        OnButtonClick = dxDBButtonEdit6ButtonClick
+        ExistButtons = True
+      end
+      object dxDBButtonEdit7: TdxDBButtonEdit
+        Left = -814
+        Top = -133
+        Width = 125
+        TabOrder = 5
+        OnKeyPress = dxDBEdit1KeyPress
+        DataField = 'RekHPP'
+        DataSource = dsMain
+        StyleController = SCEdit
+        Buttons = <
+          item
+            Default = True
+          end>
+        OnButtonClick = dxDBButtonEdit7ButtonClick
+        ExistButtons = True
+      end
+      object dxDBImageEdit2: TdxDBImageEdit
+        Left = -814
+        Top = -133
+        Width = 124
+        TabOrder = 6
+        OnKeyPress = dxDBEdit1KeyPress
+        DataField = 'FgOto'
+        DataSource = dsMain
+        StyleController = SCEdit
+        Descriptions.Strings = (
+          'Sudah Otorisasi'
+          'Belum Otorisasi')
+        ImageIndexes.Strings = (
+          '0'
+          '1')
+        Values.Strings = (
+          'Y'
+          'T')
+      end
+    end
+    inherited paOperation: TdxContainer
+      Top = 8
+      inherited bbFind: TdxButton
+        OnClick = bbFindClick
+      end
+    end
+    inherited pa1: TdxContainer
+      Top = 0
+    end
+  end
+  inherited paBottom: TdxContainer
+    Top = 630
+    Width = 937
+  end
+  inherited pa2: TdxContainer
+    Height = 593
+  end
+  inherited pcMain: TdxPageControl
+    Width = 744
+    Height = 593
+    inherited ts01: TdxTabSheet
+      inherited dbgList: TdxDBGrid
+        Width = 797
+        Height = 600
+        DefaultLayout = False
+        Filter.Criteria = {00000000}
+        object dbgListPOID: TdxDBGridMaskColumn
+          Caption = 'Invoice Pembelian'
+          DisableEditor = True
+          Width = 202
+          BandIndex = 0
+          RowIndex = 0
+          FieldName = 'PurchaseID'
+        end
+        object dbgListPODate: TdxDBGridDateColumn
+          Caption = 'Tanggal'
+          DisableEditor = True
+          Width = 112
+          BandIndex = 0
+          RowIndex = 0
+          FieldName = 'TransDate'
+        end
+        object dbgListSuppId: TdxDBGridMaskColumn
+          Caption = 'Kode Supplier'
+          DisableEditor = True
+          Width = 124
+          BandIndex = 0
+          RowIndex = 0
+          FieldName = 'SuppID'
+        end
+        object dbgListLSuppname: TdxDBGridLookupColumn
+          Caption = 'Nama Supplier'
+          DisableEditor = True
+          Width = 153
+          BandIndex = 0
+          RowIndex = 0
+          FieldName = 'LuSupplier'
+        end
+      end
+    end
+    inherited ts02: TdxTabSheet
+      object Shape3: TShape
+        Left = 381
+        Top = 390
+        Width = 356
+        Height = 31
+        Brush.Color = 14467152
+      end
+      object Label7: TLabel
+        Left = 386
+        Top = 393
+        Width = 90
+        Height = 24
+        Caption = 'Sub Total'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -20
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        Transparent = True
+      end
+      object DBText5: TDBText
+        Left = 561
+        Top = 395
+        Width = 169
+        Height = 21
+        Alignment = taRightJustify
+        DataField = 'SubTotal'
+        DataSource = dsTotal
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -20
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        Transparent = True
+      end
+      object Label1: TLabel
+        Left = 44
+        Top = 12
+        Width = 58
+        Height = 13
+        Alignment = taRightJustify
+        Caption = 'No Invoice :'
+        Color = clRed
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        ParentColor = False
+        ParentFont = False
+        Transparent = True
+      end
+      object Label2: TLabel
+        Left = 57
+        Top = 52
+        Width = 45
+        Height = 13
+        Alignment = taRightJustify
+        Caption = 'Tanggal :'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        ParentFont = False
+        Transparent = True
+      end
+      object Label3: TLabel
+        Left = 58
+        Top = 72
+        Width = 44
+        Height = 13
+        Alignment = taRightJustify
+        Caption = 'Supplier :'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        ParentFont = False
+        Transparent = True
+      end
+      object Label4: TLabel
+        Left = 41
+        Top = 152
+        Width = 61
+        Height = 13
+        Alignment = taRightJustify
+        Caption = 'Keterangan :'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        ParentFont = False
+        Transparent = True
+      end
+      object Label13: TLabel
+        Left = 5
+        Top = 200
+        Width = 126
+        Height = 20
+        Caption = 'Detil Pembelian'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clBlack
+        Font.Height = -16
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold, fsUnderline]
+        ParentFont = False
+      end
+      object DBText1: TDBText
+        Left = 252
+        Top = 72
+        Width = 42
+        Height = 13
+        AutoSize = True
+        DataField = 'LuSupplier'
+        DataSource = dsMain
+      end
+      object Label5: TLabel
+        Left = 64
+        Top = 92
+        Width = 36
+        Height = 13
+        Alignment = taRightJustify
+        Caption = 'Valuta :'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        ParentFont = False
+        Transparent = True
+      end
+      object DBText4: TDBText
+        Left = 180
+        Top = 92
+        Width = 42
+        Height = 13
+        AutoSize = True
+        DataField = 'LCurrName'
+        DataSource = dsMain
+      end
+      object DBText6: TDBText
+        Left = 263
+        Top = 10
+        Width = 242
+        Height = 34
+        Alignment = taCenter
+        DataField = 'LCurrName'
+        DataSource = dsMain
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -27
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object Label6: TLabel
+        Left = 34
+        Top = 172
+        Width = 68
+        Height = 13
+        Alignment = taRightJustify
+        Caption = 'Jatuh Tempo :'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        ParentFont = False
+        Transparent = True
+      end
+      object Label8: TLabel
+        Left = 168
+        Top = 172
+        Width = 21
+        Height = 13
+        Alignment = taRightJustify
+        AutoSize = False
+        Caption = 'Hari'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        ParentFont = False
+        Transparent = True
+      end
+      object Label20: TLabel
+        Left = 197
+        Top = 172
+        Width = 86
+        Height = 13
+        Alignment = taRightJustify
+        Caption = 'Tgl Jatuh Tempo :'
+      end
+      object DBText7: TDBText
+        Left = 287
+        Top = 172
+        Width = 141
+        Height = 13
+        DataField = 'TglJthTempo'
+        DataSource = dsMain
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clRed
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object Shape4: TShape
+        Left = 381
+        Top = 420
+        Width = 356
+        Height = 31
+        Brush.Color = 14467152
+      end
+      object Label15: TLabel
+        Left = 386
+        Top = 423
+        Width = 129
+        Height = 24
+        Caption = 'PPN            %'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -20
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        Transparent = True
+      end
+      object Shape5: TShape
+        Left = 381
+        Top = 450
+        Width = 356
+        Height = 31
+        Brush.Color = 14467152
+      end
+      object Label16: TLabel
+        Left = 386
+        Top = 453
+        Width = 112
+        Height = 24
+        Caption = 'Grand Total'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -20
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        Transparent = True
+      end
+      object DBText10: TDBText
+        Left = 561
+        Top = 455
+        Width = 169
+        Height = 21
+        Alignment = taRightJustify
+        DataField = 'GT'
+        DataSource = dsTotal
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -20
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        Transparent = True
+      end
+      object Label17: TLabel
+        Left = 551
+        Top = 423
+        Width = 7
+        Height = 24
+        Caption = ':'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -20
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        Transparent = True
+      end
+      object Label18: TLabel
+        Left = 551
+        Top = 453
+        Width = 7
+        Height = 24
+        Caption = ':'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -20
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        Transparent = True
+      end
+      object Label19: TLabel
+        Left = 551
+        Top = 393
+        Width = 7
+        Height = 24
+        Caption = ':'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -20
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        Transparent = True
+      end
+      object DBText9: TDBText
+        Left = 561
+        Top = 425
+        Width = 169
+        Height = 21
+        Alignment = taRightJustify
+        DataField = 'PPN'
+        DataSource = dsTotal
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -20
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        Transparent = True
+      end
+      object Label14: TLabel
+        Left = 36
+        Top = 32
+        Width = 66
+        Height = 13
+        Alignment = taRightJustify
+        Caption = 'Faktur Pajak :'
+        Color = clRed
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        ParentColor = False
+        ParentFont = False
+        Transparent = True
+      end
+      object Label9: TLabel
+        Left = 249
+        Top = 52
+        Width = 29
+        Height = 13
+        Alignment = taRightJustify
+        Caption = 'Rate :'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        ParentFont = False
+        Transparent = True
+      end
+      object Label21: TLabel
+        Left = 20
+        Top = 111
+        Width = 79
+        Height = 13
+        Alignment = taRightJustify
+        Caption = 'No Penerimaan :'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        ParentFont = False
+        Transparent = True
+      end
+      object Label22: TLabel
+        Left = 382
+        Top = 484
+        Width = 132
+        Height = 13
+        Caption = 'Tabel Cek Pembayaran'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold, fsUnderline]
+        ParentFont = False
+        Transparent = True
+      end
+      object DBText11: TDBText
+        Left = 164
+        Top = 192
+        Width = 48
+        Height = 13
+        AutoSize = True
+        DataField = 'TermAsli'
+        DataSource = dsMain
+      end
+      object Label29: TLabel
+        Left = 49
+        Top = 131
+        Width = 50
+        Height = 13
+        Alignment = taRightJustify
+        Caption = 'Customer :'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        ParentFont = False
+        Transparent = True
+      end
+      object bbCancel: TdxButton
+        Tag = 4444
+        Left = 642
+        Top = 186
+        Width = 83
+        Height = 28
+        About = 'Design eXperience. '#169' 2002 M. Hoffmann'
+        Anchors = [akRight, akBottom]
+        Color = 9609897
+        ParentColor = False
+        ParentShowHint = False
+        ShowHint = True
+        Version = '1.0.2e'
+        Action = ActCancel
+        Caption = '&Batal (F4)'
+        Colors.FocusedFrom = 16750383
+        Colors.FocusedTo = 16763799
+        Colors.HighlightFrom = clWhite
+        Colors.HighlightTo = clWhite
+        HotTrack = True
+        TabOrder = 0
+        TabStop = False
+      end
+      object GroupBox2: TGroupBox
+        Left = 516
+        Top = 3
+        Width = 221
+        Height = 50
+        Ctl3D = False
+        ParentCtl3D = False
+        TabOrder = 1
+        object Label10: TLabel
+          Left = 16
+          Top = 10
+          Width = 28
+          Height = 13
+          Alignment = taRightJustify
+          Caption = 'User :'
+        end
+        object DBText2: TDBText
+          Left = 53
+          Top = 9
+          Width = 132
+          Height = 17
+          DataField = 'UpdUser'
+          DataSource = dsMain
+        end
+        object Label11: TLabel
+          Left = 7
+          Top = 30
+          Width = 38
+          Height = 13
+          Alignment = taRightJustify
+          Caption = 'Waktu :'
+        end
+        object DBText3: TDBText
+          Left = 54
+          Top = 30
+          Width = 132
+          Height = 17
+          DataField = 'UpdDate'
+          DataSource = dsMain
+        end
+      end
+      object dbg: TdxDBGrid
+        Left = 2
+        Top = 221
+        Width = 741
+        Height = 167
+        Bands = <
+          item
+          end>
+        DefaultLayout = False
+        KeyField = 'ItemID'
+        SummaryGroups = <>
+        SummarySeparator = ', '
+        TabOrder = 2
+        OnEnter = dbgEnter
+        DataSource = dsDetil
+        Filter.Criteria = {00000000}
+        HideFocusRect = True
+        HideSelection = True
+        LookAndFeel = lfFlat
+        OptionsDB = [edgoCanAppend, edgoCancelOnExit, edgoCanDelete, edgoCanInsert, edgoCanNavigation, edgoConfirmDelete, edgoUseBookmarks]
+        OptionsView = [edgoAutoHeaderPanelHeight, edgoBandHeaderWidth, edgoIndicator, edgoUseBitmap]
+        object dbgKdItem: TdxDBGridButtonColumn
+          Caption = 'Kode Barang'
+          Width = 85
+          BandIndex = 0
+          RowIndex = 0
+          FieldName = 'ItemID'
+          Buttons = <
+            item
+              Default = True
+            end>
+          OnButtonClick = dbgKdItemButtonClick
+        end
+        object dbgNmItem: TdxDBGridColumn
+          Caption = 'Nama Barang'
+          Color = clWhite
+          DisableEditor = True
+          TabStop = False
+          Width = 250
+          BandIndex = 0
+          RowIndex = 0
+          FieldName = 'LuItemName'
+          SummaryFooterType = cstCount
+          SummaryFooterFormat = '0 Item(s)'
+        end
+        object dbgLokasi: TdxDBGridButtonColumn
+          Caption = 'Lokasi'
+          Width = 54
+          BandIndex = 0
+          RowIndex = 0
+          FieldName = 'WarehouseID'
+          Buttons = <
+            item
+              Default = True
+            end>
+          OnButtonClick = dbgLokasiButtonClick
+        end
+        object dbgQty: TdxDBGridColumn
+          Caption = 'Jumlah'
+          Width = 55
+          BandIndex = 0
+          RowIndex = 0
+          FieldName = 'Qty'
+          SummaryFooterType = cstSum
+          SummaryFooterFormat = '#0'
+          SummaryField = 'Qty'
+        end
+        object dbgHarga: TdxDBGridColumn
+          Caption = 'Harga'
+          Width = 100
+          BandIndex = 0
+          RowIndex = 0
+          FieldName = 'Price'
+        end
+        object dbgDisc: TdxDBGridColumn
+          Caption = 'Disc (%)'
+          BandIndex = 0
+          RowIndex = 0
+          FieldName = 'Disc'
+        end
+        object dbgTotal: TdxDBGridColumn
+          Caption = 'Total'
+          Color = clWhite
+          DisableEditor = True
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clWindowText
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = [fsBold]
+          TabStop = False
+          Width = 100
+          BandIndex = 0
+          RowIndex = 0
+          FieldName = 'CTotal'
+          SummaryFooterType = cstSum
+        end
+      end
+      object TmbBrg: TdxButton
+        Tag = 1111
+        Left = 5
+        Top = 391
+        Width = 91
+        Height = 26
+        About = 'Design eXperience. '#169' 2002 M. Hoffmann'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        Version = '1.0.2e'
+        OnClick = TmbBrgClick
+        Caption = '(+) Barang'
+        TabOrder = 3
+        TabStop = False
+      end
+      object KrgBrg: TdxButton
+        Tag = 2222
+        Left = 97
+        Top = 391
+        Width = 92
+        Height = 26
+        About = 'Design eXperience. '#169' 2002 M. Hoffmann'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        Version = '1.0.2e'
+        OnClick = KrgBrgClick
+        Caption = '(-) Barang'
+        TabOrder = 4
+        TabStop = False
+      end
+      object bbSimpanDetil: TdxButton
+        Tag = 4444
+        Left = 190
+        Top = 391
+        Width = 92
+        Height = 26
+        About = 'Design eXperience. '#169' 2002 M. Hoffmann'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        Version = '1.0.2e'
+        OnClick = bbSimpanDetilClick
+        Caption = 'Simpan'
+        TabOrder = 5
+        TabStop = False
+      end
+      object BtlBrg: TdxButton
+        Tag = 4444
+        Left = 283
+        Top = 391
+        Width = 92
+        Height = 26
+        About = 'Design eXperience. '#169' 2002 M. Hoffmann'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        Version = '1.0.2e'
+        OnClick = BtlBrgClick
+        Caption = 'Batal'
+        TabOrder = 6
+        TabStop = False
+      end
+      object bbSave: TdxButton
+        Tag = 3333
+        Left = 558
+        Top = 186
+        Width = 83
+        Height = 28
+        About = 'Design eXperience. '#169' 2002 M. Hoffmann'
+        Anchors = [akRight, akBottom]
+        Color = 9609897
+        ParentColor = False
+        ParentShowHint = False
+        ShowHint = True
+        Version = '1.0.2e'
+        Action = ActSave
+        Caption = 'Simpan (F3)'
+        Colors.FocusedFrom = 16750383
+        Colors.FocusedTo = 16763799
+        Colors.HighlightFrom = clWhite
+        Colors.HighlightTo = clWhite
+        HotTrack = True
+        TabOrder = 7
+        TabStop = False
+      end
+      object dxDBGrid2: TdxDBGrid
+        Left = 6
+        Top = 417
+        Width = 266
+        Height = 124
+        Bands = <
+          item
+          end>
+        DefaultLayout = True
+        HeaderPanelRowCount = 1
+        SummaryGroups = <>
+        SummarySeparator = ', '
+        TabOrder = 8
+        DataSource = dsSN
+        Filter.Criteria = {00000000}
+        HideFocusRect = True
+        HideSelection = True
+        LookAndFeel = lfUltraFlat
+        OptionsView = [edgoBandHeaderWidth, edgoIndicator, edgoUseBitmap]
+        object dxDBGrid2SNID: TdxDBGridColumn
+          Caption = 'Serial Number'
+          Width = 234
+          BandIndex = 0
+          RowIndex = 0
+          FieldName = 'SNID'
+        end
+      end
+      object dxButton1: TdxButton
+        Tag = 1111
+        Left = 6
+        Top = 543
+        Width = 65
+        Height = 26
+        About = 'Design eXperience. '#169' 2002 M. Hoffmann'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        Version = '1.0.2e'
+        OnClick = dxButton1Click
+        Caption = '(+) SN'
+        TabOrder = 9
+        TabStop = False
+      end
+      object dxButton2: TdxButton
+        Tag = 2222
+        Left = 72
+        Top = 543
+        Width = 65
+        Height = 26
+        About = 'Design eXperience. '#169' 2002 M. Hoffmann'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        Version = '1.0.2e'
+        OnClick = dxButton2Click
+        Caption = '(-) SN'
+        TabOrder = 10
+        TabStop = False
+      end
+      object dxButton4: TdxButton
+        Tag = 4444
+        Left = 138
+        Top = 543
+        Width = 65
+        Height = 26
+        About = 'Design eXperience. '#169' 2002 M. Hoffmann'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        Version = '1.0.2e'
+        OnClick = dxButton4Click
+        Caption = 'Simpan'
+        TabOrder = 11
+        TabStop = False
+      end
+      object dxButton5: TdxButton
+        Tag = 4444
+        Left = 204
+        Top = 543
+        Width = 65
+        Height = 26
+        About = 'Design eXperience. '#169' 2002 M. Hoffmann'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+        Version = '1.0.2e'
+        OnClick = dxButton5Click
+        Caption = 'Batal'
+        TabOrder = 12
+        TabStop = False
+      end
+      object dxDBGrid1: TdxDBGrid
+        Left = 381
+        Top = 500
+        Width = 356
+        Height = 70
+        Bands = <
+          item
+          end>
+        DefaultLayout = True
+        HeaderPanelRowCount = 1
+        SummaryGroups = <>
+        SummarySeparator = ', '
+        TabOrder = 13
+        DataSource = dscekbayar
+        Filter.Criteria = {00000000}
+        HideFocusRect = True
+        HideSelection = True
+        LookAndFeel = lfUltraFlat
+        OptionsView = [edgoBandHeaderWidth, edgoIndicator, edgoUseBitmap]
+        object dxDBGrid1Column1: TdxDBGridColumn
+          Width = 82
+          BandIndex = 0
+          RowIndex = 0
+          FieldName = 'Tanggal'
+        end
+        object dxDBGrid1Column2: TdxDBGridColumn
+          Width = 122
+          BandIndex = 0
+          RowIndex = 0
+          FieldName = 'VoucherID'
+        end
+        object dxDBGrid1Column3: TdxDBGridColumn
+          Width = 120
+          BandIndex = 0
+          RowIndex = 0
+          FieldName = 'Amount'
+        end
+      end
+      object dxDBEdit1: TdxDBEdit
+        Left = 106
+        Top = 8
+        Width = 145
+        Color = clMenu
+        TabOrder = 14
+        OnKeyPress = dxDBEdit1KeyPress
+        DataField = 'PurchaseID'
+        DataSource = dsMain
+        StyleController = SCEdit
+      end
+      object dxDBEdit4: TdxDBEdit
+        Left = 106
+        Top = 28
+        Width = 145
+        TabOrder = 15
+        OnKeyPress = dxDBEdit1KeyPress
+        DataField = 'FPSID'
+        DataSource = dsMain
+        StyleController = SCEdit
+      end
+      object dxDBDateEdit1: TdxDBDateEdit
+        Left = 106
+        Top = 48
+        Width = 114
+        TabOrder = 16
+        OnKeyPress = dxDBEdit1KeyPress
+        DataField = 'TransDate'
+        DataSource = dsMain
+        StyleController = SCEdit
+        UseEditMask = True
+        StoredValues = 4
+      end
+      object dxDBEdit5: TdxDBEdit
+        Left = 285
+        Top = 48
+        Width = 107
+        TabOrder = 17
+        OnKeyPress = dxDBEdit1KeyPress
+        DataField = 'Rate'
+        DataSource = dsMain
+        StyleController = SCEdit
+      end
+      object txtSupplier: TdxDBButtonEdit
+        Left = 106
+        Top = 68
+        Width = 143
+        TabOrder = 18
+        OnKeyPress = dxDBEdit1KeyPress
+        DataField = 'SuppID'
+        DataSource = dsMain
+        StyleController = SCEdit
+        Buttons = <
+          item
+            Default = True
+          end
+          item
+            Default = False
+            Glyph.Data = {
+              DE000000424DDE0000000000000076000000280000000D0000000D0000000100
+              0400000000006800000000000000000000001000000000000000000000000000
+              8000008000000080800080000000800080008080000080808000C0C0C0000000
+              FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00FFFFFFFFFFFF
+              F000FFFFFFFFFFFFF000FFFFF000FFFFF000FFFFF0F0FFFFF000FFFFF0F0FFFF
+              F000FF0000F0000FF000FF0FFFFFFF0FF000FF0000F0000FF000FFFFF0F0FFFF
+              F000FFFFF0F0FFFFF000FFFFF000FFFFF000FFFFFFFFFFFFF000FFFFFFFFFFFF
+              F000}
+            Kind = bkGlyph
+          end>
+        OnButtonClick = txtSupplierButtonClick
+        ExistButtons = True
+      end
+      object dxDBButtonEdit2: TdxDBButtonEdit
+        Left = 106
+        Top = 88
+        Width = 71
+        TabOrder = 19
+        OnKeyPress = dxDBEdit1KeyPress
+        DataField = 'CurrID'
+        DataSource = dsMain
+        StyleController = SCEdit
+        Buttons = <
+          item
+            Default = True
+          end>
+        OnButtonClick = dxDBButtonEdit2ButtonClick
+        ExistButtons = True
+      end
+      object dxDBButtonEdit1: TdxDBButtonEdit
+        Left = 106
+        Top = 108
+        Width = 143
+        TabOrder = 20
+        OnKeyPress = dxDBEdit1KeyPress
+        DataField = 'KonsinyasiID'
+        DataSource = dsMain
+        StyleController = SCEdit
+        Buttons = <
+          item
+            Default = True
+          end>
+        OnButtonClick = dxDBButtonEdit1ButtonClick
+        ExistButtons = True
+      end
+      object dxDBEdit2: TdxDBEdit
+        Left = 106
+        Top = 148
+        Width = 455
+        TabOrder = 21
+        OnKeyPress = dxDBEdit1KeyPress
+        DataField = 'Note'
+        DataSource = dsMain
+        StyleController = SCEdit
+      end
+      object dxDBEdit3: TdxDBEdit
+        Left = 106
+        Top = 168
+        Width = 60
+        TabOrder = 22
+        OnKeyPress = dxDBEdit1KeyPress
+        DataField = 'JatuhTempo'
+        DataSource = dsMain
+        StyleController = SCEdit
+      end
+      object dxDBImageEdit1: TdxDBImageEdit
+        Left = 302
+        Top = 425
+        Width = 71
+        TabOrder = 23
+        Visible = False
+        OnKeyPress = dxDBEdit1KeyPress
+        DataField = 'FgTax'
+        DataSource = dsMain
+        StyleController = SCEdit
+        Descriptions.Strings = (
+          'Ya'
+          'Tidak')
+        ImageIndexes.Strings = (
+          '0'
+          '1')
+        Values.Strings = (
+          'Y'
+          'T')
+      end
+      object dxDBEdit6: TdxDBEdit
+        Left = 434
+        Top = 425
+        Width = 60
+        TabOrder = 24
+        OnKeyPress = dxDBEdit1KeyPress
+        DataField = 'RatePPN'
+        DataSource = dsMain
+        StyleController = SCEdit
+      end
+      object dxDBEdit7: TdxDBEdit
+        Left = 106
+        Top = 128
+        Width = 455
+        TabOrder = 25
+        OnKeyPress = dxDBEdit1KeyPress
+        DataField = 'LSOID'
+        DataSource = dsMain
+        StyleController = SCEdit
+      end
+      object dxDBEdit8: TdxDBEdit
+        Left = 248
+        Top = 108
+        Width = 169
+        TabOrder = 26
+        OnKeyPress = dxDBEdit1KeyPress
+        DataField = 'LPOID'
+        DataSource = dsMain
+        StyleController = SCEdit
+      end
+    end
+  end
+  inherited paToolBar: TdxContainer
+    Width = 937
+    inherited sbLast: TSpeedButton
+      Left = 909
+    end
+    inherited sbNext: TSpeedButton
+      Left = 886
+    end
+    inherited sbPrev: TSpeedButton
+      Left = 863
+    end
+    inherited sbFirst: TSpeedButton
+      Left = 840
+    end
+    inherited sbPeriod: TSpeedButton
+      Left = 812
+    end
+    inherited BvlPeriod: TBevel
+      Left = 566
+    end
+    inherited laPeriod: TLabel
+      Left = 570
+    end
+  end
+  inherited quMain: TADOQuery
+    BeforeEdit = quMainBeforeEdit
+    BeforeDelete = quMainBeforeDelete
+    OnCalcFields = quMainCalcFields
+    OnNewRecord = quMainNewRecord
+    SQL.Strings = (
+      'select * from APTrPurchaseHd ')
+    Left = 224
+    object quMainPurchaseID: TStringField
+      FieldName = 'PurchaseID'
+      Size = 50
+    end
+    object quMainTransDate: TDateTimeField
+      FieldName = 'TransDate'
+    end
+    object quMainSuppID: TStringField
+      FieldName = 'SuppID'
+      OnChange = quMainSuppIDChange
+    end
+    object quMainNote: TStringField
+      FieldName = 'Note'
+      Size = 400
+    end
+    object quMainUpdDate: TDateTimeField
+      FieldName = 'UpdDate'
+      DisplayFormat = 'DD MMMM YYYY HH:MM:SS'
+      EditMask = 'DD MMMM YYYY HH:MM:SS'
+    end
+    object quMainUpdUser: TStringField
+      FieldName = 'UpdUser'
+    end
+    object quMainCurrID: TStringField
+      FieldName = 'CurrID'
+      FixedChar = True
+      Size = 3
+    end
+    object quMainTTLPb: TBCDField
+      FieldName = 'TTLPb'
+      Precision = 18
+      Size = 0
+    end
+    object quMainRate: TBCDField
+      FieldName = 'Rate'
+      DisplayFormat = '#,0.00'
+      EditFormat = '#,0.00'
+      Precision = 18
+      Size = 0
+    end
+    object quMainLCurrName: TStringField
+      FieldKind = fkLookup
+      FieldName = 'LCurrName'
+      LookupDataSet = quValuta
+      LookupKeyFields = 'CurrID'
+      LookupResultField = 'CurrName'
+      KeyFields = 'CurrID'
+      Size = 50
+      Lookup = True
+    end
+    object quMainJatuhTempo: TIntegerField
+      FieldName = 'JatuhTempo'
+    end
+    object quMainTglJthTempo: TStringField
+      DisplayWidth = 18
+      FieldKind = fkCalculated
+      FieldName = 'TglJthTempo'
+      Size = 10
+      Calculated = True
+    end
+    object quMainFgTax: TStringField
+      FieldName = 'FgTax'
+      Size = 1
+    end
+    object quMainPPN: TBCDField
+      FieldName = 'PPN'
+      DisplayFormat = '#,0.00'
+      EditFormat = '#,0.00'
+      Precision = 18
+    end
+    object quMainFPSID: TStringField
+      FieldName = 'FPSID'
+      Size = 30
+    end
+    object quMainLuSupplier: TStringField
+      FieldKind = fkLookup
+      FieldName = 'LuSupplier'
+      LookupDataSet = quSup
+      LookupKeyFields = 'SuppID'
+      LookupResultField = 'SuppName'
+      KeyFields = 'SuppID'
+      Size = 200
+      Lookup = True
+    end
+    object quMainRekeningD: TStringField
+      FieldName = 'RekeningD'
+    end
+    object quMainRekeningP: TStringField
+      FieldName = 'RekeningP'
+    end
+    object quMainRekeningU: TStringField
+      FieldName = 'RekeningU'
+    end
+    object quMainRekeningK: TStringField
+      FieldName = 'RekeningK'
+    end
+    object quMainKonsinyasiID: TStringField
+      FieldName = 'KonsinyasiID'
+      OnChange = quMainKonsinyasiIDChange
+      Size = 50
+    end
+    object quMainFgForm: TStringField
+      FieldName = 'FgForm'
+    end
+    object quMainRekPersediaan: TStringField
+      FieldName = 'RekPersediaan'
+      Size = 50
+    end
+    object quMainRekHPP: TStringField
+      FieldName = 'RekHPP'
+      Size = 50
+    end
+    object quMainFgOto: TStringField
+      FieldName = 'FgOto'
+      Size = 10
+    end
+    object quMainLRekBeli: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'LRekBeli'
+      Size = 100
+      Calculated = True
+    end
+    object quMainLRekPPN: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'LRekPPN'
+      Size = 100
+      Calculated = True
+    end
+    object quMainLRekPersediaan: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'LRekPersediaan'
+      Size = 100
+      Calculated = True
+    end
+    object quMainLRekHPP: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'LRekHPP'
+      Size = 100
+      Calculated = True
+    end
+    object quMainLRekUtang: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'LRekUtang'
+      Size = 100
+      Calculated = True
+    end
+    object quMainRatePPN: TBCDField
+      FieldName = 'RatePPN'
+      DisplayFormat = '#,0.00'
+      EditFormat = '#,0.00'
+      Precision = 18
+    end
+    object quMainStPb: TBCDField
+      FieldName = 'StPb'
+      Precision = 18
+    end
+    object quMainLPOID: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'LPOID'
+      Size = 100
+      Calculated = True
+    end
+    object quMainTermAsli: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'TermAsli'
+      Size = 100
+      Calculated = True
+    end
+    object quMainLSOID: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'LSOID'
+      Size = 300
+      Calculated = True
+    end
+  end
+  inherited quDetil: TADOQuery
+    BeforeInsert = quDetilBeforeInsert
+    BeforeEdit = quDetilBeforeEdit
+    BeforeDelete = quDetilBeforeDelete
+    AfterDelete = quDetilAfterDelete
+    OnCalcFields = quDetilCalcFields
+    OnNewRecord = quDetilNewRecord
+    Parameters = <
+      item
+        Name = 'PurchaseID'
+        DataType = ftString
+        NumericScale = 255
+        Precision = 255
+        Size = 50
+        Value = Null
+      end
+      item
+        Name = 'SuppId'
+        Attributes = [paNullable]
+        DataType = ftString
+        NumericScale = 255
+        Precision = 255
+        Size = 20
+        Value = Null
+      end>
+    SQL.Strings = (
+      'select * from APTrPurchaseDt  WHERE PurchaseID=:PurchaseID '
+      'And SuppId=:SuppId')
+    object quDetilPurchaseID: TStringField
+      FieldName = 'PurchaseID'
+      Size = 50
+    end
+    object quDetilItemID: TStringField
+      DisplayWidth = 20
+      FieldName = 'ItemID'
+    end
+    object quDetilQty: TBCDField
+      FieldName = 'Qty'
+      DisplayFormat = '#,0'
+      EditFormat = '#,0'
+      Precision = 18
+    end
+    object quDetilWarehouseID: TStringField
+      FieldName = 'WarehouseID'
+    end
+    object quDetilPrice: TBCDField
+      FieldName = 'Price'
+      DisplayFormat = '#,0.00'
+      EditFormat = '#,0.00'
+      Precision = 18
+    end
+    object quDetilUpdDate: TDateTimeField
+      FieldName = 'UpdDate'
+    end
+    object quDetilUpdUser: TStringField
+      FieldName = 'UpdUser'
+    end
+    object quDetilLuItemName: TStringField
+      DisplayWidth = 100
+      FieldKind = fkLookup
+      FieldName = 'LuItemName'
+      LookupDataSet = quItem
+      LookupKeyFields = 'ItemID'
+      LookupResultField = 'ItemName'
+      KeyFields = 'ItemID'
+      Size = 100
+      Lookup = True
+    end
+    object quDetilCTotal: TFloatField
+      FieldKind = fkCalculated
+      FieldName = 'CTotal'
+      DisplayFormat = '#,0.00'
+      EditFormat = '#,0.00'
+      Calculated = True
+    end
+    object quDetilLWareHouse: TStringField
+      FieldKind = fkLookup
+      FieldName = 'LWareHouse'
+      LookupDataSet = quWarehouse
+      LookupKeyFields = 'WarehouseID'
+      LookupResultField = 'WarehouseName'
+      KeyFields = 'WarehouseID'
+      Size = 50
+      Lookup = True
+    end
+    object quDetilSuppId: TStringField
+      FieldName = 'SuppId'
+    end
+    object quDetilDisc: TFloatField
+      FieldName = 'Disc'
+      DisplayFormat = '#,0.00'
+      EditFormat = '#,0.00'
+    end
+  end
+  inherited dsDetil: TDataSource
+    OnStateChange = dsDetilStateChange
+  end
+  object quSup: TADOQuery
+    Connection = dmMain.dbConn
+    CursorType = ctStatic
+    Parameters = <>
+    SQL.Strings = (
+      'select * from APMsSupplier order by suppname')
+    Left = 548
+    Top = 8
+    object quSupSuppID: TStringField
+      FieldName = 'SuppID'
+    end
+    object quSupSuppName: TStringField
+      DisplayWidth = 100
+      FieldName = 'SuppName'
+      Size = 50
+    end
+    object quSupAddress: TStringField
+      FieldName = 'Address'
+      Size = 300
+    end
+    object quSupCity: TStringField
+      FieldName = 'City'
+      Size = 150
+    end
+    object quSupContactPerson: TStringField
+      FieldName = 'ContactPerson'
+      Size = 150
+    end
+    object quSupPhone: TStringField
+      FieldName = 'Phone'
+    end
+    object quSupFax: TStringField
+      FieldName = 'Fax'
+    end
+    object quSupEmail: TStringField
+      FieldName = 'Email'
+      Size = 50
+    end
+    object quSupNote: TStringField
+      FieldName = 'Note'
+      Size = 300
+    end
+    object quSupUpdDate: TDateTimeField
+      FieldName = 'UpdDate'
+    end
+    object quSupUpdUser: TStringField
+      FieldName = 'UpdUser'
+    end
+  end
+  object quItem: TADOQuery
+    Connection = dmMain.dbConn
+    CursorType = ctStatic
+    Parameters = <>
+    SQL.Strings = (
+      'select * from INMsItem order by itemname')
+    Left = 484
+    Top = 264
+    object quItemItemID: TStringField
+      FieldName = 'ItemID'
+    end
+    object quItemItemName: TStringField
+      FieldName = 'ItemName'
+      Size = 150
+    end
+    object quItemUpdDate: TDateTimeField
+      FieldName = 'UpdDate'
+    end
+    object quItemUpdUser: TStringField
+      FieldName = 'UpdUser'
+    end
+  end
+  object quWarehouse: TADOQuery
+    Connection = dmMain.dbConn
+    CursorType = ctStatic
+    Parameters = <>
+    SQL.Strings = (
+      'select * from INMsWarehouse ')
+    Left = 512
+    Top = 264
+    object quWarehouseWarehouseID: TStringField
+      FieldName = 'WarehouseID'
+    end
+    object quWarehouseWarehouseName: TStringField
+      FieldName = 'WarehouseName'
+      Size = 100
+    end
+  end
+  object quAct1: TADOQuery
+    Connection = dmMain.dbConn
+    Parameters = <>
+    Left = 420
+    Top = 4
+  end
+  object quTotal: TADOQuery
+    Connection = dmMain.dbConn
+    DataSource = dsMain
+    Parameters = <
+      item
+        Name = 'PurchaseId'
+        DataType = ftString
+        NumericScale = 255
+        Precision = 255
+        Size = 50
+        Value = Null
+      end
+      item
+        Name = 'SuppId'
+        DataType = ftString
+        NumericScale = 255
+        Precision = 255
+        Size = 20
+        Value = Null
+      end>
+    SQL.Strings = (
+      
+        'SELECT ROUND(K.SubTotal,2) as SubTotal,ROUND(CASE WHEN FgTax='#39'Y'#39 +
+        ' THEN K.SubTotal*K.Rate*0.01 ELSE 0 END,2) as PPN,'
+      
+        'ROUND(ROUND(K.SubTotal,2)+ROUND((CASE WHEN FgTax='#39'Y'#39' THEN K.SubT' +
+        'otal*K.Rate*0.01 ELSE 0 END),2),2) as GT FROM ('
+      
+        'SELECT A.PurchaseID,A.SuppID,B.FgTax,ISNULL(B.RatePPN,0) as Rate' +
+        ',ISNULL(SUM(Price*Qty)-SUM(Price*Qty*Disc*0.01),0) as SubTotal'
+      
+        'FROM APTrPurchaseDt A INNER JOIN APTrPurchaseHd B on A.PurchaseI' +
+        'D=B.PurchaseID'
+      'GROUP BY A.PurchaseID,A.SuppID,B.FgTax,B.RatePPN) as K '
+      'WHERE K.PurchaseId=:PurchaseID AND K.SuppId=:SuppId')
+    Left = 768
+    Top = 372
+    object quTotalSubTotal: TFloatField
+      FieldName = 'SubTotal'
+      DisplayFormat = '#,0.00'
+    end
+    object quTotalPPN: TFloatField
+      FieldName = 'PPN'
+      ReadOnly = True
+      DisplayFormat = '#,0.00'
+    end
+    object quTotalGT: TFloatField
+      FieldName = 'GT'
+      ReadOnly = True
+      DisplayFormat = '#,0.00'
+    end
+  end
+  object dsTotal: TDataSource
+    DataSet = quTotal
+    OnStateChange = dsDetilStateChange
+    Left = 796
+    Top = 372
+  end
+  object quTemp: TADOQuery
+    Connection = dmMain.dbConn
+    CursorType = ctStatic
+    Parameters = <>
+    Left = 488
+    Top = 304
+    object StringField1: TStringField
+      FieldName = 'SuppID'
+    end
+    object StringField2: TStringField
+      FieldName = 'SuppName'
+      Size = 50
+    end
+    object StringField3: TStringField
+      FieldName = 'Address'
+      Size = 300
+    end
+    object StringField4: TStringField
+      FieldName = 'City'
+      Size = 150
+    end
+    object StringField5: TStringField
+      FieldName = 'ContactPerson'
+      Size = 150
+    end
+    object StringField6: TStringField
+      FieldName = 'Phone'
+    end
+    object StringField7: TStringField
+      FieldName = 'Fax'
+    end
+    object StringField8: TStringField
+      FieldName = 'Email'
+      Size = 50
+    end
+    object StringField9: TStringField
+      FieldName = 'Note'
+      Size = 300
+    end
+    object DateTimeField1: TDateTimeField
+      FieldName = 'UpdDate'
+    end
+    object StringField10: TStringField
+      FieldName = 'UpdUser'
+    end
+  end
+  object quValuta: TADOQuery
+    Connection = dmMain.dbConn
+    CursorType = ctStatic
+    BeforePost = quDetilBeforePost
+    AfterPost = quDetilAfterPost
+    DataSource = dsMain
+    Parameters = <>
+    SQL.Strings = (
+      'SELECT * FROM SAMSValuta')
+    Left = 540
+    Top = 264
+  end
+  object quSN: TADOQuery
+    Connection = dmMain.dbConn
+    BeforeInsert = quSNBeforeInsert
+    BeforePost = quSNBeforePost
+    AfterPost = quSNAfterPost
+    BeforeDelete = quSNBeforeDelete
+    OnNewRecord = quSNNewRecord
+    DataSource = dsDetil
+    Parameters = <
+      item
+        Name = 'PurchaseID'
+        DataType = ftString
+        NumericScale = 255
+        Precision = 255
+        Size = 50
+        Value = Null
+      end
+      item
+        Name = 'ItemID'
+        DataType = ftString
+        NumericScale = 255
+        Precision = 255
+        Size = 20
+        Value = Null
+      end>
+    SQL.Strings = (
+      'SELECT * FROM APTrPurchaseDtSN'
+      'WHERE PurchaseID=:PurchaseID AND ItemID=:ItemID')
+    Left = 308
+    Top = 504
+    object quSNPurchaseID: TStringField
+      FieldName = 'PurchaseID'
+      Size = 50
+    end
+    object quSNItemID: TStringField
+      FieldName = 'ItemID'
+    end
+    object quSNSuppId: TStringField
+      FieldName = 'SuppId'
+    end
+    object quSNWarehouseID: TStringField
+      FieldName = 'WarehouseID'
+    end
+    object quSNPrice: TBCDField
+      FieldName = 'Price'
+      Precision = 18
+    end
+    object quSNSNID: TStringField
+      FieldName = 'SNID'
+      Size = 30
+    end
+    object quSNUpdDate: TDateTimeField
+      FieldName = 'UpdDate'
+    end
+    object quSNUpdUser: TStringField
+      FieldName = 'UpdUser'
+    end
+    object quSNFgJual: TStringField
+      FieldName = 'FgJual'
+      Size = 1
+    end
+    object quSNFgSN: TStringField
+      FieldName = 'FgSN'
+      Size = 1
+    end
+  end
+  object dsSN: TDataSource
+    DataSet = quSN
+    OnStateChange = dsSNStateChange
+    Left = 332
+    Top = 504
+  end
+  object qucekbayar: TADOQuery
+    Connection = dmMain.dbConn
+    OnNewRecord = quDetilNewRecord
+    DataSource = dsMain
+    Parameters = <
+      item
+        Name = 'PurchaseID'
+        DataType = ftString
+        NumericScale = 255
+        Precision = 255
+        Size = 100
+        Value = Null
+      end>
+    SQL.Strings = (
+      
+        'select CONVERT(VARCHAR(10),Y.Transdate1,103) as Tanggal,X.Vouche' +
+        'rID,X.Amount '
+      
+        'from CFTrKKBBDt X inner join CFTrKKBBHd Y on X.VoucherID=Y.Vouch' +
+        'erID WHERE X.Note=:PurchaseID')
+    Left = 836
+    Top = 548
+    object qucekbayarTanggal: TStringField
+      FieldName = 'Tanggal'
+      ReadOnly = True
+      Size = 10
+    end
+    object qucekbayarVoucherID: TStringField
+      FieldName = 'VoucherID'
+      Size = 30
+    end
+    object qucekbayarAmount: TBCDField
+      FieldName = 'Amount'
+      DisplayFormat = '#,0.00'
+      Precision = 18
+    end
+  end
+  object dscekbayar: TDataSource
+    DataSet = qucekbayar
+    OnStateChange = dscekbayarStateChange
+    Left = 864
+    Top = 548
+  end
+  object quAct2: TADOQuery
+    Connection = dmMain.dbConn
+    Parameters = <>
+    Left = 452
+    Top = 4
+  end
+end

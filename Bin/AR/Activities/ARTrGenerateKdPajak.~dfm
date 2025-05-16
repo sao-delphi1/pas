@@ -1,0 +1,179 @@
+inherited fmARGenerateKdPajak: TfmARGenerateKdPajak
+  Left = 315
+  Top = 220
+  Caption = 'Generate Kd Seri Faktur Pajak'
+  ClientHeight = 242
+  ClientWidth = 410
+  OldCreateOrder = True
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Label2: TLabel [0]
+    Left = 26
+    Top = 24
+    Width = 51
+    Height = 13
+    Caption = 'Seri Faktur'
+  end
+  object Label3: TLabel [1]
+    Left = 89
+    Top = 24
+    Width = 31
+    Height = 13
+    Caption = 'Tahun'
+  end
+  object Label4: TLabel [2]
+    Left = 168
+    Top = 24
+    Width = 47
+    Height = 13
+    Caption = 'No Faktur'
+  end
+  object Label5: TLabel [3]
+    Left = 24
+    Top = 96
+    Width = 256
+    Height = 29
+    Caption = 'No Seri Faktur Pajak :'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -24
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label6: TLabel [4]
+    Left = 24
+    Top = 129
+    Width = 199
+    Height = 29
+    Caption = '900-13.00000001'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -24
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label7: TLabel [5]
+    Left = 283
+    Top = 24
+    Width = 44
+    Height = 13
+    Caption = 'Generate'
+  end
+  object Label1: TLabel [6]
+    Left = 26
+    Top = 76
+    Width = 48
+    Height = 13
+    Caption = 'No Surat :'
+  end
+  object dxEdit2: TdxEdit [7]
+    Left = 24
+    Top = 48
+    Width = 55
+    TabOrder = 0
+    Text = '900'
+    OnKeyPress = dxEdit1KeyPress
+    StyleController = SCEdit
+    OnChange = dxEdit1Change
+  end
+  object dxEdit3: TdxEdit [8]
+    Left = 79
+    Top = 48
+    Width = 50
+    TabOrder = 1
+    Text = '19'
+    OnKeyPress = dxEdit1KeyPress
+    StyleController = SCEdit
+    OnChange = dxEdit1Change
+  end
+  object dxEdit4: TdxEdit [9]
+    Left = 131
+    Top = 48
+    Width = 121
+    TabOrder = 2
+    Text = '00000001'
+    OnKeyPress = dxEdit1KeyPress
+    StyleController = SCEdit
+    OnChange = dxEdit1Change
+  end
+  object dxEdit5: TdxEdit [10]
+    Left = 276
+    Top = 48
+    Width = 60
+    TabOrder = 3
+    Text = '1'
+    OnKeyPress = dxEdit1KeyPress
+    StyleController = SCEdit
+  end
+  object dxButton1: TdxButton [11]
+    Tag = 5555
+    Left = 24
+    Top = 172
+    Width = 135
+    Height = 26
+    Cursor = crHandPoint
+    Hint = 'Find Record'
+    About = 'Design eXperience. '#169' 2002 M. Hoffmann'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsBold]
+    ParentFont = False
+    ParentShowHint = False
+    ShowHint = True
+    Version = '1.0.2e'
+    OnClick = dxButton1Click
+    Caption = 'GENERATE'
+    Colors.FocusedFrom = 16750383
+    Colors.FocusedTo = 16763799
+    Colors.HighlightFrom = clWhite
+    Colors.HighlightTo = clWhite
+    HotTrack = True
+    TabOrder = 4
+  end
+  object dxButton2: TdxButton [12]
+    Tag = 5555
+    Left = 160
+    Top = 172
+    Width = 135
+    Height = 26
+    Cursor = crHandPoint
+    Hint = 'Find Record'
+    About = 'Design eXperience. '#169' 2002 M. Hoffmann'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsBold]
+    ParentFont = False
+    ParentShowHint = False
+    ShowHint = True
+    Version = '1.0.2e'
+    OnClick = dxButton2Click
+    Caption = 'BATAL'
+    Colors.FocusedFrom = 16750383
+    Colors.FocusedTo = 16763799
+    Colors.HighlightFrom = clWhite
+    Colors.HighlightTo = clWhite
+    HotTrack = True
+    TabOrder = 5
+  end
+  object dxEdit1: TdxEdit [13]
+    Left = 79
+    Top = 72
+    Width = 173
+    TabOrder = 6
+    OnKeyPress = dxEdit1KeyPress
+    StyleController = SCEdit
+    OnChange = dxEdit1Change
+  end
+  object quCek: TADOQuery
+    Connection = dmMain.dbConn
+    Parameters = <>
+    Left = 272
+    Top = 4
+  end
+end

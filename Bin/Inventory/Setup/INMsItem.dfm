@@ -1,0 +1,924 @@
+inherited fmINMSItem: TfmINMSItem
+  Left = 647
+  Top = 36
+  Caption = 'Master Barang'
+  ClientHeight = 438
+  ClientWidth = 621
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Label10: TLabel [0]
+    Left = 216
+    Top = 322
+    Width = 112
+    Height = 13
+    Alignment = taRightJustify
+    AutoSize = False
+    Caption = 'Fax :'
+    Transparent = True
+  end
+  object Label12: TLabel [1]
+    Left = 204
+    Top = 350
+    Width = 129
+    Height = 13
+    Alignment = taRightJustify
+    AutoSize = False
+    Caption = 'Alamat :'
+    Transparent = True
+  end
+  object Label3: TLabel [2]
+    Left = 26
+    Top = 212
+    Width = 112
+    Height = 13
+    Alignment = taRightJustify
+    AutoSize = False
+    Caption = 'Harga User :'
+    Transparent = True
+  end
+  object Label5: TLabel [3]
+    Left = 26
+    Top = 232
+    Width = 112
+    Height = 13
+    Alignment = taRightJustify
+    AutoSize = False
+    Caption = 'Harga Dealer :'
+    Transparent = True
+  end
+  object Label6: TLabel [4]
+    Left = 34
+    Top = 220
+    Width = 112
+    Height = 13
+    Alignment = taRightJustify
+    AutoSize = False
+    Caption = 'Harga User :'
+    Transparent = True
+  end
+  object Label11: TLabel [5]
+    Left = 34
+    Top = 240
+    Width = 112
+    Height = 13
+    Alignment = taRightJustify
+    AutoSize = False
+    Caption = 'Harga Dealer :'
+    Transparent = True
+  end
+  inherited paLeft: TdxContainer
+    Height = 389
+    inherited pa3: TdxContainer
+      Height = 210
+    end
+    inherited paOperation: TdxContainer
+      inherited bbFind: TdxButton
+        OnClick = bbFindClick
+      end
+    end
+  end
+  inherited paBottom: TdxContainer
+    Top = 426
+    Width = 621
+  end
+  inherited pa2: TdxContainer
+    Height = 389
+  end
+  inherited pcMain: TdxPageControl
+    Width = 428
+    Height = 389
+    inherited ts01: TdxTabSheet
+      inherited dbgList: TdxDBGrid
+        Width = 428
+        Height = 350
+        KeyField = 'SuppID'
+        Filter.Criteria = {00000000}
+        OptionsBehavior = [edgoAutoSearch, edgoAutoSort, edgoDragScroll, edgoEnterThrough, edgoImmediateEditor, edgoTabThrough, edgoVertThrough]
+        object dbgListItemID: TdxDBGridColumn
+          Caption = 'Kode Barang'
+          Width = 84
+          BandIndex = 0
+          RowIndex = 0
+          FieldName = 'ItemID'
+        end
+        object dbgListItemName: TdxDBGridColumn
+          Caption = 'Nama Barang'
+          Width = 131
+          BandIndex = 0
+          RowIndex = 0
+          FieldName = 'ItemName'
+        end
+        object dbgListStock: TdxDBGridColumn
+          ReadOnly = True
+          BandIndex = 0
+          RowIndex = 0
+          FieldName = 'Stock'
+        end
+        object dbgListProduct: TdxDBGridColumn
+          Caption = 'Produk'
+          Width = 80
+          BandIndex = 0
+          RowIndex = 0
+          FieldName = 'LProduct'
+        end
+        object dbgListGroup: TdxDBGridColumn
+          Caption = 'Group'
+          Width = 81
+          BandIndex = 0
+          RowIndex = 0
+          FieldName = 'LGroup'
+        end
+        object dbgListGaransi: TdxDBGridColumn
+          Width = 85
+          BandIndex = 0
+          RowIndex = 0
+          FieldName = 'Garansi'
+        end
+        object dbgListValuta: TdxDBGridColumn
+          Caption = 'Valuta'
+          Width = 84
+          BandIndex = 0
+          RowIndex = 0
+          FieldName = 'CurrID'
+        end
+        object dbgListUserPrice: TdxDBGridColumn
+          Caption = 'Harga User'
+          Width = 118
+          BandIndex = 0
+          RowIndex = 0
+          FieldName = 'UserPrice'
+        end
+        object dbgListDealerPrice: TdxDBGridColumn
+          Caption = 'Harga Delear'
+          Width = 118
+          BandIndex = 0
+          RowIndex = 0
+          FieldName = 'DealerPrice'
+        end
+      end
+    end
+    inherited ts02: TdxTabSheet
+      object Label1: TLabel
+        Left = 29
+        Top = 53
+        Width = 68
+        Height = 13
+        Alignment = taRightJustify
+        Caption = 'Kode Barang :'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        ParentFont = False
+        Transparent = True
+      end
+      object Label2: TLabel
+        Left = 26
+        Top = 73
+        Width = 71
+        Height = 13
+        Alignment = taRightJustify
+        Caption = 'Nama Barang :'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        ParentFont = False
+        Transparent = True
+      end
+      object Label7: TLabel
+        Left = 41
+        Top = 166
+        Width = 60
+        Height = 13
+        Alignment = taRightJustify
+        Caption = 'Harga User :'
+        Transparent = True
+      end
+      object Label8: TLabel
+        Left = 32
+        Top = 186
+        Width = 69
+        Height = 13
+        Alignment = taRightJustify
+        Caption = 'Harga Dealer :'
+        Transparent = True
+      end
+      object DBText8: TDBText
+        Left = 264
+        Top = 13
+        Width = 150
+        Height = 13
+        DataField = 'LProduct'
+        DataSource = dsMain
+      end
+      object Label17: TLabel
+        Left = 59
+        Top = 13
+        Width = 40
+        Height = 13
+        Alignment = taRightJustify
+        Caption = 'Produk :'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        ParentFont = False
+        Transparent = True
+      end
+      object Label13: TLabel
+        Left = 64
+        Top = 33
+        Width = 35
+        Height = 13
+        Alignment = taRightJustify
+        Caption = 'Group :'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        ParentFont = False
+        Transparent = True
+      end
+      object Label14: TLabel
+        Left = 59
+        Top = 146
+        Width = 40
+        Height = 13
+        Alignment = taRightJustify
+        Caption = 'Satuan :'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        ParentFont = False
+        Transparent = True
+      end
+      object Label15: TLabel
+        Left = 355
+        Top = 392
+        Width = 43
+        Height = 13
+        AutoSize = False
+        Caption = 'Hari'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        ParentFont = False
+        Transparent = True
+      end
+      object Label16: TLabel
+        Left = 225
+        Top = 391
+        Width = 74
+        Height = 13
+        Alignment = taRightJustify
+        Caption = 'Jangka Garansi'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        ParentFont = False
+        Transparent = True
+      end
+      object Label18: TLabel
+        Left = 19
+        Top = 481
+        Width = 72
+        Height = 13
+        Alignment = taRightJustify
+        Caption = 'Minimum Stok :'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        ParentFont = False
+        Transparent = True
+      end
+      object DBText4: TDBText
+        Left = 264
+        Top = 33
+        Width = 150
+        Height = 13
+        DataField = 'LGroup'
+        DataSource = dsMain
+      end
+      object Label19: TLabel
+        Left = 58
+        Top = 460
+        Width = 36
+        Height = 13
+        Alignment = taRightJustify
+        Caption = 'Komisi :'
+        Transparent = True
+      end
+      object Label20: TLabel
+        Left = 213
+        Top = 53
+        Width = 60
+        Height = 13
+        Alignment = taRightJustify
+        Caption = 'Product No :'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        ParentFont = False
+        Transparent = True
+      end
+      object Label21: TLabel
+        Left = 36
+        Top = 110
+        Width = 61
+        Height = 13
+        Alignment = taRightJustify
+        Caption = 'Keterangan :'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        ParentFont = False
+        Transparent = True
+      end
+      object Label9: TLabel
+        Left = 6
+        Top = 206
+        Width = 95
+        Height = 13
+        Alignment = taRightJustify
+        Caption = 'Kode Barang/Jasa :'
+        Transparent = True
+      end
+      object bbSave: TdxButton
+        Tag = 3333
+        Left = 265
+        Top = 328
+        Width = 80
+        Height = 30
+        About = 'Design eXperience. '#169' 2002 M. Hoffmann'
+        Anchors = [akRight, akBottom]
+        Color = 9609897
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+        ParentShowHint = False
+        ShowHint = True
+        Version = '1.0.2e'
+        Action = ActSave
+        Colors.FocusedFrom = 16750383
+        Colors.FocusedTo = 16763799
+        Colors.HighlightFrom = clWhite
+        Colors.HighlightTo = clWhite
+        HotTrack = True
+        TabOrder = 0
+      end
+      object bbCancel: TdxButton
+        Tag = 4444
+        Left = 346
+        Top = 328
+        Width = 80
+        Height = 30
+        About = 'Design eXperience. '#169' 2002 M. Hoffmann'
+        Anchors = [akRight, akBottom]
+        Color = 9609897
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+        ParentShowHint = False
+        ShowHint = True
+        Version = '1.0.2e'
+        Action = ActCancel
+        Colors.FocusedFrom = 16750383
+        Colors.FocusedTo = 16763799
+        Colors.HighlightFrom = clWhite
+        Colors.HighlightTo = clWhite
+        HotTrack = True
+        TabOrder = 1
+      end
+      object dxDBEdit4: TdxDBEdit
+        Left = 96
+        Top = 477
+        Width = 46
+        TabOrder = 2
+        Alignment = taRightJustify
+        DataField = 'MinimumStok'
+        DataSource = dsMain
+        StyleController = SCEdit
+        StoredValues = 1
+      end
+      object DBRadioGroup1: TDBRadioGroup
+        Left = 8
+        Top = 380
+        Width = 211
+        Height = 33
+        Caption = '[Garansi]'
+        Columns = 2
+        Ctl3D = False
+        DataField = 'Garantee'
+        DataSource = dsMain
+        Items.Strings = (
+          'GARANSI'
+          'NON GARANSI')
+        ParentCtl3D = False
+        TabOrder = 3
+        Values.Strings = (
+          '1'
+          '0')
+      end
+      object dxDBEdit3: TdxDBEdit
+        Left = 306
+        Top = 388
+        Width = 46
+        TabOrder = 4
+        Alignment = taRightJustify
+        DataField = 'JangkaGarantee'
+        DataSource = dsMain
+        StyleController = SCEdit
+        StoredValues = 1
+      end
+      object DBRadioGroup2: TDBRadioGroup
+        Left = 96
+        Top = 416
+        Width = 162
+        Height = 33
+        Caption = '[Mata Uang]'
+        Columns = 2
+        Ctl3D = False
+        DataField = 'CurrID'
+        DataSource = dsMain
+        Items.Strings = (
+          'IDR'
+          'USD')
+        ParentCtl3D = False
+        TabOrder = 5
+        Values.Strings = (
+          'IDR'
+          'USD')
+      end
+      object dxDBEdit5: TdxDBEdit
+        Left = 97
+        Top = 456
+        Width = 157
+        TabOrder = 6
+        Alignment = taRightJustify
+        DataField = 'Komisi'
+        DataSource = dsMain
+        StyleController = SCEdit
+        StoredValues = 1
+      end
+      object DBRadioGroup3: TDBRadioGroup
+        Left = 104
+        Top = 274
+        Width = 162
+        Height = 33
+        Caption = '[Status Aktif]'
+        Columns = 2
+        Ctl3D = False
+        DataField = 'FgActive'
+        DataSource = dsMain
+        Items.Strings = (
+          'Ya'
+          'Tidak')
+        ParentCtl3D = False
+        TabOrder = 7
+        Values.Strings = (
+          'Y'
+          'T')
+      end
+      object dxDBButtonEdit8: TdxDBButtonEdit
+        Left = 104
+        Top = 9
+        Width = 150
+        TabOrder = 8
+        OnKeyPress = dxDBEdit1KeyPress
+        DataField = 'ProductID'
+        DataSource = dsMain
+        StyleController = SCEdit
+        Buttons = <
+          item
+            Default = True
+          end>
+        OnButtonClick = dxDBButtonEdit8ButtonClick
+        ExistButtons = True
+      end
+      object dxDBButtonEdit1: TdxDBButtonEdit
+        Left = 104
+        Top = 29
+        Width = 150
+        TabOrder = 9
+        OnKeyPress = dxDBEdit1KeyPress
+        DataField = 'GroupID'
+        DataSource = dsMain
+        StyleController = SCEdit
+        Buttons = <
+          item
+            Default = True
+          end>
+        OnButtonClick = dxDBButtonEdit1ButtonClick
+        ExistButtons = True
+      end
+      object dxDBEdit1: TdxDBEdit
+        Left = 104
+        Top = 49
+        Width = 90
+        TabOrder = 10
+        OnKeyPress = dxDBEdit1KeyPress
+        DataField = 'ItemID'
+        DataSource = dsMain
+        StyleController = SCEdit
+      end
+      object dxDBEdit8: TdxDBEdit
+        Left = 280
+        Top = 49
+        Width = 90
+        TabOrder = 11
+        OnKeyPress = dxDBEdit1KeyPress
+        DataField = 'PartNo'
+        DataSource = dsMain
+        StyleController = SCEdit
+      end
+      object dxDBEdit2: TdxDBEdit
+        Left = 104
+        Top = 69
+        Width = 300
+        TabOrder = 12
+        OnKeyPress = dxDBEdit1KeyPress
+        DataField = 'ItemName'
+        DataSource = dsMain
+        StyleController = SCEdit
+      end
+      object dxDBMemo2: TdxDBMemo
+        Left = 104
+        Top = 89
+        Width = 300
+        TabOrder = 13
+        OnKeyPress = dxDBEdit1KeyPress
+        DataField = 'Note'
+        DataSource = dsMain
+        StyleController = SCEdit
+        WantReturns = False
+        Height = 54
+      end
+      object dxDBButtonEdit3: TdxDBButtonEdit
+        Left = 104
+        Top = 142
+        Width = 81
+        TabOrder = 14
+        OnKeyPress = dxDBEdit1KeyPress
+        DataField = 'UOMID'
+        DataSource = dsMain
+        StyleController = SCEdit
+        Buttons = <
+          item
+            Default = True
+          end>
+        OnButtonClick = dxDBButtonEdit3ButtonClick
+        ExistButtons = True
+      end
+      object dxDBEdit7: TdxDBEdit
+        Left = 104
+        Top = 162
+        Width = 150
+        TabOrder = 15
+        OnKeyPress = dxDBEdit1KeyPress
+        Alignment = taRightJustify
+        DataField = 'UserPrice'
+        DataSource = dsMain
+        StyleController = SCEdit
+        StoredValues = 1
+      end
+      object dxDBEdit6: TdxDBEdit
+        Left = 104
+        Top = 182
+        Width = 150
+        TabOrder = 16
+        OnKeyPress = dxDBEdit1KeyPress
+        Alignment = taRightJustify
+        DataField = 'DealerPrice'
+        DataSource = dsMain
+        StyleController = SCEdit
+        StoredValues = 1
+      end
+      object DBRadioGroup4: TDBRadioGroup
+        Left = 104
+        Top = 236
+        Width = 162
+        Height = 33
+        Caption = '[Barang/Jasa]'
+        Columns = 2
+        Ctl3D = False
+        DataField = 'FgBarang'
+        DataSource = dsMain
+        Items.Strings = (
+          'Barang'
+          'Jasa')
+        ParentCtl3D = False
+        TabOrder = 17
+        Values.Strings = (
+          'A'
+          'B')
+      end
+      object dxDBButtonEdit2: TdxDBButtonEdit
+        Left = 184
+        Top = 142
+        Width = 105
+        TabOrder = 18
+        OnKeyPress = dxDBEdit1KeyPress
+        DataField = 'KodeSatuan'
+        DataSource = dsMain
+        StyleController = SCEdit
+        Buttons = <
+          item
+            Default = True
+          end>
+        OnButtonClick = dxDBButtonEdit3ButtonClick
+        ExistButtons = True
+      end
+      object GroupBox2: TGroupBox
+        Left = 15
+        Top = 313
+        Width = 221
+        Height = 50
+        Ctl3D = False
+        ParentCtl3D = False
+        TabOrder = 19
+        object Label4: TLabel
+          Left = 16
+          Top = 10
+          Width = 28
+          Height = 13
+          Alignment = taRightJustify
+          Caption = 'User :'
+        end
+        object DBText1: TDBText
+          Left = 53
+          Top = 9
+          Width = 132
+          Height = 17
+          DataField = 'UpdUser'
+          DataSource = dsMain
+        end
+        object Label22: TLabel
+          Left = 7
+          Top = 30
+          Width = 38
+          Height = 13
+          Alignment = taRightJustify
+          Caption = 'Waktu :'
+        end
+        object DBText9: TDBText
+          Left = 54
+          Top = 30
+          Width = 132
+          Height = 17
+          DataField = 'UpdDate'
+          DataSource = dsMain
+        end
+      end
+      object dxDBEdit9: TdxDBEdit
+        Left = 104
+        Top = 202
+        Width = 150
+        TabOrder = 20
+        OnKeyPress = dxDBEdit1KeyPress
+        Alignment = taRightJustify
+        DataField = 'KodeJenisBarang'
+        DataSource = dsMain
+        StyleController = SCEdit
+        StoredValues = 1
+      end
+    end
+  end
+  inherited paToolBar: TdxContainer
+    Width = 621
+    inherited sbLast: TSpeedButton
+      Left = 584
+    end
+    inherited sbNext: TSpeedButton
+      Left = 557
+    end
+    inherited sbPrev: TSpeedButton
+      Left = 530
+    end
+    inherited sbFirst: TSpeedButton
+      Left = 503
+    end
+    inherited sbPeriod: TSpeedButton
+      Left = 477
+    end
+    inherited BvlPeriod: TBevel
+      Left = 231
+    end
+    inherited laPeriod: TLabel
+      Left = 235
+    end
+  end
+  inherited quMain: TADOQuery
+    BeforeDelete = quMainBeforeDelete
+    OnCalcFields = quMainCalcFields
+    OnNewRecord = quMainNewRecord
+    SQL.Strings = (
+      'select *, CASE Garantee WHEN '#39'1'#39' THEN '#39'Ya'#39' '
+      
+        '                                        WHEN '#39'0'#39' THEN '#39'Non'#39' END ' +
+        'AS Garansi '
+      ' from INMsItem')
+    object quMainItemID: TStringField
+      FieldName = 'ItemID'
+    end
+    object quMainItemName: TStringField
+      FieldName = 'ItemName'
+      Size = 150
+    end
+    object quMainProductID: TStringField
+      FieldName = 'ProductID'
+    end
+    object quMainGroupID: TStringField
+      FieldName = 'GroupID'
+    end
+    object quMainUOMID: TStringField
+      FieldName = 'UOMID'
+    end
+    object quMainGarantee: TStringField
+      FieldName = 'Garantee'
+      FixedChar = True
+      Size = 1
+    end
+    object quMainUserPrice: TBCDField
+      FieldName = 'UserPrice'
+      LookupDataSet = ADOQuery1
+      Precision = 18
+    end
+    object quMainDealerPrice: TBCDField
+      FieldName = 'DealerPrice'
+      Precision = 18
+    end
+    object quMainUpdDate: TDateTimeField
+      FieldName = 'UpdDate'
+      DisplayFormat = 'DD MMMM YYYY'
+      EditMask = 'DD MMMM YYYY'
+    end
+    object quMainUpdUser: TStringField
+      FieldName = 'UpdUser'
+    end
+    object quMainLProduct: TStringField
+      FieldKind = fkLookup
+      FieldName = 'LProduct'
+      LookupDataSet = quProduct
+      LookupKeyFields = 'ProductID'
+      LookupResultField = 'ProductDesc'
+      KeyFields = 'ProductID'
+      Lookup = True
+    end
+    object quMainLGroup: TStringField
+      FieldKind = fkLookup
+      FieldName = 'LGroup'
+      LookupDataSet = quGroup
+      LookupKeyFields = 'GroupID'
+      LookupResultField = 'GroupDesc'
+      KeyFields = 'GroupID'
+      Lookup = True
+    end
+    object quMainGaransi: TStringField
+      FieldName = 'Garansi'
+      ReadOnly = True
+      Size = 3
+    end
+    object quMainCurrID: TStringField
+      FieldName = 'CurrID'
+    end
+    object quMainLUOMID: TStringField
+      FieldKind = fkLookup
+      FieldName = 'LUOMID'
+      LookupDataSet = quUOM
+      LookupKeyFields = 'UOMId'
+      LookupResultField = 'UOMId'
+      KeyFields = 'UOMID'
+      Size = 50
+      Lookup = True
+    end
+    object quMainJangkaGarantee: TBCDField
+      FieldName = 'JangkaGarantee'
+      Precision = 18
+      Size = 0
+    end
+    object quMainMinimumStok: TBCDField
+      FieldName = 'MinimumStok'
+      Precision = 18
+      Size = 0
+    end
+    object quMainKomisi: TBCDField
+      FieldName = 'Komisi'
+      Precision = 18
+      Size = 0
+    end
+    object quMainCtk: TStringField
+      FieldName = 'Ctk'
+      FixedChar = True
+      Size = 1
+    end
+    object quMainFgActive: TStringField
+      FieldName = 'FgActive'
+      Size = 1
+    end
+    object quMainStock: TIntegerField
+      FieldKind = fkCalculated
+      FieldName = 'Stock'
+      DisplayFormat = '#,0'
+      Calculated = True
+    end
+    object quMainPartNo: TStringField
+      FieldName = 'PartNo'
+      Size = 50
+    end
+    object quMainNote: TStringField
+      FieldName = 'Note'
+      Size = 50
+    end
+    object quMainKodeJenisBarang: TStringField
+      FieldName = 'KodeJenisBarang'
+      Size = 50
+    end
+    object quMainKodeSatuan: TStringField
+      FieldName = 'KodeSatuan'
+      Size = 50
+    end
+    object quMainFgBarang: TStringField
+      FieldName = 'FgBarang'
+      Size = 10
+    end
+  end
+  inherited ActionList: TActionList
+    inherited ActSave: TAction
+      Caption = 'SIMPAN (F3)'
+    end
+    inherited ActCancel: TAction
+      Caption = 'BATAL (F4)'
+    end
+  end
+  object quProduct: TADOQuery
+    Connection = dmMain.dbConn
+    CursorType = ctStatic
+    DataSource = dsMain
+    Parameters = <>
+    SQL.Strings = (
+      'SELECT * FROM INMsProduct')
+    Left = 552
+    Top = 132
+  end
+  object quGroup: TADOQuery
+    Connection = dmMain.dbConn
+    CursorType = ctStatic
+    DataSource = dsMain
+    Parameters = <>
+    SQL.Strings = (
+      'SELECT * FROM INMsGroup')
+    Left = 552
+    Top = 160
+  end
+  object quTemp: TADOQuery
+    Connection = dmMain.dbConn
+    Parameters = <>
+    Left = 391
+    Top = 5
+  end
+  object quUOM: TADOQuery
+    Connection = dmMain.dbConn
+    CursorType = ctStatic
+    DataSource = dsMain
+    Parameters = <>
+    SQL.Strings = (
+      'SELECT * FROM INMsUOM')
+    Left = 544
+    Top = 292
+  end
+  object ADOQuery1: TADOQuery
+    Connection = dmMain.dbConn
+    CursorType = ctStatic
+    DataSource = dsMain
+    Parameters = <>
+    SQL.Strings = (
+      'SELECT * FROM INMsGroup')
+    Left = 552
+    Top = 188
+  end
+end

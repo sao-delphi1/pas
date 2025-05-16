@@ -1,0 +1,239 @@
+unit ARRptPenjPerCustDlg;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, RptDlg, DB, dxExEdtr, dxCntner, ADODB, StdCtrls, Buttons,
+  ExtCtrls, dxEditor, dxEdLib, dxTL, dxDBCtrl, dxDBGrid, dxCore, dxButton;
+
+type
+  TfmARRptPenjPerCustDlg = class(TfmRptDlg)
+    quActCustID: TStringField;
+    quActCustName: TStringField;
+    GroupBox1: TGroupBox;
+    Label2: TLabel;
+    dt1: TdxDateEdit;
+    dt2: TdxDateEdit;
+    rbAll: TRadioButton;
+    rbSelect: TRadioButton;
+    dbgList: TdxDBGrid;
+    dbgListCustID: TdxDBGridMaskColumn;
+    dbgListCustName: TdxDBGridMaskColumn;
+    bbCancel: TdxButton;
+    RadioGroup1: TRadioGroup;
+    Label1: TLabel;
+    dxCurrencyEdit1: TdxCurrencyEdit;
+    procedure bbPreviewClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure rbSelectClick(Sender: TObject);
+    procedure bbCancelClick(Sender: TObject);
+    procedure RadioGroup1Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    Status : string;
+  end;
+
+var
+  fmARRptPenjPerCustDlg: TfmARRptPenjPerCustDlg;
+
+implementation
+
+uses INQRRptAdjusment, UnitGeneral,  
+  StdLv0, APQRRptPembPerBrg, APQRRptPembPerSupp, ARQRRptPenjPerCust, Search,
+  UnitDate, CFQRRptKeuanganBank, ConMain, MyUnit;
+
+{$R *.dfm}
+
+procedure TfmARRptPenjPerCustDlg.bbPreviewClick(Sender: TObject);
+begin
+  inherited;
+  if Status = 'Penjualan' then
+  begin
+    with TfmARQRRptPenjPerCust.Create(Self) do
+     try
+       qrlTitle.Caption := laTitle.Caption;
+       qrlPeriode.Caption := 'Periode : '+FormatDateTime('dd/MM/yyyy',dt1.date)+' s/d '+FormatDateTime('dd/MM/yyyy',dt2.date);
+
+       with qu001,SQL do
+       begin
+         Close;Clear;
+         add('SELECT DISTINCT K.CustId,K.Cust FROM'
+            +'(SELECT DISTINCT A.CustID,B.CustName as Cust FROM ARTrPenjualanHd A INNER JOIN ARMsCustomer B ON A.CustId=B.CustId '
+            +'WHERE Convert(varchar(8),TransDate,112) BETWEEN '''+FormatDateTime('yyyyMMdd',dt1.Date)+''' AND '''+FormatDateTime('yyyyMMdd',dt2.Date)+'''');
+         if RadioGroup1.ItemIndex = 1 then
+            Add(' AND ISNULL(A.TTLPj,0) >= '''+CurrToStr(dxCurrencyEdit1.Value)+''' ');
+         if rbSelect.Checked then
+            Add(' AND A.CustId IN '+SelGrid(quAct,dbgList,'CustID'));
+         Add(' ) as K ');
+         add(' ORDER BY K.CustId');
+         Open;
+         if IsEmpty then
+         begin
+           MsgInfo('No Data !');
+           Abort;
+         end;
+       end;
+
+       with qu002,SQL do
+       begin
+         Close;Clear;
+         add('SELECT DISTINCT K.SaleId,K.CustId,K.Tgl,K.Tgl2,K.CurrId,K.TTLPj,K.PPN,K.SubTotal,K.TaxID,K.Rate FROM'
+            +'(SELECT DISTINCT A.SaleId,A.CustId,Convert(varchar(10),Transdate,103) as Tgl,Convert(varchar(8),TransDate,112) as Tgl2,A.TaxID,ISNULL(A.Rate,0) as Rate,'
+            +'CurrID,ISNULL(TTLPj,0) as TTLPj, ISNULL(PPN,0) as PPN, ISNULL(StPj,0) as SubTotal FROM ARTrPenjualanHd A WHERE A.CustId=:CustId AND '
+            +'Convert(varchar(8),TransDate,112) BETWEEN '''+FormatDateTime('yyyyMMdd',dt1.Date)+''' AND '''+FormatDateTime('yyyyMMdd',dt2.Date)+'''');
+         if RadioGroup1.ItemIndex = 1 then
+            Add(' AND ISNULL(TTLPj,0) >= '''+CurrToStr(dxCurrencyEdit1.Value)+''' ');
+         Add(' ) as K ORDER BY K.Tgl2');
+         Parameters.ParamByName('CustId').DataType := ftString;
+         Open;
+       end;
+
+
+       with qu003,SQL do
+       begin
+         Close;Clear;
+         add(' SELECT Distinct K.SaleId,K.ItemId,K.ItemName,K.Qty,K.Price,K.Total FROM'
+            +' (SELECT distinct A.SaleId,A.ItemId,B.ItemName,A.Qty,A.Price,(A.Qty*A.Price) as Total'
+            +' FROM ARTrPenjualandt A INNER JOIN INMsItem B ON A.ItemId=B.ItemId'
+            +' WHERE A.SaleId=:SaleId'
+            +' ) as K  ORDER BY K.ItemId');
+         Parameters.ParamByName('SaleId').DataType := ftString;
+         Open;
+       end;
+
+       if Sender=bbPreview then
+          MyReport.Previewmodal
+       else
+          MyReport.Print;
+
+     finally
+        free;
+     end;
+  end else
+  begin
+  with TfmCFQRRptKeuanganBank.Create(Self) do
+     try
+       qrlTitle.Caption := laTitle.Caption;
+       qrlPeriode.Caption := 'Periode : '+FormatDateTime('dd/MM/yyyy',dt1.date)+' s/d '+FormatDateTime('dd/MM/yyyy',dt2.date);
+       TanggalDari := dt1.Date;
+       TanggalSampai := dt2.Date;
+
+      With qu001,SQL do
+      Begin
+        Close;Clear;
+        Add('SELECT DISTINCT K.CustID,K.CustID as TempField,L.CustName as BankName,K.CustID+'' - ''+L.CustName as Bank FROM ('
+           +'SELECT A.CustID,A.Transdate,ISNULL(A.TTLPj,0) as TTLPj FROM ARTrPenjualanHd A UNION ALL '
+           +'SELECT Actor,A.Transdate,ISNULL(A.JumlahD,0) FROM CFTrKKBBHd A WHERE A.FlagKKBB IN (''ARK'',''ARB'',''ARC'')) as K '
+           +'INNER JOIN ARMsCustomer L ON K.CustID=L.CustID '
+           +'WHERE CONVERT(VARCHAR(8),K.Transdate,112) <= '''+FormatDateTime('yyyyMMdd',dt2.Date)+''' ');
+        if rbSelect.Checked then
+           Add(' AND K.CustId IN '+SelGrid(quAct,dbgList,'CustID'));
+        Add(' ORDER BY K.CustID');
+        Open;
+      End;
+
+      with qu002,SQL do
+      Begin
+        Close;Clear;
+        Add('SELECT DISTINCT K.CurrID as ValutaID,K.CustID FROM ('
+           +'SELECT Transdate,CurrID,CustID FROM ARTrPenjualanHd UNION ALL SELECT Transdate,CurrID,Actor FROM CFTrKKBBHd WHERE FlagKKBB IN (''ARK'',''ARB'',''ARC'')) as K '
+           +'WHERE CONVERT(VARCHAR(8),K.Transdate,112) <= '''+FormatDateTime('yyyyMMdd',dt2.Date)+''' '
+           +'AND K.CustID=:CustID ');
+        Parameters.ParamByName('CustID').DataType := ftString;
+        Open;
+      End;
+
+      with qu003,SQL do
+      Begin
+        Close;Clear;
+        Add('SELECT K.Transdate,K.VoucherNo,CONVERT(VARCHAR(10),K.Transdate,103) as Tanggal,K.Note,K.Amount,K.GroupRekID,L.CustName as BankName FROM ('
+           +'SELECT 1 as Kode,TransDate,SaleID as VoucherNo,''Penjualan'' as Note,ISNULL(TTLPj,0) as Amount,''100'' as GroupRekID,CustID,CurrID FROM ARTrPenjualanHd UNION ALL '
+           +'SELECT 2,A.Transdate1,A.VoucherID,''Pembayaran ''+B.Note,B.Amount,''200'',A.Actor,A.CurrId '
+           +'FROM CFTrKKBBHd A INNER JOIN CFTrKKBBDt B ON A.VoucherID=B.VoucherID WHERE A.FlagKKBB IN (''ARK'',''ARB'',''ARC'') AND B.RekeningID='''+sDRPj+''' ) as K '
+           +'INNER JOIN ARMsCustomer L ON K.CustID=L.CustID WHERE K.CustID=:CustID AND K.CurrID=:ValutaID '
+           +'AND CONVERT(VARCHAR(8),K.Transdate,112) BETWEEN '''+FormatDateTime('yyyyMMdd',dt1.Date)+'''  AND '''+FormatDateTime('yyyyMMdd',dt2.Date)+''' '
+           +'ORDER BY Kode,CONVERT(VARCHAR(8),K.Transdate,112),K.VoucherNo');
+        Parameters.ParamByName('CustID').DataType := ftString;
+        Parameters.ParamByName('ValutaID').DataType := ftString;
+        Open;
+      End;
+
+     if Sender=bbPreview then
+          MyReport.Previewmodal
+       else
+          MyReport.Print;
+     finally
+        free;
+     end;
+  end;
+end;
+
+procedure TfmARRptPenjPerCustDlg.FormShow(Sender: TObject);
+begin
+  inherited;
+  quAct.Open;
+  dt1.Date:=EncodeDate(GetYear(Date),GetMonth(Date),1);
+  dt2.date := date;
+  if Status = 'Penjualan' then
+  begin
+    laTitle.Caption := 'Laporan Penjualan Per Pelanggan';
+    RadioGroup1.Visible := True;
+  end else
+  begin
+    laTitle.Caption := 'Laporan Kartu Piutang Penjualan';
+    RadioGroup1.Visible := False;
+  end;
+end;
+
+procedure TfmARRptPenjPerCustDlg.rbSelectClick(Sender: TObject);
+begin                  
+  inherited;      
+  if Sender=rbAll then
+  begin
+     dbgList.OptionsBehavior := dbgList.OptionsBehavior - [edgoMultiSelect];
+  end else
+  if Sender=rbSelect then
+  begin
+     dbgList.OptionsBehavior := dbgList.OptionsBehavior + [edgoMultiSelect];
+     if dbgList.FocusedNode <> nil then
+       dbgList.FocusedNode.Selected := TRUE;
+  end;
+end;
+
+procedure TfmARRptPenjPerCustDlg.bbCancelClick(Sender: TObject);
+begin
+  inherited;
+  with TfmSearch.Create(Self) do
+    try
+       Title := 'Pelanggan';
+       SQLString := ' SELECT CustName as Nama_Pelanggan ,CustId as Kode_Pelanggan'
+                   +' FROM ARMsCustomer A '
+                   +' ORDER BY CustID';
+
+       if ShowModal = MrOK then
+       begin
+         Self.quAct.Locate('CustID',Res[1],[]);
+       end;
+    finally
+       free;
+    end;
+end;
+
+procedure TfmARRptPenjPerCustDlg.RadioGroup1Click(Sender: TObject);
+begin
+  inherited;
+  if RadioGroup1.ItemIndex = 0 then
+  begin
+    Label1.Visible := False;
+    dxCurrencyEdit1.Visible := False;
+  end else
+  begin
+    Label1.Visible := True;
+    dxCurrencyEdit1.Visible := True;
+  end;
+end;
+
+end.
