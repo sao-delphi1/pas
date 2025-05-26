@@ -3,7 +3,7 @@ object fmUtama: TfmUtama
   Top = 346
   Width = 960
   Height = 579
-  Caption = 'Nama Perusahaan'
+  Caption = 'Portal Andalan Solusi'
   Color = 13676331
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText

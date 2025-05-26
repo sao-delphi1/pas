@@ -764,13 +764,13 @@ begin
         QRLabel38.Caption := '* Pembayaran CBD (Cash before Delivery)'
       else
         if DBRadioGroup3.ItemIndex = 2 then
-          QRLabel38.Caption := '* Pembayaran 30 Hari Kerja, setelah Invoice diterima oleh Dept Accounting PT. Mitra Agung Prakarsa'
+          QRLabel38.Caption := '* Pembayaran 30 Hari Kerja, setelah Invoice diterima oleh Dept Accounting PT. Portal Andalan Solusi'
         else
           if DBRadioGroup3.ItemIndex = 3 then
             if RgJaminan.ItemIndex = 0 then
-              QRLabel38.Caption := '* Pembayaran '+dxDBEdit11.Text+' Hari Kerja, setelah Invoice diterima oleh Dept Accounting PT. Mitra Agung Prakarsa.'
+              QRLabel38.Caption := '* Pembayaran '+dxDBEdit11.Text+' Hari Kerja, setelah Invoice diterima oleh Dept Accounting PT. Portal Andalan Solusi.'
             else
-              QRLabel38.Caption := '* Pembayaran '+dxDBEdit11.Text+' Hari Kerja, setelah Invoice diterima oleh Dept Accounting PT. Mitra Agung Prakarsa. Dengan jaminan cheque / Giro'
+              QRLabel38.Caption := '* Pembayaran '+dxDBEdit11.Text+' Hari Kerja, setelah Invoice diterima oleh Dept Accounting PT. Portal Andalan Solusi. Dengan jaminan cheque / Giro'
           else
             QRLabel38.Enabled := False;
     end else

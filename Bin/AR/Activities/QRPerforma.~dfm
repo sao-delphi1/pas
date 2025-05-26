@@ -1,6 +1,6 @@
 inherited fmQRPerforma: TfmQRPerforma
-  Left = 35
-  Top = 0
+  Left = 328
+  Top = 112
   Width = 1165
   Height = 690
   Caption = 'Performa Invoice'
@@ -86,17 +86,18 @@ inherited fmQRPerforma: TfmQRPerforma
         FontSize = 10
       end
       inherited qrlCompAddres: TQRMemo
-        Left = 204
-        Top = 241
-        Width = 53
-        Height = 48
-        Enabled = False
+        Left = 12
+        Top = 92
+        Width = 277
+        Height = 67
         Size.Values = (
-          127
-          539.75
-          637.645833333333
-          140.229166666667)
-        FontSize = 10
+          177.270833333333
+          31.75
+          243.416666666667
+          732.895833333333)
+        Font.Height = -11
+        ParentFont = False
+        FontSize = 8
       end
       inherited ImgCompany: TQRImage
         Left = 158
@@ -109,99 +110,6 @@ inherited fmQRPerforma: TfmQRPerforma
           418.041666666667
           679.979166666667
           71.4375)
-      end
-      object QRLabel44: TQRLabel
-        Left = 11
-        Top = 105
-        Width = 300
-        Height = 16
-        Frame.Color = clBlack
-        Frame.DrawTop = False
-        Frame.DrawBottom = False
-        Frame.DrawLeft = False
-        Frame.DrawRight = False
-        Size.Values = (
-          42.3333333333333
-          29.1041666666667
-          277.8125
-          793.75)
-        Alignment = taLeftJustify
-        AlignToBand = False
-        AutoSize = False
-        AutoStretch = True
-        Caption = 'Jalan Gunung Sahari Raya No.1'
-        Color = clWhite
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Arial'
-        Font.Style = []
-        ParentFont = False
-        Transparent = False
-        WordWrap = True
-        FontSize = 8
-      end
-      object QRLabel47: TQRLabel
-        Left = 11
-        Top = 133
-        Width = 300
-        Height = 16
-        Frame.Color = clBlack
-        Frame.DrawTop = False
-        Frame.DrawBottom = False
-        Frame.DrawLeft = False
-        Frame.DrawRight = False
-        Size.Values = (
-          42.3333333333333
-          29.1041666666667
-          351.895833333333
-          793.75)
-        Alignment = taLeftJustify
-        AlignToBand = False
-        AutoSize = False
-        AutoStretch = True
-        Caption = 'Jakarta Utara 14420'
-        Color = clWhite
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Arial'
-        Font.Style = []
-        ParentFont = False
-        Transparent = False
-        WordWrap = True
-        FontSize = 8
-      end
-      object QRLabel46: TQRLabel
-        Left = 11
-        Top = 146
-        Width = 300
-        Height = 16
-        Frame.Color = clBlack
-        Frame.DrawTop = False
-        Frame.DrawBottom = False
-        Frame.DrawLeft = False
-        Frame.DrawRight = False
-        Size.Values = (
-          42.3333333333333
-          29.1041666666667
-          386.291666666667
-          793.75)
-        Alignment = taLeftJustify
-        AlignToBand = False
-        AutoSize = False
-        AutoStretch = True
-        Caption = 'Phone 021 - 2262 2546, 021 - 2262 2604'
-        Color = clWhite
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Arial'
-        Font.Style = []
-        ParentFont = False
-        Transparent = False
-        WordWrap = True
-        FontSize = 8
       end
       object QRLabel1: TQRLabel
         Left = 381
@@ -801,18 +709,18 @@ inherited fmQRPerforma: TfmQRPerforma
       object QRImage2: TQRImage
         Left = 5
         Top = 1
-        Width = 251
-        Height = 104
+        Width = 236
+        Height = 88
         Frame.Color = clBlack
         Frame.DrawTop = False
         Frame.DrawBottom = False
         Frame.DrawLeft = False
         Frame.DrawRight = False
         Size.Values = (
-          275.166666666667
+          232.833333333333
           13.2291666666667
           2.64583333333333
-          664.104166666667)
+          624.416666666667)
         AutoSize = True
         Center = True
         Picture.Data = {
@@ -36914,37 +36822,6 @@ inherited fmQRPerforma: TfmQRPerforma
           FFFFFFFF0000}
         Stretch = True
       end
-      object QRLabel31: TQRLabel
-        Left = 11
-        Top = 119
-        Width = 300
-        Height = 16
-        Frame.Color = clBlack
-        Frame.DrawTop = False
-        Frame.DrawBottom = False
-        Frame.DrawLeft = False
-        Frame.DrawRight = False
-        Size.Values = (
-          42.3333333333333
-          29.1041666666667
-          314.854166666667
-          793.75)
-        Alignment = taLeftJustify
-        AlignToBand = False
-        AutoSize = False
-        AutoStretch = True
-        Caption = 'Rukan Mangga Dua Square Blok G No.12'
-        Color = clWhite
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Arial'
-        Font.Style = []
-        ParentFont = False
-        Transparent = False
-        WordWrap = True
-        FontSize = 8
-      end
     end
     inherited BndPF: TQRBand
       Top = 452
@@ -38063,7 +37940,7 @@ inherited fmQRPerforma: TfmQRPerforma
       object QRLabel41: TQRLabel
         Left = 208
         Top = 84
-        Width = 210
+        Width = 213
         Height = 19
         Frame.Color = clBlack
         Frame.DrawTop = False
@@ -38074,12 +37951,12 @@ inherited fmQRPerforma: TfmQRPerforma
           50.2708333333333
           550.333333333333
           222.25
-          555.625)
+          563.5625)
         Alignment = taLeftJustify
         AlignToBand = False
         AutoSize = True
         AutoStretch = False
-        Caption = 'OCBC NISP Cabang Gunung Sahari'
+        Caption = 'Mandiri Cabang Mangga Dua Square'
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -38094,7 +37971,7 @@ inherited fmQRPerforma: TfmQRPerforma
       object QRLabel42: TQRLabel
         Left = 208
         Top = 100
-        Width = 93
+        Width = 104
         Height = 19
         Frame.Color = clBlack
         Frame.DrawTop = False
@@ -38105,12 +37982,12 @@ inherited fmQRPerforma: TfmQRPerforma
           50.2708333333333
           550.333333333333
           264.583333333333
-          246.0625)
+          275.166666666667)
         Alignment = taLeftJustify
         AlignToBand = False
         AutoSize = True
         AutoStretch = False
-        Caption = '020.8000.17277'
+        Caption = '120 0000 677 687'#10
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText

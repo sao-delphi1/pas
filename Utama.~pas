@@ -188,7 +188,7 @@ procedure TfmUtama.FormShow(Sender: TObject);
 Var MyIniFile : TIniFile;
     Client,Server : String;
 begin
-  Caption := 'Mitra Agung Prakarsa versi : '+version;
+  Caption := 'Nama Perusahaan versi : '+version;
   MyIniFile  := TIniFile.Create(ExtractFilePath(Application.ExeName)+'Setting.ini');
   Client := Decrypt(MyIniFile.ReadString('Server','07',''));
   Server := ServerPath;

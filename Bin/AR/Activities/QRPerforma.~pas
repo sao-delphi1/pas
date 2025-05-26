@@ -8,9 +8,6 @@ uses
 
 type
   TfmQRPerforma = class(TfmRptLv3)
-    QRLabel44: TQRLabel;
-    QRLabel47: TQRLabel;
-    QRLabel46: TQRLabel;
     QRShape4: TQRShape;
     QRLabel1: TQRLabel;
     QRLabel2: TQRLabel;
@@ -84,7 +81,6 @@ type
     QRShape7: TQRShape;
     QRDBText17: TQRDBText;
     QRImage2: TQRImage;
-    QRLabel31: TQRLabel;
     QRLabel50: TQRLabel;
     QRLabel34: TQRLabel;
     QRLabel39: TQRLabel;

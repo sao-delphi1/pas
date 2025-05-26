@@ -175,6 +175,7 @@ inherited fmARQRRptKwitansi: TfmARQRRptKwitansi
           584.729166666667)
         Font.Height = -11
         ParentFont = False
+        WordWrap = True
         FontSize = 8
       end
       inherited ImgCompany: TQRImage

@@ -6767,7 +6767,7 @@ inherited fmQRRptBayarPeriksa: TfmQRRptBayarPeriksa
       object QRLabel11: TQRLabel
         Left = 172
         Top = 437
-        Width = 282
+        Width = 238
         Height = 18
         Frame.Color = clBlack
         Frame.DrawTop = False
@@ -6778,12 +6778,12 @@ inherited fmQRRptBayarPeriksa: TfmQRRptBayarPeriksa
           47.625
           455.083333333333
           1156.22916666667
-          746.125)
+          629.708333333333)
         Alignment = taLeftJustify
         AlignToBand = False
         AutoSize = True
         AutoStretch = False
-        Caption = ': Bank Mandiri KCP Jkt Pasar Pagi Mangga Dua'
+        Caption = ': Bank Mandiri KCP Mangga Dua Square'
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText

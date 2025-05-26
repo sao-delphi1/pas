@@ -1275,4 +1275,10 @@ inherited fmARTrPenawaran: TfmARTrPenawaran
       Size = 5
     end
   end
+  object quPPN: TADOQuery
+    Connection = dmMain.dbConn
+    Parameters = <>
+    Left = 448
+    Top = 4
+  end
 end

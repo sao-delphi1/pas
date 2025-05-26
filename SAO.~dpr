@@ -181,7 +181,8 @@ uses
   ARQRRptSOBelumInvoice in 'Bin\AR\Report\ARQRRptSOBelumInvoice.pas' {fmARQRRptSOBelumInvoice},
   ARRptSisaTransferBarangDlg in 'Bin\AR\Report\ARRptSisaTransferBarangDlg.pas' {fmARRptSisaTransferBarangDlg},
   ARRptSNReport in 'Bin\AR\Report\ARRptSNReport.pas' {fmARRptSNReport},
-  ARRptInvBlmSN in 'Bin\AR\Report\ARRptInvBlmSN.pas' {fmARRptInvBlmSN};
+  ARRptInvBlmSN in 'Bin\AR\Report\ARRptInvBlmSN.pas' {fmARRptInvBlmSN},
+  ARUploadCoreTax in 'Bin\AR\Setup\ARUploadCoreTax.pas' {fmARUploadCoreTax};
 
 {$R *.res}
 
@@ -190,6 +191,7 @@ begin
   Application.CreateForm(TdmMain, dmMain);
   Application.CreateForm(TfmLogin, fmLogin);
   Application.CreateForm(TfmKeyPadSC, fmKeyPadSC);
+  Application.CreateForm(TfmARUploadCoreTax, fmARUploadCoreTax);
   if not (dmMain.dbConn.Connected) or (fmLogIn.ShowModal = mrAbort) then
   begin
      Application.Terminate;

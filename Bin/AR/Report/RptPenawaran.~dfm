@@ -14318,6 +14318,9 @@ inherited fmRptPenawaran: TfmRptPenawaran
           687.916666666667
           44.9791666666667
           518.583333333333)
+        Lines.Strings = ()
+        ParentFont = False
+        WordWrap = True
         FontSize = 10
       end
       inherited ImgCompany: TQRImage

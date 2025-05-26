@@ -48,11 +48,11 @@ inherited fmLogin: TfmLogin
       Transparent = True
     end
     object Label3: TLabel
-      Left = 147
+      Left = 19
       Top = 19
-      Width = 43
+      Width = 284
       Height = 24
-      Caption = 'PAS'
+      Caption = 'PORTAL ANDALAN SOLUSI'
       Font.Charset = ANSI_CHARSET
       Font.Color = clRed
       Font.Height = -21

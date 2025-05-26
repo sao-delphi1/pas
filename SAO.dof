@@ -87,6 +87,7 @@ ProductVersion=1.0.0.0
 Comments=
 [Excluded Packages]
 C:\Program Files (x86)\Developer Express Inc\ExpressPrinting System\Delphi 6\Lib\dxPSdxDBTLLnkD6.bpl=ExpressPrinting System ReportLink for ExpressQuantumDBTreeList by Developer Express Inc.
+C:\Program Files (x86)\Developer Express Inc\ExpressPrinting System\Delphi 6\Lib\dxPSdxDBGrLnkD6.bpl=ExpressPrinting System ReportLink for ExpressQuantumGrid by Developer Express Inc.
 C:\Program Files (x86)\Developer Express Inc\ExpressPrinting System\Delphi 6\Lib\dxPSdxInsLnkD6.bpl=ExpressPrinting System ReportLink for ExpressInspector by Developer Express Inc.
 C:\Program Files (x86)\Developer Express Inc\ExpressPrinting System\Delphi 6\Lib\dxPSdxOILnkD6.bpl=ExpressPrinting System ReportLink for ExpressRTTIInspector by Developer Express Inc.
 C:\Program Files (x86)\Developer Express Inc\ExpressPrinting System\Delphi 6\Lib\dxPSdxOCLnkD6.bpl=ExpressPrinting System ReportLinks for ExpressOrgChart by Developer Express Inc.

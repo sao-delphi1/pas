@@ -129,6 +129,8 @@ begin
   if sHarga = 'Y' then
     if qu002.FieldByName('Price').AsCurrency > 0 then
     PrintBand := qu002.FieldByName('Note').AsString <> ''
+    else
+    PrintBand := False;
 end;
 
 procedure TfmQRRptInvPenjualan.QRLabel18Print(sender: TObject;
@@ -157,7 +159,14 @@ begin
         +'and ItemID='''+qu002.FieldByName('ItemID').AsString+''' ');
      Open;
    End;
-   PrintBand := qu003.FieldByName('SNID').AsString <> '';
+   //PrintBand := qu003.FieldByName('SNID').AsString <> '';
+
+   if sHarga = 'Y' then
+    if qu002.FieldByName('Price').AsCurrency > 0 then
+    PrintBand := qu003.FieldByName('SNID').AsString <> ''
+    else
+    PrintBand := False;
+
    while not qu003.Eof do
    begin
      SerialNumber := SerialNumber +'  '+ qu003.FieldbyName('SNID').AsString;

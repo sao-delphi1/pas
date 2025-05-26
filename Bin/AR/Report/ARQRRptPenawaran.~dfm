@@ -124,6 +124,7 @@ inherited fmARQRRptPenawaran: TfmARQRRptPenawaran
           709.083333333333
           42.3333333333333
           584.729166666667)
+        ParentFont = False
         WordWrap = True
         FontSize = 10
       end

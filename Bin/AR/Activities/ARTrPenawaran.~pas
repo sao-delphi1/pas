@@ -132,6 +132,7 @@ type
     dxDBEdit11: TdxDBEdit;
     quMainLcustomer: TStringField;
     DBText2: TDBText;
+    quPPN: TADOQuery;
     procedure FormShow(Sender: TObject);
     procedure dsMainStateChange(Sender: TObject);
     procedure dbgPenawaranEnter(Sender: TObject);
@@ -295,15 +296,18 @@ begin
   quMainTransdate.FocusControl;
   quMainTransdate.AsDateTime := Date;
   quMainCurrID.AsString := 'IDR';
-  quMainFgTax.AsString := 'T';
+  quMainFgTax.AsString := 'Y';
   quMainDisc.AsCurrency := 0;
   quMainUP.AsString:= '';
   quMainFlag.AsString := Flag;
   quMainFOB.ASString := 'Jakarta';
-  if StrToInt(FormatDateTime('YYYYMMDD',quMainTransdate.AsDateTime)) < 20220401 then
-    quMainPPN.AsCurrency := 10
-  else
-    quMainPPN.AsCurrency := 11;
+  with quPPN,SQL do
+  begin
+    Close;Clear;
+    Add('select PPN from samsset');
+    Open;
+  end;
+  quMainPPN.AsCurrency := quPPN.FieldByName('PPN').AsCurrency;
   quMainDisc.AsCurrency := 0;
   quMainTerm.AsCurrency := 7;
   quMainFGTerm.ASString := 'XHR';

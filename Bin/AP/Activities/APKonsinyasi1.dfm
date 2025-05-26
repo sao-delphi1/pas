@@ -1,15 +1,15 @@
 inherited fmAPKonsinyasi: TfmAPKonsinyasi
-  Left = 164
-  Top = 74
+  Left = 471
+  Top = 203
   Caption = 'Penerimaan Barang'
-  ClientHeight = 490
-  ClientWidth = 977
+  ClientHeight = 540
+  ClientWidth = 1120
   PixelsPerInch = 96
   TextHeight = 13
   inherited paLeft: TdxContainer
-    Height = 441
+    Height = 491
     inherited pa3: TdxContainer
-      Height = 262
+      Height = 312
     end
     inherited paOperation: TdxContainer
       inherited bbFind: TdxButton
@@ -18,15 +18,15 @@ inherited fmAPKonsinyasi: TfmAPKonsinyasi
     end
   end
   inherited paBottom: TdxContainer
-    Top = 478
-    Width = 977
+    Top = 528
+    Width = 1120
   end
   inherited pa2: TdxContainer
-    Height = 441
+    Height = 491
   end
   inherited pcMain: TdxPageControl
-    Width = 784
-    Height = 441
+    Width = 927
+    Height = 491
     inherited ts01: TdxTabSheet
       inherited dbgList: TdxDBGrid
         Width = 779
@@ -123,7 +123,7 @@ inherited fmAPKonsinyasi: TfmAPKonsinyasi
       end
       object Label3: TLabel
         Left = 73
-        Top = 52
+        Top = 72
         Width = 44
         Height = 13
         Alignment = taRightJustify
@@ -138,7 +138,7 @@ inherited fmAPKonsinyasi: TfmAPKonsinyasi
       end
       object DBText1: TDBText
         Left = 220
-        Top = 52
+        Top = 72
         Width = 42
         Height = 13
         AutoSize = True
@@ -147,7 +147,7 @@ inherited fmAPKonsinyasi: TfmAPKonsinyasi
       end
       object Label4: TLabel
         Left = 73
-        Top = 73
+        Top = 93
         Width = 44
         Height = 13
         Alignment = taRightJustify
@@ -162,7 +162,7 @@ inherited fmAPKonsinyasi: TfmAPKonsinyasi
       end
       object DBText2: TDBText
         Left = 220
-        Top = 72
+        Top = 92
         Width = 42
         Height = 13
         AutoSize = True
@@ -171,7 +171,7 @@ inherited fmAPKonsinyasi: TfmAPKonsinyasi
       end
       object Label5: TLabel
         Left = 56
-        Top = 92
+        Top = 112
         Width = 61
         Height = 13
         Alignment = taRightJustify
@@ -180,7 +180,7 @@ inherited fmAPKonsinyasi: TfmAPKonsinyasi
       end
       object Label13: TLabel
         Left = 2
-        Top = 115
+        Top = 131
         Width = 183
         Height = 16
         Caption = 'Detail Penerimaan Barang'
@@ -192,11 +192,11 @@ inherited fmAPKonsinyasi: TfmAPKonsinyasi
         ParentFont = False
       end
       object Label6: TLabel
-        Left = 504
-        Top = 115
-        Width = 196
+        Left = 663
+        Top = 131
+        Width = 140
         Height = 16
-        Caption = 'Detil Serial Number per Item'
+        Caption = 'Detil Serial Number '
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clBlack
         Font.Height = -13
@@ -205,8 +205,8 @@ inherited fmAPKonsinyasi: TfmAPKonsinyasi
         ParentFont = False
       end
       object Label7: TLabel
-        Left = 263
-        Top = 32
+        Left = 79
+        Top = 52
         Width = 38
         Height = 13
         Alignment = taRightJustify
@@ -219,10 +219,19 @@ inherited fmAPKonsinyasi: TfmAPKonsinyasi
         ParentFont = False
         Transparent = True
       end
+      object DBText5: TDBText
+        Left = 288
+        Top = 52
+        Width = 42
+        Height = 13
+        AutoSize = True
+        DataField = 'LSO'
+        DataSource = dsMain
+      end
       object bbSave: TdxButton
         Tag = 3333
-        Left = 597
-        Top = 85
+        Left = 508
+        Top = 79
         Width = 83
         About = 'Design eXperience. '#169' 2002 M. Hoffmann'
         Anchors = [akRight, akBottom]
@@ -243,8 +252,8 @@ inherited fmAPKonsinyasi: TfmAPKonsinyasi
       end
       object bbCancel: TdxButton
         Tag = 4444
-        Left = 681
-        Top = 85
+        Left = 592
+        Top = 79
         Width = 83
         About = 'Design eXperience. '#169' 2002 M. Hoffmann'
         Anchors = [akRight, akBottom]
@@ -264,7 +273,7 @@ inherited fmAPKonsinyasi: TfmAPKonsinyasi
         TabStop = False
       end
       object GroupBox2: TGroupBox
-        Left = 479
+        Left = 671
         Top = 3
         Width = 221
         Height = 50
@@ -306,9 +315,9 @@ inherited fmAPKonsinyasi: TfmAPKonsinyasi
       end
       object dbg: TdxDBGrid
         Left = 0
-        Top = 133
-        Width = 438
-        Height = 255
+        Top = 149
+        Width = 661
+        Height = 172
         Bands = <
           item
             Alignment = taLeftJustify
@@ -316,7 +325,6 @@ inherited fmAPKonsinyasi: TfmAPKonsinyasi
           end>
         DefaultLayout = True
         HeaderPanelRowCount = 1
-        KeyField = 'KonsinyasiID'
         SummaryGroups = <>
         SummarySeparator = ', '
         TabOrder = 3
@@ -329,7 +337,7 @@ inherited fmAPKonsinyasi: TfmAPKonsinyasi
         OptionsView = [edgoBandHeaderWidth, edgoIndicator, edgoUseBitmap]
         object dbgItemID: TdxDBGridButtonColumn
           Caption = 'Kode Barang'
-          Width = 91
+          Width = 100
           BandIndex = 0
           RowIndex = 0
           FieldName = 'ItemID'
@@ -341,7 +349,7 @@ inherited fmAPKonsinyasi: TfmAPKonsinyasi
         end
         object dbgPartNo: TdxDBGridButtonColumn
           Caption = 'Part No'
-          Width = 79
+          Width = 100
           BandIndex = 0
           RowIndex = 0
           FieldName = 'PartNo'
@@ -356,7 +364,7 @@ inherited fmAPKonsinyasi: TfmAPKonsinyasi
           Color = clWhite
           ReadOnly = True
           TabStop = False
-          Width = 209
+          Width = 185
           BandIndex = 0
           RowIndex = 0
           FieldName = 'LuItemName'
@@ -364,7 +372,7 @@ inherited fmAPKonsinyasi: TfmAPKonsinyasi
         object dbgCurrID: TdxDBGridButtonColumn
           Caption = 'Valuta'
           Visible = False
-          Width = 45
+          Width = 46
           BandIndex = 0
           RowIndex = 0
           FieldName = 'CurrID'
@@ -374,9 +382,30 @@ inherited fmAPKonsinyasi: TfmAPKonsinyasi
             end>
           OnButtonClick = dbgCurrIDButtonClick
         end
+        object dbgColumn9: TdxDBGridColumn
+          Caption = 'PO'
+          Width = 60
+          BandIndex = 0
+          RowIndex = 0
+          FieldName = 'LPO'
+        end
+        object dbgColumn10: TdxDBGridColumn
+          Caption = 'Terima'
+          Width = 60
+          BandIndex = 0
+          RowIndex = 0
+          FieldName = 'LTerima'
+        end
+        object dbgColumn11: TdxDBGridColumn
+          Caption = 'Sisa'
+          Width = 60
+          BandIndex = 0
+          RowIndex = 0
+          FieldName = 'LSisa'
+        end
         object dbgQty: TdxDBGridColumn
           Caption = 'Jumlah'
-          Width = 47
+          Width = 60
           BandIndex = 0
           RowIndex = 0
           FieldName = 'Qty'
@@ -384,7 +413,7 @@ inherited fmAPKonsinyasi: TfmAPKonsinyasi
         object dbgPrice: TdxDBGridColumn
           Caption = 'Harga'
           Visible = False
-          Width = 68
+          Width = 70
           BandIndex = 0
           RowIndex = 0
           FieldName = 'Price'
@@ -395,7 +424,7 @@ inherited fmAPKonsinyasi: TfmAPKonsinyasi
           ReadOnly = True
           TabStop = False
           Visible = False
-          Width = 99
+          Width = 103
           BandIndex = 0
           RowIndex = 0
           FieldName = 'LuProduct'
@@ -406,23 +435,30 @@ inherited fmAPKonsinyasi: TfmAPKonsinyasi
           ReadOnly = True
           TabStop = False
           Visible = False
-          Width = 125
+          Width = 128
           BandIndex = 0
           RowIndex = 0
           FieldName = 'LuGroup'
         end
       end
       object dxDBGrid2: TdxDBGrid
-        Left = 438
-        Top = 133
-        Width = 345
-        Height = 255
+        Left = 661
+        Top = 149
+        Width = 266
+        Height = 291
         Bands = <
           item
           end>
         DefaultLayout = True
         HeaderPanelRowCount = 1
-        SummaryGroups = <>
+        SummaryGroups = <
+          item
+            DefaultGroup = False
+            SummaryItems = <
+              item
+              end>
+            Name = 'dxDBGrid2SummaryGroup2'
+          end>
         SummarySeparator = ', '
         TabOrder = 4
         DataSource = dsSN
@@ -430,30 +466,25 @@ inherited fmAPKonsinyasi: TfmAPKonsinyasi
         HideFocusRect = True
         HideSelection = True
         LookAndFeel = lfUltraFlat
+        OptionsBehavior = [edgoAutoCopySelectedToClipboard, edgoAutoSort, edgoDragScroll, edgoEditing, edgoEnterShowEditor, edgoEnterThrough, edgoImmediateEditor, edgoMultiSelect, edgoTabThrough, edgoVertThrough]
         OptionsView = [edgoBandHeaderWidth, edgoIndicator, edgoUseBitmap]
         object dxDBGrid2SNID: TdxDBGridColumn
-          Caption = 'Serial Number'
-          Width = 142
+          Caption = 'Serial Number ( Ctrl + F12 = Kosongkan )'
+          Width = 234
           BandIndex = 0
           RowIndex = 0
           FieldName = 'SNID'
-        end
-        object dxDBGrid2Column2: TdxDBGridColumn
-          Width = 80
-          BandIndex = 0
-          RowIndex = 0
-          FieldName = 'SaleID'
-        end
-        object dxDBGrid2Column3: TdxDBGridColumn
-          Width = 100
-          BandIndex = 0
-          RowIndex = 0
-          FieldName = 'CustName'
+          SummaryFooterType = cstCount
+          SummaryFooterField = 'SNID'
+          SummaryFooterFormat = '#,0'
+          SummaryField = 'SNID'
+          SummaryFormat = '#,0'
+          SummaryGroupName = 'dxDBGrid2SummaryGroup2'
         end
       end
       object dxButton3: TdxButton
         Left = 346
-        Top = 390
+        Top = 441
         Width = 93
         Height = 26
         About = 'Design eXperience. '#169' 2002 M. Hoffmann'
@@ -471,7 +502,7 @@ inherited fmAPKonsinyasi: TfmAPKonsinyasi
       object TmbBrg: TdxButton
         Tag = 1111
         Left = 2
-        Top = 390
+        Top = 441
         Width = 85
         Height = 26
         About = 'Design eXperience. '#169' 2002 M. Hoffmann'
@@ -490,7 +521,7 @@ inherited fmAPKonsinyasi: TfmAPKonsinyasi
       object KrgBrg: TdxButton
         Tag = 2222
         Left = 88
-        Top = 390
+        Top = 441
         Width = 85
         Height = 26
         About = 'Design eXperience. '#169' 2002 M. Hoffmann'
@@ -509,7 +540,7 @@ inherited fmAPKonsinyasi: TfmAPKonsinyasi
       object bbSimpanDetil: TdxButton
         Tag = 4444
         Left = 174
-        Top = 390
+        Top = 441
         Width = 85
         Height = 26
         About = 'Design eXperience. '#169' 2002 M. Hoffmann'
@@ -528,7 +559,7 @@ inherited fmAPKonsinyasi: TfmAPKonsinyasi
       object BtlBrg: TdxButton
         Tag = 4444
         Left = 260
-        Top = 390
+        Top = 441
         Width = 85
         Height = 26
         About = 'Design eXperience. '#169' 2002 M. Hoffmann'
@@ -546,8 +577,8 @@ inherited fmAPKonsinyasi: TfmAPKonsinyasi
       end
       object dxButton1: TdxButton
         Tag = 1111
-        Left = 440
-        Top = 390
+        Left = 662
+        Top = 441
         Width = 65
         Height = 26
         About = 'Design eXperience. '#169' 2002 M. Hoffmann'
@@ -565,8 +596,8 @@ inherited fmAPKonsinyasi: TfmAPKonsinyasi
       end
       object dxButton2: TdxButton
         Tag = 2222
-        Left = 506
-        Top = 390
+        Left = 728
+        Top = 441
         Width = 65
         Height = 26
         About = 'Design eXperience. '#169' 2002 M. Hoffmann'
@@ -584,8 +615,8 @@ inherited fmAPKonsinyasi: TfmAPKonsinyasi
       end
       object dxButton4: TdxButton
         Tag = 4444
-        Left = 572
-        Top = 390
+        Left = 794
+        Top = 441
         Width = 65
         Height = 26
         About = 'Design eXperience. '#169' 2002 M. Hoffmann'
@@ -603,8 +634,8 @@ inherited fmAPKonsinyasi: TfmAPKonsinyasi
       end
       object dxButton5: TdxButton
         Tag = 4444
-        Left = 638
-        Top = 390
+        Left = 860
+        Top = 441
         Width = 65
         Height = 26
         About = 'Design eXperience. '#169' 2002 M. Hoffmann'
@@ -644,8 +675,8 @@ inherited fmAPKonsinyasi: TfmAPKonsinyasi
         StoredValues = 4
       end
       object dxDBButtonEdit1: TdxDBButtonEdit
-        Left = 308
-        Top = 28
+        Left = 124
+        Top = 48
         Width = 158
         TabOrder = 16
         OnKeyPress = dxDBEdit1KeyPress
@@ -661,7 +692,7 @@ inherited fmAPKonsinyasi: TfmAPKonsinyasi
       end
       object dxDBButtonEdit3: TdxDBButtonEdit
         Left = 124
-        Top = 48
+        Top = 68
         Width = 93
         TabOrder = 17
         OnKeyPress = dxDBEdit1KeyPress
@@ -677,7 +708,7 @@ inherited fmAPKonsinyasi: TfmAPKonsinyasi
       end
       object dxDBButtonEdit2: TdxDBButtonEdit
         Left = 124
-        Top = 68
+        Top = 88
         Width = 93
         TabOrder = 18
         OnKeyPress = dxDBEdit1KeyPress
@@ -693,7 +724,7 @@ inherited fmAPKonsinyasi: TfmAPKonsinyasi
       end
       object dxDBEdit2: TdxDBEdit
         Left = 124
-        Top = 88
+        Top = 108
         Width = 381
         TabOrder = 19
         OnKeyPress = dxDBEdit1KeyPress
@@ -701,30 +732,114 @@ inherited fmAPKonsinyasi: TfmAPKonsinyasi
         DataSource = dsMain
         StyleController = SCEdit
       end
+      object dxButton6: TdxButton
+        Tag = 4444
+        Left = 835
+        Top = 127
+        Width = 90
+        Height = 21
+        About = 'Design eXperience. '#169' 2002 M. Hoffmann'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold]
+        ParentFont = False
+        Version = '1.0.2e'
+        OnClick = dxButton6Click
+        Caption = 'Generate SN'
+        TabOrder = 20
+        TabStop = False
+      end
+      object dxDBGrid1: TdxDBGrid
+        Left = 0
+        Top = 321
+        Width = 661
+        Height = 119
+        Bands = <
+          item
+            Alignment = taLeftJustify
+            Caption = 'List Item(s)'
+          end>
+        DefaultLayout = True
+        HeaderPanelRowCount = 1
+        KeyField = 'KonsinyasiID'
+        ShowSummaryFooter = True
+        SummaryGroups = <
+          item
+            DefaultGroup = False
+            SummaryItems = <
+              item
+              end>
+            Name = 'dbgSummaryGroup2'
+          end>
+        SummarySeparator = ', '
+        TabOrder = 21
+        OnEnter = dbgEnter
+        DataSource = dsCek
+        Filter.Criteria = {00000000}
+        HideFocusRect = True
+        HideSelection = True
+        LookAndFeel = lfFlat
+        OptionsDB = [edgoCancelOnExit, edgoCanNavigation, edgoConfirmDelete, edgoLoadAllRecords, edgoUseBookmarks]
+        OptionsView = [edgoBandHeaderWidth, edgoIndicator, edgoUseBitmap]
+        object dxDBGridButtonColumn1: TdxDBGridButtonColumn
+          Caption = 'Tanggal Terima'
+          Width = 120
+          BandIndex = 0
+          RowIndex = 0
+          FieldName = 'Transdate'
+          SummaryFooterType = cstCount
+          SummaryFooterField = 'Transdate'
+          SummaryFooterFormat = '#,0'
+          Buttons = <
+            item
+              Default = True
+            end>
+          OnButtonClick = dbgItemIDButtonClick
+          SummaryField = 'Transdate'
+          SummaryFormat = '#,0'
+          SummaryGroupName = 'dbgSummaryGroup2'
+        end
+        object dxDBGrid1Column2: TdxDBGridColumn
+          Caption = 'Nota Penerimaan'
+          Width = 200
+          BandIndex = 0
+          RowIndex = 0
+          FieldName = 'KonsinyasiID'
+        end
+        object dxDBGrid1Column3: TdxDBGridColumn
+          Caption = 'Jumlah'
+          Width = 65
+          BandIndex = 0
+          RowIndex = 0
+          FieldName = 'Qty'
+        end
+      end
     end
   end
   inherited paToolBar: TdxContainer
-    Width = 977
+    Width = 1120
     inherited sbLast: TSpeedButton
-      Left = 949
+      Left = 1092
     end
     inherited sbNext: TSpeedButton
-      Left = 926
+      Left = 1069
     end
     inherited sbPrev: TSpeedButton
-      Left = 903
+      Left = 1046
     end
     inherited sbFirst: TSpeedButton
-      Left = 880
+      Left = 1023
     end
     inherited sbPeriod: TSpeedButton
-      Left = 852
+      Left = 995
     end
     inherited BvlPeriod: TBevel
-      Left = 606
+      Left = 749
     end
     inherited laPeriod: TLabel
-      Left = 610
+      Left = 753
     end
   end
   inherited SCEdit: TdxEditStyleController
@@ -736,6 +851,7 @@ inherited fmAPKonsinyasi: TfmAPKonsinyasi
   inherited quMain: TADOQuery
     BeforeEdit = quMainBeforeEdit
     BeforeDelete = quMainBeforeDelete
+    OnCalcFields = quMainCalcFields
     OnNewRecord = quMainNewRecord
     SQL.Strings = (
       'SELECT *'
@@ -804,14 +920,26 @@ inherited fmAPKonsinyasi: TfmAPKonsinyasi
       FieldName = 'POID'
       Size = 50
     end
+    object quMainLSO: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'LSO'
+      Size = 200
+      Calculated = True
+    end
   end
   inherited ActionList: TActionList
     Top = 4
+    object Action1: TAction
+      Caption = 'Action1'
+      ShortCut = 16507
+      OnExecute = Action1Execute
+    end
   end
   inherited quDetil: TADOQuery
     BeforeInsert = quDetilBeforeEdit
     BeforeEdit = quDetilBeforeEdit
     BeforeDelete = quDetilBeforeDelete
+    OnCalcFields = quDetilCalcFields
     OnNewRecord = quDetilNewRecord
     Parameters = <
       item
@@ -896,6 +1024,33 @@ inherited fmAPKonsinyasi: TfmAPKonsinyasi
       FieldName = 'PartNo'
       OnChange = quDetilPartNoChange
     end
+    object quDetilPOID: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'POID'
+      Size = 100
+      Calculated = True
+    end
+    object quDetilLPO: TCurrencyField
+      FieldKind = fkCalculated
+      FieldName = 'LPO'
+      DisplayFormat = '#,0'
+      Currency = False
+      Calculated = True
+    end
+    object quDetilLTerima: TCurrencyField
+      FieldKind = fkCalculated
+      FieldName = 'LTerima'
+      DisplayFormat = '#,0'
+      Currency = False
+      Calculated = True
+    end
+    object quDetilLSisa: TCurrencyField
+      FieldKind = fkCalculated
+      FieldName = 'LSisa'
+      DisplayFormat = '#,0'
+      Currency = False
+      Calculated = True
+    end
   end
   inherited dsDetil: TDataSource
     OnStateChange = dsDetilStateChange
@@ -938,7 +1093,6 @@ inherited fmAPKonsinyasi: TfmAPKonsinyasi
     BeforePost = quSNBeforePost
     AfterPost = quSNAfterPost
     BeforeDelete = quSNBeforeDelete
-    OnCalcFields = quSNCalcFields
     OnNewRecord = quSNNewRecord
     DataSource = dsDetil
     Parameters = <
@@ -970,10 +1124,6 @@ inherited fmAPKonsinyasi: TfmAPKonsinyasi
     object quSNItemID: TStringField
       FieldName = 'ItemID'
     end
-    object quSNSNID: TStringField
-      FieldName = 'SNID'
-      Size = 50
-    end
     object quSNUpdDate: TDateTimeField
       FieldName = 'UpdDate'
     end
@@ -988,17 +1138,9 @@ inherited fmAPKonsinyasi: TfmAPKonsinyasi
       FieldName = 'FgSN'
       Size = 1
     end
-    object quSNSaleID: TStringField
-      FieldKind = fkCalculated
-      FieldName = 'SaleID'
+    object quSNSNID: TStringField
+      FieldName = 'SNID'
       Size = 100
-      Calculated = True
-    end
-    object quSNCustName: TStringField
-      FieldKind = fkCalculated
-      FieldName = 'CustName'
-      Size = 200
-      Calculated = True
     end
   end
   object dsSN: TDataSource
@@ -1022,9 +1164,50 @@ inherited fmAPKonsinyasi: TfmAPKonsinyasi
     Left = 272
     Top = 52
   end
-  object quCalc: TADOQuery
+  object quCek: TADOQuery
     Connection = dmMain.dbConn
-    Parameters = <>
+    DataSource = dsDetil
+    Parameters = <
+      item
+        Name = 'ItemID'
+        DataType = ftString
+        NumericScale = 255
+        Precision = 255
+        Size = 20
+        Value = Null
+      end
+      item
+        Name = 'POID'
+        Attributes = [paNullable]
+        DataType = ftString
+        NumericScale = 255
+        Precision = 255
+        Size = 20
+        Value = Null
+      end>
+    SQL.Strings = (
+      'select B.Transdate,B.KonsinyasiID,A.Qty from APTrKonsinyasiDt A '
+      'inner join APTrKonsinyasiHd B On A.KonsinyasiID=B.KonsinyasiID'
+      'Where A.ItemID=:ItemID AND B.POID=:POID')
+    Left = 388
+    Top = 4
+    object quCekTransdate: TDateTimeField
+      FieldName = 'Transdate'
+      DisplayFormat = 'dd/mm/yyyy'
+    end
+    object quCekKonsinyasiID: TStringField
+      FieldName = 'KonsinyasiID'
+      Size = 50
+    end
+    object quCekQty: TBCDField
+      FieldName = 'Qty'
+      DisplayFormat = '#,0'
+      Precision = 18
+    end
+  end
+  object dsCek: TDataSource
+    DataSet = quCek
+    OnStateChange = dsCekStateChange
     Left = 416
     Top = 4
   end
