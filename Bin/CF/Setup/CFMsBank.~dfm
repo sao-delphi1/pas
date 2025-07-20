@@ -3,7 +3,7 @@ inherited fmCFMsBank: TfmCFMsBank
   Top = 263
   Caption = 'Master Bank'
   ClientHeight = 319
-  ClientWidth = 689
+  ClientWidth = 670
   PixelsPerInch = 96
   TextHeight = 13
   inherited paLeft: TdxContainer
@@ -12,20 +12,24 @@ inherited fmCFMsBank: TfmCFMsBank
       Height = 91
     end
     inherited paOperation: TdxContainer
+      Top = 8
       inherited bbFind: TdxButton
         OnClick = bbFindClick
       end
     end
+    inherited pa1: TdxContainer
+      Top = 0
+    end
   end
   inherited paBottom: TdxContainer
     Top = 307
-    Width = 689
+    Width = 670
   end
   inherited pa2: TdxContainer
     Height = 270
   end
   inherited pcMain: TdxPageControl
-    Width = 496
+    Width = 477
     Height = 270
     inherited ts01: TdxTabSheet
       inherited dbgList: TdxDBGrid
@@ -108,7 +112,7 @@ inherited fmCFMsBank: TfmCFMsBank
       end
       object Label3: TLabel
         Left = 12
-        Top = 124
+        Top = 123
         Width = 80
         Height = 13
         Alignment = taRightJustify
@@ -123,7 +127,7 @@ inherited fmCFMsBank: TfmCFMsBank
       end
       object DBText3: TDBText
         Left = 228
-        Top = 124
+        Top = 123
         Width = 228
         Height = 13
         DataField = 'LRekeningName'
@@ -131,9 +135,10 @@ inherited fmCFMsBank: TfmCFMsBank
       end
       object bbSave: TdxButton
         Tag = 3333
-        Left = 338
-        Top = 216
-        Height = 19
+        Left = 284
+        Top = 200
+        Width = 83
+        Height = 26
         About = 'Design eXperience. '#169' 2002 M. Hoffmann'
         Anchors = [akRight, akBottom]
         Color = 9609897
@@ -151,9 +156,10 @@ inherited fmCFMsBank: TfmCFMsBank
       end
       object bbCancel: TdxButton
         Tag = 4444
-        Left = 414
-        Top = 216
-        Height = 19
+        Left = 368
+        Top = 200
+        Width = 83
+        Height = 26
         About = 'Design eXperience. '#169' 2002 M. Hoffmann'
         Anchors = [akRight, akBottom]
         Color = 9609897
@@ -172,7 +178,7 @@ inherited fmCFMsBank: TfmCFMsBank
       object dxDBEdit1: TdxDBEdit
         Left = 99
         Top = 10
-        Width = 100
+        Width = 102
         TabOrder = 2
         OnKeyPress = dxDBEdit1KeyPress
         DataField = 'BankId'
@@ -182,7 +188,7 @@ inherited fmCFMsBank: TfmCFMsBank
       object dxDBEdit2: TdxDBEdit
         Left = 99
         Top = 30
-        Width = 385
+        Width = 358
         TabOrder = 3
         OnKeyPress = dxDBEdit1KeyPress
         DataField = 'BankName'
@@ -191,8 +197,8 @@ inherited fmCFMsBank: TfmCFMsBank
       end
       object dxDBMemo2: TdxDBMemo
         Left = 99
-        Top = 51
-        Width = 357
+        Top = 50
+        Width = 358
         TabOrder = 4
         OnKeyPress = dxDBEdit1KeyPress
         DataField = 'Note'
@@ -203,7 +209,7 @@ inherited fmCFMsBank: TfmCFMsBank
       end
       object dxDBButtonEdit1: TdxDBButtonEdit
         Left = 99
-        Top = 120
+        Top = 119
         Width = 121
         TabOrder = 5
         OnKeyPress = dxDBEdit1KeyPress
@@ -219,7 +225,7 @@ inherited fmCFMsBank: TfmCFMsBank
       end
       object DBRadioGroup3: TDBRadioGroup
         Left = 99
-        Top = 144
+        Top = 143
         Width = 117
         Height = 33
         Caption = '[Status Aktif]'
@@ -280,27 +286,27 @@ inherited fmCFMsBank: TfmCFMsBank
     end
   end
   inherited paToolBar: TdxContainer
-    Width = 689
+    Width = 670
     inherited sbLast: TSpeedButton
-      Left = 661
+      Left = 642
     end
     inherited sbNext: TSpeedButton
-      Left = 638
+      Left = 619
     end
     inherited sbPrev: TSpeedButton
-      Left = 615
+      Left = 596
     end
     inherited sbFirst: TSpeedButton
-      Left = 592
+      Left = 573
     end
     inherited sbPeriod: TSpeedButton
-      Left = 564
+      Left = 545
     end
     inherited BvlPeriod: TBevel
-      Left = 318
+      Left = 299
     end
     inherited laPeriod: TLabel
-      Left = 322
+      Left = 303
     end
   end
   inherited quMain: TADOQuery
@@ -359,7 +365,7 @@ inherited fmCFMsBank: TfmCFMsBank
     Parameters = <>
     SQL.Strings = (
       'SELECT * FROM CFMsGroupRek')
-    Left = 556
-    Top = 272
+    Left = 612
+    Top = 184
   end
 end

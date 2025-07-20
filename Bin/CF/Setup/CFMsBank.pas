@@ -42,6 +42,8 @@ type
     Label11: TLabel;
     DBText4: TDBText;
     quMainFgActive: TStringField;
+    DBRadioGroup1: TDBRadioGroup;
+    quMainFgDisplay: TStringField;
     procedure dsMainStateChange(Sender: TObject);
     procedure quMainBeforePost(DataSet: TDataSet);
     procedure dxDBEdit1KeyPress(Sender: TObject; var Key: Char);
@@ -232,6 +234,7 @@ begin
   inherited;
   quMainBankId.FocusControl;
   quMainFgActive.AsString := 'Y';
+  quMainFgDisplay.AsString := 'Y';
 end;
 
 procedure TfmCFMsBank.dxDBButtonEdit1ButtonClick(Sender: TObject;

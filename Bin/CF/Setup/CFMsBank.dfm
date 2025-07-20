@@ -2,39 +2,35 @@ inherited fmCFMsBank: TfmCFMsBank
   Left = 261
   Top = 263
   Caption = 'Master Bank'
-  ClientHeight = 319
-  ClientWidth = 670
+  ClientHeight = 344
+  ClientWidth = 722
   PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 14
   inherited paLeft: TdxContainer
-    Height = 270
+    Height = 291
     inherited pa3: TdxContainer
-      Height = 91
+      Height = 98
     end
     inherited paOperation: TdxContainer
-      Top = 8
       inherited bbFind: TdxButton
         OnClick = bbFindClick
       end
     end
-    inherited pa1: TdxContainer
-      Top = 0
-    end
   end
   inherited paBottom: TdxContainer
-    Top = 307
-    Width = 670
+    Top = 331
+    Width = 722
   end
   inherited pa2: TdxContainer
-    Height = 270
+    Height = 291
   end
   inherited pcMain: TdxPageControl
-    Width = 477
-    Height = 270
+    Width = 514
+    Height = 291
     inherited ts01: TdxTabSheet
       inherited dbgList: TdxDBGrid
-        Width = 599
-        Height = 373
+        Width = 645
+        Height = 402
         Filter.Criteria = {00000000}
         object dbgListBankId: TdxDBGridMaskColumn
           Caption = 'Kode Bank'
@@ -73,72 +69,72 @@ inherited fmCFMsBank: TfmCFMsBank
     inherited ts02: TdxTabSheet
       object Label1: TLabel
         Left = 33
-        Top = 14
-        Width = 59
-        Height = 13
+        Top = 15
+        Width = 66
+        Height = 15
         Alignment = taRightJustify
         Caption = 'Kode Bank :'
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clBlack
-        Font.Height = -11
+        Font.Height = -12
         Font.Name = 'MS Sans Serif'
         Font.Style = []
         ParentFont = False
         Transparent = True
       end
       object Label2: TLabel
-        Left = 30
-        Top = 34
-        Width = 62
-        Height = 13
+        Left = 28
+        Top = 37
+        Width = 71
+        Height = 15
         Alignment = taRightJustify
         Caption = 'Nama Bank :'
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clBlack
-        Font.Height = -11
+        Font.Height = -12
         Font.Name = 'MS Sans Serif'
         Font.Style = []
         ParentFont = False
         Transparent = True
       end
       object Label13: TLabel
-        Left = 31
-        Top = 54
-        Width = 61
-        Height = 13
+        Left = 37
+        Top = 58
+        Width = 62
+        Height = 14
         Alignment = taRightJustify
         Caption = 'Keterangan :'
         Transparent = True
       end
       object Label3: TLabel
-        Left = 12
-        Top = 123
-        Width = 80
-        Height = 13
+        Left = 8
+        Top = 132
+        Width = 91
+        Height = 15
         Alignment = taRightJustify
         Caption = 'Kode Rekening :'
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clBlack
-        Font.Height = -11
+        Font.Height = -12
         Font.Name = 'MS Sans Serif'
         Font.Style = []
         ParentFont = False
         Transparent = True
       end
       object DBText3: TDBText
-        Left = 228
-        Top = 123
-        Width = 228
-        Height = 13
+        Left = 246
+        Top = 132
+        Width = 245
+        Height = 14
         DataField = 'LRekeningName'
         DataSource = dsMain
       end
       object bbSave: TdxButton
         Tag = 3333
-        Left = 284
-        Top = 200
-        Width = 83
-        Height = 26
+        Left = 306
+        Top = 215
+        Width = 89
+        Height = 28
         About = 'Design eXperience. '#169' 2002 M. Hoffmann'
         Anchors = [akRight, akBottom]
         Color = 9609897
@@ -156,10 +152,10 @@ inherited fmCFMsBank: TfmCFMsBank
       end
       object bbCancel: TdxButton
         Tag = 4444
-        Left = 368
-        Top = 200
-        Width = 83
-        Height = 26
+        Left = 396
+        Top = 215
+        Width = 90
+        Height = 28
         About = 'Design eXperience. '#169' 2002 M. Hoffmann'
         Anchors = [akRight, akBottom]
         Color = 9609897
@@ -176,9 +172,9 @@ inherited fmCFMsBank: TfmCFMsBank
         TabOrder = 1
       end
       object dxDBEdit1: TdxDBEdit
-        Left = 99
-        Top = 10
-        Width = 102
+        Left = 107
+        Top = 11
+        Width = 109
         TabOrder = 2
         OnKeyPress = dxDBEdit1KeyPress
         DataField = 'BankId'
@@ -186,9 +182,9 @@ inherited fmCFMsBank: TfmCFMsBank
         StyleController = SCEdit
       end
       object dxDBEdit2: TdxDBEdit
-        Left = 99
-        Top = 30
-        Width = 358
+        Left = 107
+        Top = 32
+        Width = 385
         TabOrder = 3
         OnKeyPress = dxDBEdit1KeyPress
         DataField = 'BankName'
@@ -196,21 +192,21 @@ inherited fmCFMsBank: TfmCFMsBank
         StyleController = SCEdit
       end
       object dxDBMemo2: TdxDBMemo
-        Left = 99
-        Top = 50
-        Width = 358
+        Left = 107
+        Top = 54
+        Width = 385
         TabOrder = 4
         OnKeyPress = dxDBEdit1KeyPress
         DataField = 'Note'
         DataSource = dsMain
         StyleController = SCEdit
         WantReturns = False
-        Height = 69
+        Height = 74
       end
       object dxDBButtonEdit1: TdxDBButtonEdit
-        Left = 99
-        Top = 119
-        Width = 121
+        Left = 107
+        Top = 128
+        Width = 130
         TabOrder = 5
         OnKeyPress = dxDBEdit1KeyPress
         DataField = 'RekeningID'
@@ -224,10 +220,10 @@ inherited fmCFMsBank: TfmCFMsBank
         ExistButtons = True
       end
       object DBRadioGroup3: TDBRadioGroup
-        Left = 99
-        Top = 143
-        Width = 117
-        Height = 33
+        Left = 107
+        Top = 154
+        Width = 126
+        Height = 36
         Caption = '[Status Aktif]'
         Columns = 2
         Ctl3D = False
@@ -243,70 +239,89 @@ inherited fmCFMsBank: TfmCFMsBank
           'T')
       end
       object GroupBox2: TGroupBox
-        Left = 11
-        Top = 186
-        Width = 221
-        Height = 50
+        Left = 12
+        Top = 200
+        Width = 238
+        Height = 54
         Ctl3D = False
         ParentCtl3D = False
         TabOrder = 7
         object Label10: TLabel
-          Left = 16
-          Top = 10
-          Width = 28
-          Height = 13
+          Left = 18
+          Top = 11
+          Width = 29
+          Height = 14
           Alignment = taRightJustify
           Caption = 'User :'
         end
         object DBText1: TDBText
-          Left = 53
-          Top = 9
-          Width = 132
-          Height = 17
+          Left = 57
+          Top = 10
+          Width = 142
+          Height = 18
           DataField = 'UpdUser'
           DataSource = dsMain
         end
         object Label11: TLabel
-          Left = 7
-          Top = 30
-          Width = 38
-          Height = 13
+          Left = 12
+          Top = 32
+          Width = 36
+          Height = 14
           Alignment = taRightJustify
           Caption = 'Waktu :'
         end
         object DBText4: TDBText
-          Left = 54
-          Top = 30
-          Width = 132
-          Height = 17
+          Left = 58
+          Top = 32
+          Width = 142
+          Height = 19
           DataField = 'UpdDate'
           DataSource = dsMain
         end
       end
+      object DBRadioGroup1: TDBRadioGroup
+        Left = 243
+        Top = 154
+        Width = 126
+        Height = 36
+        Caption = '[Display on Web]'
+        Columns = 2
+        Ctl3D = False
+        DataField = 'FgDisplay'
+        DataSource = dsMain
+        Items.Strings = (
+          'Ya'
+          'Tidak')
+        ParentCtl3D = False
+        TabOrder = 8
+        Values.Strings = (
+          'Y'
+          'T')
+      end
     end
   end
   inherited paToolBar: TdxContainer
-    Width = 670
+    Width = 722
     inherited sbLast: TSpeedButton
-      Left = 642
+      Left = 691
     end
     inherited sbNext: TSpeedButton
-      Left = 619
+      Left = 667
     end
     inherited sbPrev: TSpeedButton
-      Left = 596
+      Left = 642
     end
     inherited sbFirst: TSpeedButton
-      Left = 573
+      Left = 617
     end
     inherited sbPeriod: TSpeedButton
-      Left = 545
+      Left = 587
     end
     inherited BvlPeriod: TBevel
-      Left = 299
+      Left = 322
     end
     inherited laPeriod: TLabel
-      Left = 303
+      Left = 326
     end
   end
   inherited quMain: TADOQuery
@@ -345,6 +360,10 @@ inherited fmCFMsBank: TfmCFMsBank
     object quMainFgActive: TStringField
       FieldName = 'FgActive'
       Size = 1
+    end
+    object quMainFgDisplay: TStringField
+      FieldName = 'FgDisplay'
+      Size = 10
     end
   end
   inherited dsMain: TDataSource
