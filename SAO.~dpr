@@ -191,7 +191,6 @@ begin
   Application.CreateForm(TdmMain, dmMain);
   Application.CreateForm(TfmLogin, fmLogin);
   Application.CreateForm(TfmKeyPadSC, fmKeyPadSC);
-  Application.CreateForm(TfmARUploadCoreTax, fmARUploadCoreTax);
   if not (dmMain.dbConn.Connected) or (fmLogIn.ShowModal = mrAbort) then
   begin
      Application.Terminate;
