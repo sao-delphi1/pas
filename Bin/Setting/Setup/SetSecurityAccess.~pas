@@ -86,6 +86,8 @@ type
     quUserLSalesName: TStringField;
     dbgUserColumn6: TdxDBGridColumn;
     dbgUserColumn7: TdxDBGridImageColumn;
+    quUserFgOtoBagasi: TStringField;
+    dbgUserColumn8: TdxDBGridImageColumn;
     procedure dxButton3Click(Sender: TObject);
     procedure dxButton4Click(Sender: TObject);
     procedure dxButton1Click(Sender: TObject);
@@ -112,6 +114,7 @@ type
     procedure dsUserStateChange(Sender: TObject);
     procedure dbgUserColumn5ButtonClick(Sender: TObject;
       AbsoluteIndex: Integer);
+    procedure quUserCalcFields(DataSet: TDataSet);
   private
     { Private declarations }
     Procedure BeriHakAkses;
@@ -357,8 +360,8 @@ begin
   inherited;
   with TfmSearch.Create(Self) do
   try
-     Title := 'Sales Name';
-     SQLString := ' SELECT SalesName,SalesID FROM ARMsSales';
+     Title := 'Cari Karyawan';
+     SQLString := ' SELECT SalesName as Nama_Karyawan,SalesID as Kode_Sales FROM ARMsSales ORDER BY SalesName';
      if ShowModal = MrOK then
      begin
         if quUser.State = dsBrowse then quUser.Edit;
@@ -367,6 +370,18 @@ begin
   finally
      free;
   end;
+end;
+
+procedure TfmSetSecurityAccess.quUserCalcFields(DataSet: TDataSet);
+begin
+  inherited;
+  with quAct,SQL do
+  begin
+    Close;Clear;
+    Add('select salesname from armssales where salesid='''+quUserSalesID.AsString+''' ');
+    Open;
+  end;
+  quUserLSalesName.AsString := quAct.FieldByName('salesname').AsString;
 end;
 
 end.

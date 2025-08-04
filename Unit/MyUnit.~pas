@@ -54,7 +54,7 @@ Const
   sDisFormat : string = '#,0.00';
 //  sEditformat : string= '#,0';
   sDisFormat1 : String= '#,0';
-  version : string = '20250526';
+  version : string = '20250728';
   PT : String ='PAS';
 var iCekHasp  : integer;
     Param1, Param2, Param3, Param4 : longint;
@@ -65,7 +65,7 @@ var iCekHasp  : integer;
     sAwalBuku, sRLTahan, sRLJalan : string;
     dtStartBook : tdatetime;
     sCompanyName, sCompanyAddress, sExcel,sCompanyBank, sPersediaan, sHPP :string;
-    sDGPb, sDGPj, sCustC, sSalesC, sDGK, sDGTr, sDGS, sDGR, sDGPR,sDRPb,sDRPj,sDGRPb,sDGRPj,sDGC,sDPB,sDGRBi,sDGRPLL,sCetak,sDRPc,sDRKas,sDRBank : string;
+    sDGPb, sDGPj, sCustC, sSalesC, sDGK, sDGTr, sDGS, sDGR, sDGPR,sDRPb,sDRPj,sDGRPb,sDGRPj,sDGC,sDPB,sDGRBi,sDGRPLL,sCetak,sDRPc,sDRKas,sDRBank,FgOtoBagasi,MySalesID : string;
     sPPN : currency;
 implementation
 

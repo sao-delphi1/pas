@@ -649,6 +649,12 @@ begin
     dxDBEdit2.Top := 102; dxDBEdit4.Top := 132; dxDBEdit5.Top := 132;
     Label4.Top := 108; Label13.Top := 138; Label14.Top := 138; Panel1.Height := 170;
   end;
+  if (StatusKKBB = 'KK') or (StatusKKBB = 'BK') then
+  begin
+    dbgNote.Visible := False;
+    dbgInvoice.Visible := TRUE;
+  end;
+  
   if (StatusKKBB = 'JU') or (StatusKKBB = 'KK') or (StatusKKBB = 'KM') or (StatusKKBB = 'BM') or (StatusKKBB = 'BK')
   or (StatusKKBB = 'APK') or (StatusKKBB = 'APB') or (StatusKKBB = 'APC') then
 //  dbgUrut.Visible := True;
@@ -1623,6 +1629,20 @@ begin
                      +'CONVERT(VARCHAR(10),K.Transdate,112) <='''+FormatDateTime('yyyyMMdd',quMainTransDate.AsDateTime)+''' '
                      +'AND ISNULL(K.TTLPb-K.Bayar-K.Retur,0) > 0' ;
        end;
+
+       if (StatusKKBB = 'KK') or (StatusKKBB = 'BK') then
+         begin
+           Title := 'Pencarian Klaim Bagasi';
+           SQLString :='SELECT K.Nota,K.Tanggal,K.SalesName,K.Total,K.Bayar,K.Total-K.Bayar as Sisa FROM ( '
+                      +'select A.TransID as Nota,CONVERT(VARCHAR(10),A.TransDate,111) as Tanggal,B.SalesName,A.Total as Total, '
+                      +'ISNULL((select SUM(X.Amount) from cftrkkbbdt X WHERE X.Note=A.TransID),0) as Bayar '
+                      +'from ARTrKlaimBagasiHd A '
+                      +'INNER JOIN ARMsSales B on A.SalesID=B.SalesID '
+                      +'WHERE A.FgOto=''Y'' '
+                      +') as K '
+                      +'WHERE K.Total-K.Bayar<>0 ';
+         end;
+         
        if ShowModal = MrOK then
        begin
           if quDetil.State = dsBrowse then quDetil.Edit;

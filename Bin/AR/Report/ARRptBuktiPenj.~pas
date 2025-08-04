@@ -1,0 +1,249 @@
+unit ARRptBuktiPenj;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, RptDlg, DB, dxExEdtr, dxCntner, ADODB, StdCtrls, Buttons,
+  ExtCtrls, dxEdLib, dxEditor, dxTL, dxDBCtrl, dxDBGrid, dxPSGlbl, dxPSUtl,
+  dxPSEngn, dxPrnPg, dxBkgnd, dxWrap, dxPrnDev, dxPSCore;
+
+type
+  TfmARRptBuktiPenj = class(TfmRptDlg)
+    dgrReport: TdxDBGrid;
+    dgrReportSaleID: TdxDBGridColumn;
+    dgrReportTgl: TdxDBGridColumn;
+    dgrReportTanggal: TdxDBGridColumn;
+    dgrReportSalesName: TdxDBGridColumn;
+    dgrReportPOID: TdxDBGridColumn;
+    dgrReportCustName: TdxDBGridColumn;
+    dgrReportFgTax: TdxDBGridColumn;
+    RgPeriode: TRadioGroup;
+    GrbBulan: TGroupBox;
+    BitBtn1: TBitBtn;
+    dxBulan: TdxImageEdit;
+    dxTahun: TdxSpinEdit;
+    GrbTanggal: TGroupBox;
+    Label2: TLabel;
+    Label3: TLabel;
+    bbRefresh: TBitBtn;
+    dtpDari: TdxDateEdit;
+    dtpSmp: TdxDateEdit;
+    bbExcel: TBitBtn;
+    bbCancel: TBitBtn;
+    bbExp: TBitBtn;
+    bbColp: TBitBtn;
+    quCalc: TADOQuery;
+    saveDlg: TSaveDialog;
+    dxReport: TdxComponentPrinter;
+    dgrReportColumn23: TdxDBGridColumn;
+    dgrReportColumn24: TdxDBGridColumn;
+    dgrReportColumn25: TdxDBGridColumn;
+    dgrReportColumn26: TdxDBGridColumn;
+    dgrReportColumn12: TdxDBGridColumn;
+    quActPOID: TStringField;
+    quActSaleID: TStringField;
+    quActSalesID: TStringField;
+    quActTgl: TStringField;
+    quActCustName: TStringField;
+    quActFgTax: TStringField;
+    quActTransdate: TDateTimeField;
+    quActJatuhTempo: TDateTimeField;
+    quActTotalInv: TBCDField;
+    quActStatusBAST: TStringField;
+    quActStatusSP: TStringField;
+    quActStatusPPH: TStringField;
+    quActStatusPPN: TStringField;
+    dgrReportColumn13: TdxDBGridColumn;
+    quActFgBAST: TStringField;
+    quActFgSP: TStringField;
+    quActFgBPPH: TStringField;
+    quActFgBPPN: TStringField;
+    quActSalesName: TStringField;
+    cbxOuts: TCheckBox;
+    procedure FormShow(Sender: TObject);
+    procedure bbRefreshClick(Sender: TObject);
+    procedure bbExcelClick(Sender: TObject);
+    procedure bbCancelClick(Sender: TObject);
+    procedure dsActStateChange(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure bbExpClick(Sender: TObject);
+    procedure bbColpClick(Sender: TObject);
+    procedure RgPeriodeClick(Sender: TObject);
+    procedure dgrReportDblClick(Sender: TObject);
+  private
+    { Private declarations }
+    sQuery : string;
+  public
+    { Public declarations }
+    SalesID : string;
+    Periode1,Periode2 : TDateTime;
+  end;
+
+var
+  fmARRptBuktiPenj: TfmARRptBuktiPenj;
+
+implementation
+
+uses UnitDate,MyUnit,UnitGeneral, ConMain, ARtrPenjualanIDR,StdLv2,PeriodDlg,ARTrConfirmDoc;
+
+{$R *.dfm}
+
+procedure TfmARRptBuktiPenj.FormShow(Sender: TObject);
+begin
+  inherited;
+  quAct.Active := TRUE;
+  dtpDari.Date := dmMain.FSysPrd1;
+  dtpSmp.Date := dmMain.FSysPrd2;
+  Periode1 := dmMain.FSysPrd1;
+  Periode2 := dmMain.FSysPrd2;
+  dxTahun.Text := FormatDateTime('YYYY',Date);
+  dxBulan.Text := FormatDateTime('MM',Date);
+  bbRefreshClick(bbRefresh);
+  dtpDari.SetFocus;
+end;
+
+procedure TfmARRptBuktiPenj.bbRefreshClick(Sender: TObject);
+var dari,sampai : string;
+    bCheckced : Boolean;
+begin
+  inherited;
+  if RgPeriode.ItemIndex = 0 then
+  begin
+    dari := FormatDateTime('yyyyMMdd',dtpDari.Date);
+    sampai := FormatDateTime('yyyyMMdd',dtpSmp.Date);
+    GrbTanggal.Visible := True;
+    GrbBulan.Visible := False;
+  end else
+  begin
+    dari := dxTahun.Text+dxBulan.Text+'01';
+    sampai := dxTahun.Text+dxBulan.Text+'31';
+    GrbTanggal.Visible := False;
+    GrbBulan.Visible := True;
+  end;
+
+  if cbxOuts.Checked then
+      bCheckced := True
+    else
+      bCheckced := False;
+
+  with quCalc,Sql do
+  begin
+    Close;Clear;
+    Add('Select ISNULL(SalesID,''-'') as SalesID FROM SysMsUser Where UserID='''+dmmain.userID+''' ');
+    Open;
+  End;
+  SalesID := quCalc.FieldByName('SalesID').AsString;
+
+  sQuery := 'SELECT ISNULL(A.POID,'''') as POID,A.SaleID,A.SalesID,B.SalesName,CONVERT(VARCHAR(10),A.TransDate,103) as Tgl,C.CustName,A.FgTax,A.Transdate, '
+           +'DATEADD(DAY,A.JatuhTempo,A.TransDate) as JatuhTempo,ISNULL(A.TTLPj,0) as TotalInv,A.FgBAST,A.FgSP,A.FgBPPH,A.FgBPPN, '
+           +'case when A.FgBAST=''Y'' then ''Sudah Terima'' else ''Belum Terima'' end as StatusBAST,case when A.FgSP=''Y'' then ''Sudah Terima'' else ''Belum Terima'' end as StatusSP, '
+           +'case when A.FgBPPH=''Y'' then ''Sudah Terima'' else ''Belum Terima'' end as StatusPPH,case when A.FgBPPN=''Y'' then ''Sudah Terima'' else ''Belum Terima'' end as StatusPPN '
+           +'FROM ARTrPenjualanHd A '
+           +'INNER JOIN ARMsSales B ON A.SalesID=B.SalesID '
+           +'INNER JOIN ARMsCustomer C ON A.CustID=C.CustID '
+           +'WHERE CONVERT(VARCHAR(8),A.Transdate,112) BETWEEN '''+dari+''' AND '''+sampai+'''   ';
+  if bCheckced then
+     SQuery := SQuery + ' AND NOT (A.FgBAST = ''Y'' AND A.FgSP = ''Y'' AND A.FgBPPH = ''Y'' AND A.FgBPPN = ''Y'') ';
+
+  if (Groupuser='Marketing') then
+  begin
+    sQuery := sQuery
+             +' AND A.SalesID='''+SalesID+''' '
+             +'ORDER BY CONVERT(VARCHAR(8),A.Transdate,112),A.SaleID,A.SalesID';
+  end else
+  begin
+    sQuery := sQuery+'ORDER BY CONVERT(VARCHAR(8),A.Transdate,112),A.SaleID,A.SalesID';
+  end;
+
+
+
+  with quAct do
+    begin
+      if active then close;
+      SQL.Text := sQuery;
+      //ShowMessage(Sql.text);
+      Open;
+    end;
+  dgrReport.FullExpand;
+end;
+
+procedure TfmARRptBuktiPenj.bbExcelClick(Sender: TObject);
+begin
+  inherited;
+  if saveDlg.Execute then
+    begin
+      if Pos('.XLS', uppercase(saveDlg.FileName)) > 0 then
+        dgrReport.SaveToXLS(saveDlg.FileName, true)
+      else
+        dgrReport.SaveToXLS(saveDlg.FileName + '.xls', true)
+    end;
+end;
+
+procedure TfmARRptBuktiPenj.bbCancelClick(Sender: TObject);
+begin
+  inherited;
+  Close;
+end;
+
+procedure TfmARRptBuktiPenj.dsActStateChange(Sender: TObject);
+begin
+  inherited;
+  SetReadOnly2(dgrReportSaleID,TRUE);
+  SetReadOnly2(dgrReportTanggal,TRUE);
+  SetReadOnly2(dgrReportSalesName,TRUE);
+  SetReadOnly2(dgrReportCustName,TRUE);
+  SetReadOnly2(dgrReportPOID,TRUE);
+  SetReadOnly2(dgrReportColumn23,TRUE);
+  SetReadOnly2(dgrReportColumn24,TRUE);
+  SetReadOnly2(dgrReportColumn25,TRUE);
+  SetReadOnly2(dgrReportColumn26,TRUE);
+  SetReadOnly2(dgrReportColumn12,TRUE);
+  SetReadOnly2(dgrReportColumn13,TRUE);
+
+end;
+
+procedure TfmARRptBuktiPenj.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+  inherited;
+  dmMain.FSysPrd1 := Periode1;
+  dmMain.FSysPrd2 := Periode2;
+end;
+
+procedure TfmARRptBuktiPenj.bbExpClick(Sender: TObject);
+begin
+  inherited;
+  dgrReport.FullExpand;
+end;
+
+procedure TfmARRptBuktiPenj.bbColpClick(Sender: TObject);
+begin
+  inherited;
+  dgrReport.FullCollapse;
+end;
+
+procedure TfmARRptBuktiPenj.RgPeriodeClick(Sender: TObject);
+begin
+  inherited;
+  bbRefreshClick(bbRefresh);
+end;
+
+procedure TfmARRptBuktiPenj.dgrReportDblClick(Sender: TObject);
+var SaleID : string;
+begin
+  inherited;
+  SaleID := quActSaleID.AsString;
+   with TfmARTrConfirmDoc.Create(Self) do
+    try
+      Label5.Caption := Self.quActSaleID.AsString;
+      Label6.Caption := Self.quActTgl.AsString;
+      ShowModal;
+    finally
+      free;
+    end;
+    bbRefreshClick(bbRefresh);
+     Self.quAct.Locate('SaleID',SaleID,[]);
+end;
+
+end.

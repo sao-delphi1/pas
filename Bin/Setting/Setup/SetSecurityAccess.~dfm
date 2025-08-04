@@ -1,18 +1,18 @@
 inherited fmSetSecurityAccess: TfmSetSecurityAccess
-  Left = 115
-  Top = 32
+  Left = 179
+  Top = 38
   Caption = 'Security Akses'
   ClientHeight = 595
-  ClientWidth = 627
+  ClientWidth = 743
   PixelsPerInch = 96
   TextHeight = 13
   inherited paToolBar: TdxContainer
-    Width = 627
+    Width = 743
   end
   object pcMain: TdxPageControl [1]
     Left = 0
     Top = 37
-    Width = 627
+    Width = 743
     Height = 558
     Align = alClient
     HideButtons = False
@@ -29,7 +29,7 @@ inherited fmSetSecurityAccess: TfmSetSecurityAccess
   object dxPageControl1: TdxPageControl [2]
     Left = 0
     Top = 37
-    Width = 627
+    Width = 743
     Height = 558
     ActivePage = ts02
     Align = alClient
@@ -383,7 +383,7 @@ inherited fmSetSecurityAccess: TfmSetSecurityAccess
       object dbgUser: TdxDBGrid
         Left = 0
         Top = 0
-        Width = 627
+        Width = 743
         Height = 498
         Bands = <
           item
@@ -401,17 +401,17 @@ inherited fmSetSecurityAccess: TfmSetSecurityAccess
         LookAndFeel = lfFlat
         OptionsBehavior = [edgoAutoSort, edgoDragScroll, edgoEditing, edgoEnterShowEditor, edgoEnterThrough, edgoImmediateEditor, edgoTabThrough, edgoVertThrough]
         OptionsDB = [edgoCanAppend, edgoCancelOnExit, edgoCanDelete, edgoCanInsert, edgoCanNavigation, edgoConfirmDelete, edgoUseBookmarks]
-        OptionsView = [edgoAutoWidth, edgoBandHeaderWidth, edgoIndicator, edgoUseBitmap]
+        OptionsView = [edgoBandHeaderWidth, edgoIndicator, edgoUseBitmap]
         object dbgUserUserId: TdxDBGridColumn
           Caption = 'User Id'
-          Width = 126
+          Width = 91
           BandIndex = 0
           RowIndex = 0
           FieldName = 'UserId'
         end
         object dbgUserKdGroup: TdxDBGridButtonColumn
           Caption = 'Group'
-          Width = 196
+          Width = 101
           BandIndex = 0
           RowIndex = 0
           FieldName = 'KdGroup'
@@ -422,15 +422,48 @@ inherited fmSetSecurityAccess: TfmSetSecurityAccess
           OnButtonClick = dbgUserKdGroupButtonClick
         end
         object dbgUserColumn5: TdxDBGridButtonColumn
-          Width = 93
+          Caption = 'Nama'
+          Width = 143
           BandIndex = 0
           RowIndex = 0
-          FieldName = 'SalesID'
+          FieldName = 'LSalesName'
           Buttons = <
             item
               Default = True
             end>
           OnButtonClick = dbgUserColumn5ButtonClick
+        end
+        object dbgUserColumn7: TdxDBGridImageColumn
+          Alignment = taLeftJustify
+          Caption = 'Oto SO'
+          MinWidth = 16
+          Width = 100
+          BandIndex = 0
+          RowIndex = 0
+          FieldName = 'FgOtoSO'
+          Descriptions.Strings = (
+            'None'
+            'Admin'
+            'Manager'
+            'Super Admin')
+          ImageIndexes.Strings = (
+            '0'
+            '1'
+            '2'
+            '3')
+          ShowDescription = True
+          Values.Strings = (
+            '0'
+            '1'
+            '2'
+            '3')
+        end
+        object dbgUserColumn6: TdxDBGridColumn
+          Caption = 'Margin Above (%)'
+          Width = 94
+          BandIndex = 0
+          RowIndex = 0
+          FieldName = 'OtoMargin'
         end
         object dbgUserUpdDate: TdxDBGridColumn
           Caption = 'Last Update'
@@ -452,23 +485,27 @@ inherited fmSetSecurityAccess: TfmSetSecurityAccess
           RowIndex = 0
           FieldName = 'UpdUser'
         end
-        object dbgUserColumn6: TdxDBGridColumn
-          BandIndex = 0
-          RowIndex = 0
-        end
-        object dbgUserColumn7: TdxDBGridImageColumn
+        object dbgUserColumn8: TdxDBGridImageColumn
           Alignment = taLeftJustify
-          MinWidth = 16
-          Width = 100
+          Caption = 'Oto Bagasi'
           BandIndex = 0
           RowIndex = 0
-          ShowDescription = True
+          FieldName = 'FgOtoBagasi'
+          Descriptions.Strings = (
+            'Ya'
+            'Tidak')
+          ImageIndexes.Strings = (
+            '0'
+            '1')
+          Values.Strings = (
+            'Y'
+            'T')
         end
       end
       object Panel3: TPanel
         Left = 0
         Top = 498
-        Width = 627
+        Width = 743
         Height = 37
         Align = alBottom
         ParentColor = True
@@ -591,6 +628,7 @@ inherited fmSetSecurityAccess: TfmSetSecurityAccess
   object quUser: TADOQuery
     Connection = dmMain.dbConn
     BeforePost = quUserBeforePost
+    OnCalcFields = quUserCalcFields
     OnNewRecord = quUserNewRecord
     Parameters = <>
     SQL.Strings = (
@@ -626,6 +664,7 @@ inherited fmSetSecurityAccess: TfmSetSecurityAccess
     end
     object quUserOtoMargin: TBCDField
       FieldName = 'OtoMargin'
+      DisplayFormat = '#,0'
       Precision = 18
     end
     object quUserLSalesName: TStringField
@@ -633,6 +672,10 @@ inherited fmSetSecurityAccess: TfmSetSecurityAccess
       FieldName = 'LSalesName'
       Size = 100
       Calculated = True
+    end
+    object quUserFgOtoBagasi: TStringField
+      FieldName = 'FgOtoBagasi'
+      Size = 10
     end
   end
   object dsUser: TDataSource

@@ -146,7 +146,8 @@ uses StdLv3, StdLv31,  SetSecurityAccess,ConMain,StdLv1,RptLv0,PeriodDlg, MyUnit
   RptPenjualan, APTrOtorisasi, CheckSN, ARUploadFK, ARRptRekapSO,
   APRptSisaTerimaBarangDlg, APChangeSN, CFRptNetCash, ARRptPPH,
   ARRptBuktiPotong, ARRptSisaTransferBarangDlg, ARRptInvBlmSN,
-  ARUploadCoreTax;
+  ARUploadCoreTax, ARTrKlaimBagasi, ARTrOtoKlaimBagasi, ARRptKlaimBagasi,
+  ARRptBuktiPenj;
 
 {$R *.dfm}
 
@@ -505,11 +506,23 @@ begin
       end;
    end
    else
+   if CompareFormName(quMenuFormName.Value,'ARTrKlaimBagasi') then
+      MakeFormDlg(fmARTrKlaimBagasi,TfmARTrKlaimBagasi)
+   else
+   if CompareFormName(quMenuFormName.Value,'ARTrOtoKlaimBagasi') then
+      MakeFormDlg(fmARTrOtoKlaimBagasi,TfmARTrOtoKlaimBagasi)
+   else
+   if CompareFormName(quMenuFormName.Value,'ARRptKlaimBagasi') then
+      MakeFormDlg(fmARRPtKlaimBagasi,TfmARRptKlaimBagasi)
+   else
    if CompareFormName(quMenuFormName.Value,'ARRptPenjPerBrgDlg') then
        MakeFormDlg(fmARRptPenjPerBrgDlg,TfmARRptPenjPerBrgDlg)
    else
    if CompareFormName(quMenuFormName.Value,'RptPenjualan') then
        MakeFormDlg(fmRptPenjualan,TfmRptPenjualan)
+   else
+   if CompareFormName(quMenuFormName.Value,'ARRptBuktiPenj') then
+       MakeFormDlg(fmARRptBuktiPenj,TfmARRptBuktiPenj)
    else
    if CompareFormName(quMenuFormName.Value,'ARRptPenjPerProdukDlg') then
        MakeFormDlg(fmARRptPenjPerBrgDlg,TfmARRptPenjPerProductDlg)

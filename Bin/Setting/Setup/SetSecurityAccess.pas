@@ -86,6 +86,8 @@ type
     quUserLSalesName: TStringField;
     dbgUserColumn6: TdxDBGridColumn;
     dbgUserColumn7: TdxDBGridImageColumn;
+    quUserFgOtoBagasi: TStringField;
+    dbgUserColumn8: TdxDBGridImageColumn;
     procedure dxButton3Click(Sender: TObject);
     procedure dxButton4Click(Sender: TObject);
     procedure dxButton1Click(Sender: TObject);

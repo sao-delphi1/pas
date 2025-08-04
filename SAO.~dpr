@@ -171,8 +171,6 @@ uses
   aprptrekaphutang in 'Bin\AP\Report\aprptrekaphutang.pas' {fmAPRptRekapHutang},
   APChangeSN in 'Bin\AP\Activities\APChangeSN.pas' {fmAPChangeSN},
   CFRptNetCash in 'Bin\CF\Report\CFRptNetCash.pas' {fmCFRptNetCash},
-  ARQRRptBAST in '..\1tech\Bin\AR\Report\ARQRRptBAST.pas' {fmARQRRptBAST},
-  ARQRRptBASTUF in '..\1tech\Bin\AR\Report\ARQRRptBASTUF.pas' {fmARQRRptBASTUF},
   ARTrUbahBagasi in 'Bin\AR\Activities\ARTrUbahBagasi.pas' {fmARTrUbahBagasi},
   ARRptBuktiPotong in 'Bin\AR\Report\ARRptBuktiPotong.pas' {fmARRptBuktiPotong},
   ARRptPPH in 'Bin\AR\Report\ARRptPPH.pas' {fmARRptPPH},
@@ -182,7 +180,9 @@ uses
   ARRptSisaTransferBarangDlg in 'Bin\AR\Report\ARRptSisaTransferBarangDlg.pas' {fmARRptSisaTransferBarangDlg},
   ARRptSNReport in 'Bin\AR\Report\ARRptSNReport.pas' {fmARRptSNReport},
   ARRptInvBlmSN in 'Bin\AR\Report\ARRptInvBlmSN.pas' {fmARRptInvBlmSN},
-  ARUploadCoreTax in 'Bin\AR\Setup\ARUploadCoreTax.pas' {fmARUploadCoreTax};
+  ARUploadCoreTax in 'Bin\AR\Setup\ARUploadCoreTax.pas' {fmARUploadCoreTax},
+  ARQRRptBAST in 'Bin\AR\Report\ARQRRptBAST.pas' {fmARQRRptBAST},
+  ARQRRptBASTUF in 'Bin\AR\Report\ARQRRptBASTUF.pas' {fmARQRRptBASTUF};
 
 {$R *.res}
 
@@ -191,6 +191,8 @@ begin
   Application.CreateForm(TdmMain, dmMain);
   Application.CreateForm(TfmLogin, fmLogin);
   Application.CreateForm(TfmKeyPadSC, fmKeyPadSC);
+  Application.CreateForm(TfmARQRRptBAST, fmARQRRptBAST);
+  Application.CreateForm(TfmARQRRptBASTUF, fmARQRRptBASTUF);
   if not (dmMain.dbConn.Connected) or (fmLogIn.ShowModal = mrAbort) then
   begin
      Application.Terminate;

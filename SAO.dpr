@@ -182,7 +182,12 @@ uses
   ARRptInvBlmSN in 'Bin\AR\Report\ARRptInvBlmSN.pas' {fmARRptInvBlmSN},
   ARUploadCoreTax in 'Bin\AR\Setup\ARUploadCoreTax.pas' {fmARUploadCoreTax},
   ARQRRptBAST in 'Bin\AR\Report\ARQRRptBAST.pas' {fmARQRRptBAST},
-  ARQRRptBASTUF in 'Bin\AR\Report\ARQRRptBASTUF.pas' {fmARQRRptBASTUF};
+  ARQRRptBASTUF in 'Bin\AR\Report\ARQRRptBASTUF.pas' {fmARQRRptBASTUF},
+  ARTrKlaimBagasi in 'Bin\AR\Activities\ARTrKlaimBagasi.pas' {fmARTrKlaimBagasi},
+  ARTrOtoKlaimBagasi in 'Bin\AR\Activities\ARTrOtoKlaimBagasi.pas' {fmARTrOtoKlaimBagasi},
+  ARRptBuktiPenj in 'Bin\AR\Report\ARRptBuktiPenj.pas' {fmARRptBuktiPenj},
+  ARRptKlaimBagasi in 'Bin\AR\Report\ARRptKlaimBagasi.pas' {fmARRptKlaimBagasi},
+  ARTrConfirmDoc in 'Bin\AR\Report\ARTrConfirmDoc.pas' {fmARTrConfirmDoc};
 
 {$R *.res}
 
@@ -193,6 +198,11 @@ begin
   Application.CreateForm(TfmKeyPadSC, fmKeyPadSC);
   Application.CreateForm(TfmARQRRptBAST, fmARQRRptBAST);
   Application.CreateForm(TfmARQRRptBASTUF, fmARQRRptBASTUF);
+  Application.CreateForm(TfmARTrKlaimBagasi, fmARTrKlaimBagasi);
+  Application.CreateForm(TfmARTrOtoKlaimBagasi, fmARTrOtoKlaimBagasi);
+  Application.CreateForm(TfmARRptBuktiPenj, fmARRptBuktiPenj);
+  Application.CreateForm(TfmARRptKlaimBagasi, fmARRptKlaimBagasi);
+  Application.CreateForm(TfmARTrConfirmDoc, fmARTrConfirmDoc);
   if not (dmMain.dbConn.Connected) or (fmLogIn.ShowModal = mrAbort) then
   begin
      Application.Terminate;

@@ -1,18 +1,18 @@
 inherited fmSetSecurityAccess: TfmSetSecurityAccess
-  Left = 115
-  Top = 32
+  Left = 179
+  Top = 38
   Caption = 'Security Akses'
   ClientHeight = 595
-  ClientWidth = 627
+  ClientWidth = 743
   PixelsPerInch = 96
   TextHeight = 13
   inherited paToolBar: TdxContainer
-    Width = 627
+    Width = 743
   end
   object pcMain: TdxPageControl [1]
     Left = 0
     Top = 37
-    Width = 627
+    Width = 743
     Height = 558
     Align = alClient
     HideButtons = False
@@ -29,7 +29,7 @@ inherited fmSetSecurityAccess: TfmSetSecurityAccess
   object dxPageControl1: TdxPageControl [2]
     Left = 0
     Top = 37
-    Width = 627
+    Width = 743
     Height = 558
     ActivePage = ts02
     Align = alClient
@@ -383,7 +383,7 @@ inherited fmSetSecurityAccess: TfmSetSecurityAccess
       object dbgUser: TdxDBGrid
         Left = 0
         Top = 0
-        Width = 627
+        Width = 743
         Height = 498
         Bands = <
           item
@@ -432,6 +432,23 @@ inherited fmSetSecurityAccess: TfmSetSecurityAccess
               Default = True
             end>
           OnButtonClick = dbgUserColumn5ButtonClick
+        end
+        object dbgUserColumn8: TdxDBGridImageColumn
+          Alignment = taLeftJustify
+          Caption = 'Oto Bagasi'
+          Width = 78
+          BandIndex = 0
+          RowIndex = 0
+          FieldName = 'FgOtoBagasi'
+          Descriptions.Strings = (
+            'Ya'
+            'Tidak')
+          ImageIndexes.Strings = (
+            '0'
+            '1')
+          Values.Strings = (
+            'Y'
+            'T')
         end
         object dbgUserColumn7: TdxDBGridImageColumn
           Alignment = taLeftJustify
@@ -489,7 +506,7 @@ inherited fmSetSecurityAccess: TfmSetSecurityAccess
       object Panel3: TPanel
         Left = 0
         Top = 498
-        Width = 627
+        Width = 743
         Height = 37
         Align = alBottom
         ParentColor = True
@@ -656,6 +673,10 @@ inherited fmSetSecurityAccess: TfmSetSecurityAccess
       FieldName = 'LSalesName'
       Size = 100
       Calculated = True
+    end
+    object quUserFgOtoBagasi: TStringField
+      FieldName = 'FgOtoBagasi'
+      Size = 10
     end
   end
   object dsUser: TDataSource
