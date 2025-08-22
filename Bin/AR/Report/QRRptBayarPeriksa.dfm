@@ -5122,7 +5122,7 @@ inherited fmQRRptBayarPeriksa: TfmQRRptBayarPeriksa
       object QRLabel5: TQRLabel
         Left = 565
         Top = 547
-        Width = 147
+        Width = 150
         Height = 18
         Frame.Color = clBlack
         Frame.DrawTop = False
@@ -5133,12 +5133,12 @@ inherited fmQRRptBayarPeriksa: TfmQRRptBayarPeriksa
           47.625
           1494.89583333333
           1447.27083333333
-          388.9375)
+          396.875)
         Alignment = taLeftJustify
         AlignToBand = False
         AutoSize = True
         AutoStretch = False
-        Caption = 'PT Mitra Agung Prakarsa'
+        Caption = 'PT. Portal Andalan Solusi'
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -5151,7 +5151,7 @@ inherited fmQRRptBayarPeriksa: TfmQRRptBayarPeriksa
         FontSize = 10
       end
       object QRLabel7: TQRLabel
-        Left = 565
+        Left = 607
         Top = 723
         Width = 46
         Height = 18
@@ -5162,7 +5162,7 @@ inherited fmQRRptBayarPeriksa: TfmQRRptBayarPeriksa
         Frame.DrawRight = False
         Size.Values = (
           47.625
-          1494.89583333333
+          1606.02083333333
           1912.9375
           121.708333333333)
         Alignment = taLeftJustify
@@ -5184,7 +5184,7 @@ inherited fmQRRptBayarPeriksa: TfmQRRptBayarPeriksa
       object QRLabel8: TQRLabel
         Left = 565
         Top = 706
-        Width = 44
+        Width = 132
         Height = 18
         Frame.Color = clBlack
         Frame.DrawTop = False
@@ -5195,12 +5195,12 @@ inherited fmQRRptBayarPeriksa: TfmQRRptBayarPeriksa
           47.625
           1494.89583333333
           1867.95833333333
-          116.416666666667)
+          349.25)
         Alignment = taLeftJustify
         AlignToBand = False
         AutoSize = True
         AutoStretch = False
-        Caption = 'William'
+        Caption = 'Hanifah Rizki Wahyuni'
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -5277,7 +5277,7 @@ inherited fmQRRptBayarPeriksa: TfmQRRptBayarPeriksa
       object QRLabel11: TQRLabel
         Left = 172
         Top = 437
-        Width = 238
+        Width = 200
         Height = 18
         Frame.Color = clBlack
         Frame.DrawTop = False
@@ -5288,12 +5288,12 @@ inherited fmQRRptBayarPeriksa: TfmQRRptBayarPeriksa
           47.625
           455.083333333333
           1156.22916666667
-          629.708333333333)
+          529.166666666667)
         Alignment = taLeftJustify
         AlignToBand = False
         AutoSize = True
         AutoStretch = False
-        Caption = ': Bank Mandiri KCP Mangga Dua Square'
+        Caption = ': Kcp Jakarta Mangga Dua Square'
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -5339,7 +5339,7 @@ inherited fmQRRptBayarPeriksa: TfmQRRptBayarPeriksa
       object QRLabel13: TQRLabel
         Left = 172
         Top = 417
-        Width = 100
+        Width = 112
         Height = 18
         Frame.Color = clBlack
         Frame.DrawTop = False
@@ -5350,12 +5350,12 @@ inherited fmQRRptBayarPeriksa: TfmQRRptBayarPeriksa
           47.625
           455.083333333333
           1103.3125
-          264.583333333333)
+          296.333333333333)
         Alignment = taLeftJustify
         AlignToBand = False
         AutoSize = True
         AutoStretch = False
-        Caption = ': 1200000677687'
+        Caption = ': 120-00-7078707-7'
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -5370,7 +5370,7 @@ inherited fmQRRptBayarPeriksa: TfmQRRptBayarPeriksa
       object QRLabel14: TQRLabel
         Left = 172
         Top = 456
-        Width = 199
+        Width = 158
         Height = 18
         Frame.Color = clBlack
         Frame.DrawTop = False
@@ -5381,12 +5381,12 @@ inherited fmQRRptBayarPeriksa: TfmQRRptBayarPeriksa
           47.625
           455.083333333333
           1206.5
-          526.520833333333)
+          418.041666666667)
         Alignment = taLeftJustify
         AlignToBand = False
         AutoSize = True
         AutoStretch = False
-        Caption = ': PT. MITRA AGUNG PRAKARSA'
+        Caption = ': PT. Portal Andalan Solusi'
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText

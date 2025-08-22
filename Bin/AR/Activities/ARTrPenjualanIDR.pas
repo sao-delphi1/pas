@@ -1765,7 +1765,7 @@ begin
 
      with TfmARQRRptBAST.Create(Self) do
      try
-       qrLabel3.Caption := 'No : MAP-BAST'+RightStr(quMainSaleID.AsString,11);
+       qrLabel3.Caption := 'No : PAS-BAST'+RightStr(quMainSaleID.AsString,11);
        qrLabel17.Caption := '     Pada '+Hari+' Tanggal '+Tanggal+' Bulan '+Bulan+' Tahun '+Tahun+' ('+Formatdatetime('d-M-yyyy',quMainTransdate.ASDatetime)+'), '
                            +'Rincian barang sesuai dengan Nomor ID Paket '+quMainPOID.ASString+' telah diterima oleh '+quMainLuCustName.ASString+' '
                            +'dengan baik, benar, dan lengkap. Dengan rincian sebagai berikut :';
@@ -2041,7 +2041,7 @@ begin
        else
          sHarga := 'T';
 
-       qrLabel3.Caption := 'No : '+RightStr(quMainSaleID.AsString,3)+'/MAP-BAUF/'+PeriodeRomawi(quMainTransDate.AsDateTime)+'/'+FormatDateTime('YYYY',quMainTransDate.AsDateTime);
+       qrLabel3.Caption := 'No : '+RightStr(quMainSaleID.AsString,3)+'/PAS-BAUF/'+PeriodeRomawi(quMainTransDate.AsDateTime)+'/'+FormatDateTime('YYYY',quMainTransDate.AsDateTime);
        qrLabel17.Caption := 'Pada hari ini '+Hari+' Tanggal '+Tanggal+' Bulan '+Bulan+' Tahun '+Tahun+' ('+Formatdatetime('d-M-yyyy',quMainTransdate.ASDatetime)+') '
                            +'bertempat '+quMainLuCustName.ASString+' telah diadakan uji fungsi barang/jasa sebagai berikut :';
 

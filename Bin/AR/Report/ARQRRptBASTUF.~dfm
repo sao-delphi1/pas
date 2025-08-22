@@ -1,12 +1,10 @@
 inherited fmARQRRptBASTUF: TfmARQRRptBASTUF
   Left = 875
   Top = 214
-  VertScrollBar.Position = 337
   Caption = 'fmARQRRptBASTUF'
   PixelsPerInch = 96
   TextHeight = 13
   inherited MyReport: TQuickRep
-    Top = -325
     Width = 794
     Height = 1123
     Functions.DATA = (
@@ -1514,7 +1512,7 @@ inherited fmARQRRptBASTUF: TfmARQRRptBASTUF
       object QRLabel24: TQRLabel
         Left = 22
         Top = 195
-        Width = 145
+        Width = 50
         Height = 17
         Frame.Color = clBlack
         Frame.DrawTop = False
@@ -1525,12 +1523,12 @@ inherited fmARQRRptBASTUF: TfmARQRRptBASTUF
           44.9791666666667
           58.2083333333333
           515.9375
-          383.645833333333)
+          132.291666666667)
         Alignment = taLeftJustify
         AlignToBand = False
         AutoSize = True
         AutoStretch = False
-        Caption = 'Hanifah Rizki Wahyuni'
+        Caption = 'William'
         Color = clWhite
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText

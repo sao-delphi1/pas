@@ -303,6 +303,9 @@ type
     dbgPenjualanColumn13: TdxDBGridColumn;
     dbgPenjualanColumn14: TdxDBGridImageColumn;
     quSNSNID: TStringField;
+    Label44: TLabel;
+    dxDBEdit14: TdxDBEdit;
+    quMainKodeNITKU: TStringField;
     procedure FormShow(Sender: TObject);
     procedure dsMainStateChange(Sender: TObject);
     procedure dbgPenjualanEnter(Sender: TObject);
@@ -2761,10 +2764,11 @@ begin
   with quAct1,SQL do
   begin
     Close;Clear;
-    Add('SELECT ISNULL(Term,0) as Term FROM ARMsCustomer WHERE CustID='''+quMainCustID.AsString+''' ');
+    Add('SELECT ISNULL(Term,0) as Term,ISNULL(KodeNITKU,''000000'') as KodeNITKU FROM ARMsCustomer WHERE CustID='''+quMainCustID.AsString+''' ');
     Open;
   end;
   quMainJatuhTempo.AsInteger := quAct1.FieldByName('Term').AsInteger;
+  quMainKodeNITKU.AsString := quAct1.FieldByName('KodeNITKU').asstring;
 end;
 
 procedure TfmARTrPenjualanIDR.quSNAfterDelete(DataSet: TDataSet);

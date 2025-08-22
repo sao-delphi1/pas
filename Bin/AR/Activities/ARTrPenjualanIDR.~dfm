@@ -919,6 +919,14 @@ inherited fmARTrPenjualanIDR: TfmARTrPenjualanIDR
         Alignment = taRightJustify
         Caption = 'Rekening MAP :'
       end
+      object Label44: TLabel
+        Left = 568
+        Top = 57
+        Width = 67
+        Height = 13
+        Alignment = taRightJustify
+        Caption = 'Kode NITKU :'
+      end
       object dbgProforma: TdxDBGrid
         Left = 0
         Top = 210
@@ -1852,6 +1860,16 @@ inherited fmARTrPenjualanIDR: TfmARTrPenjualanIDR
           'Y'
           'T')
       end
+      object dxDBEdit14: TdxDBEdit
+        Left = 640
+        Top = 53
+        Width = 100
+        TabOrder = 45
+        OnKeyPress = dxDBEdit1KeyPress
+        DataField = 'KodeNITKU'
+        DataSource = dsMain
+        StyleController = SCEdit
+      end
     end
   end
   object RbCetak: TRadioGroup [6]
@@ -2237,6 +2255,10 @@ inherited fmARTrPenjualanIDR: TfmARTrPenjualanIDR
       FieldName = 'FgRek'
       Size = 10
     end
+    object quMainKodeNITKU: TStringField
+      FieldName = 'KodeNITKU'
+      Size = 50
+    end
   end
   inherited dsMain: TDataSource
     OnDataChange = dsMainDataChange
@@ -2503,6 +2525,7 @@ inherited fmARTrPenjualanIDR: TfmARTrPenjualanIDR
     Top = 320
   end
   object quValuta: TADOQuery
+    Active = True
     Connection = dmMain.dbConn
     CursorType = ctStatic
     BeforePost = quDetilBeforePost

@@ -3761,7 +3761,7 @@ inherited fmARQRRptKwitansi: TfmARQRRptKwitansi
       object QRLabel39: TQRLabel
         Left = 604
         Top = 439
-        Width = 100
+        Width = 141
         Height = 16
         Frame.Color = clBlack
         Frame.DrawTop = False
@@ -3772,12 +3772,12 @@ inherited fmARQRRptKwitansi: TfmARQRRptKwitansi
           42.3333333333333
           1598.08333333333
           1161.52083333333
-          264.583333333333)
+          373.0625)
         Alignment = taCenter
         AlignToBand = False
         AutoSize = False
         AutoStretch = False
-        Caption = 'William'
+        Caption = 'Hanifah Rizki Wahyuni'
         Color = clWhite
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -3790,7 +3790,7 @@ inherited fmARQRRptKwitansi: TfmARQRRptKwitansi
         FontSize = 9
       end
       object QRLabel40: TQRLabel
-        Left = 604
+        Left = 627
         Top = 455
         Width = 100
         Height = 16
@@ -3801,7 +3801,7 @@ inherited fmARQRRptKwitansi: TfmARQRRptKwitansi
         Frame.DrawRight = False
         Size.Values = (
           42.3333333333333
-          1598.08333333333
+          1658.9375
           1203.85416666667
           264.583333333333)
         Alignment = taCenter
