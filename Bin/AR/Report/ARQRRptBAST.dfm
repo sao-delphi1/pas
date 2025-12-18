@@ -1,6 +1,7 @@
 inherited fmARQRRptBAST: TfmARQRRptBAST
-  Left = 680
-  Top = 316
+  Left = 612
+  Top = 151
+  Width = 899
   Caption = 'Berita Acara Serah Terima'
   PixelsPerInch = 96
   TextHeight = 13

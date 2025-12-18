@@ -187,7 +187,9 @@ uses
   ARTrOtoKlaimBagasi in 'Bin\AR\Activities\ARTrOtoKlaimBagasi.pas' {fmARTrOtoKlaimBagasi},
   ARRptBuktiPenj in 'Bin\AR\Report\ARRptBuktiPenj.pas' {fmARRptBuktiPenj},
   ARRptKlaimBagasi in 'Bin\AR\Report\ARRptKlaimBagasi.pas' {fmARRptKlaimBagasi},
-  ARTrConfirmDoc in 'Bin\AR\Report\ARTrConfirmDoc.pas' {fmARTrConfirmDoc};
+  ARTrConfirmDoc in 'Bin\AR\Report\ARTrConfirmDoc.pas' {fmARTrConfirmDoc},
+  ARQRRptKwitansiBaru in 'Bin\AR\Report\ARQRRptKwitansiBaru.pas' {fmARQRRptKwitansiBaru},
+  ARQRptBASTBaru in 'Bin\AR\Report\ARQRptBASTBaru.pas' {fmARQRptBASTBaru};
 
 {$R *.res}
 
@@ -196,13 +198,6 @@ begin
   Application.CreateForm(TdmMain, dmMain);
   Application.CreateForm(TfmLogin, fmLogin);
   Application.CreateForm(TfmKeyPadSC, fmKeyPadSC);
-  Application.CreateForm(TfmARQRRptBAST, fmARQRRptBAST);
-  Application.CreateForm(TfmARQRRptBASTUF, fmARQRRptBASTUF);
-  Application.CreateForm(TfmARTrKlaimBagasi, fmARTrKlaimBagasi);
-  Application.CreateForm(TfmARTrOtoKlaimBagasi, fmARTrOtoKlaimBagasi);
-  Application.CreateForm(TfmARRptBuktiPenj, fmARRptBuktiPenj);
-  Application.CreateForm(TfmARRptKlaimBagasi, fmARRptKlaimBagasi);
-  Application.CreateForm(TfmARTrConfirmDoc, fmARTrConfirmDoc);
   if not (dmMain.dbConn.Connected) or (fmLogIn.ShowModal = mrAbort) then
   begin
      Application.Terminate;

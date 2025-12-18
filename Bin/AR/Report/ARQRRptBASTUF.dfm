@@ -1,12 +1,10 @@
 inherited fmARQRRptBASTUF: TfmARQRRptBASTUF
   Left = 875
   Top = 214
-  VertScrollBar.Position = 337
   Caption = 'fmARQRRptBASTUF'
   PixelsPerInch = 96
   TextHeight = 13
   inherited MyReport: TQuickRep
-    Top = -325
     Width = 794
     Height = 1123
     Functions.DATA = (

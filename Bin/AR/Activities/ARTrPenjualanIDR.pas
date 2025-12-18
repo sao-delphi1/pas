@@ -1,5 +1,5 @@
 unit ARTrPenjualanIDR;
-                                                                                                               
+
 interface
 
 uses
@@ -306,6 +306,7 @@ type
     Label44: TLabel;
     dxDBEdit14: TdxDBEdit;
     quMainKodeNITKU: TStringField;
+    quAct4: TADOQuery;
     procedure FormShow(Sender: TObject);
     procedure dsMainStateChange(Sender: TObject);
     procedure dbgPenjualanEnter(Sender: TObject);
@@ -412,7 +413,7 @@ uses Search, UnitGeneral, ConMain, MyUnit,
     ARQRRptSegel, ARQRRptInvPenjualan, ARQRRptSuratJalan, ARMsPelanggan,
   Allitem, ARQRRptKartuPiutangDetil, ARQRRptStokAkhir,
   ARTrPiutangIDR, ARSN, StdLv3, StdLv0, ARQRRptKwitansi,
-  QRRptBayarPeriksa, RptLv0, ARQRRptBAST, ARQRRptBASTUF;
+  QRRptBayarPeriksa, RptLv0, ARQRRptBAST, ARQRRptBASTUF,ARQRRptKwitansiBaru,ARQRptBASTBaru;
 
 {$R *.dfm}
 
@@ -1425,6 +1426,7 @@ procedure TfmARTrPenjualanIDR.dxButton1Click(Sender: TObject);
 var sTotal : Currency;
     iPrint : Integer;
     Hari,Bulan,Tahun,Tanggal : string;
+    HariSP,BulanSP,TahunSP,TanggalSP,TglLengkap : string;
 begin
   inherited;
   If (Self.quMain.State = dsEdit) or (Self.quMain.State = dsInsert) or
@@ -1478,6 +1480,9 @@ begin
      try
        MyReport.PrinterSettings.PrinterIndex := iPrint;
        QRMemo1.Lines.Text := sCompanyAddress;
+       QRImage2.Left := 7;
+       QRImage2.Top := 10;
+
 
        if quMainFgRek.AsString='T' then QRLabel18.Enabled := False;
 
@@ -1624,6 +1629,8 @@ begin
      try
        MyReport.PrinterSettings.PrinterIndex := iPrint;
        QRMemo1.Lines.Text := sCompanyAddress;
+       QRImage2.Left := 7;
+       QRImage2.Top := 10;
 
        if quMainFgRek.AsString='T' then QRLabel18.Enabled := False;
        
@@ -1691,8 +1698,10 @@ begin
 
   if RbCetak.ItemIndex = 2 then
   Begin
-     with TfmARQRRptKwitansi.Create(Self) do
+     with TfmARQRRptKwitansiBaru.Create(Self) do
      try
+       QRImage2.Enabled := True;
+       Qrimage2.Left := 5; QRImage2.Top := 2;
        MyReport.PrinterSettings.PrinterIndex := iPrint;
 
        if quMainFgRek.AsString='T' then QRLabel1.Enabled := False;
@@ -1761,14 +1770,120 @@ begin
      Hari := quAct3.FieldByName('hari').AsString;
      Tanggal := convert2(FormatFloat(sEditFormat,StrToInt(Formatdatetime('D',quMainTransdate.ASDatetime))));
      Bulan := quAct3.FieldByName('bulan').AsString;
+     Tahun := convert2(FormatFloat(sEditFormat,StrToInt(Formatdatetime('YYYY',quMainTransdate.ASDatetime))))+',';
+
+     with TfmARQRptBASTBaru.Create(Self) do
+     try
+       QRImage2.Enabled := True;
+       Qrimage2.Left := 5; QRImage2.Top := 2;
+       qrLabel5.Caption := 'No. PAS-BAST'+RightStr(quMainSaleID.AsString,11);
+       qrLabel17.Caption := '     Pada Hari '+Hari+' Tanggal '+Tanggal+' Bulan '+Bulan+' Tahun '+Tahun+' '
+                           +'yang bertanda tangan di bawah ini :';
+
+
+       QRMemo1.Lines.Text := sCompanyAddress;
+
+       with qu001,SQL do
+       Begin
+         Close;Clear;
+         add(' SELECT A.FgTax,B.SalesName as Sales,''DO-''+A.SaleId as SaleID,A.SaleID as Nota,A.TaxID,A.CurrId,A.Discount,isnull(DP,0) as DP'
+            +' ,isnull((TtlPj-DP),0) as GT,isnull(TTLPj,0) as Total,Convert(varchar(12),Transdate,106) as Tgl,A.CustId,'
+            +' CASE WHEN ISNULL(A.Actor,'''')='''' THEN C.CustName ELSE C.CustName+'' (''+A.Actor+'')'' END as Custname,'
+            +' C.Address as Address,C.City,A.Alamat,A.POID,A.PPK,'
+            +' CASE WHEN ISNULL(JatuhTempo,0) > 0 THEN CONVERT(VARCHAR(12),DATEADD(DAY,JatuhTempo,Transdate),106)+'' (''+CAST(JatuhTempo as VARCHAR(3))+'' Hari)'' '
+            +' ELSE CONVERT(VARCHAR(12),DATEADD(DAY,JatuhTempo,Transdate),106) END as JthTempo,'
+            +' CASE WHEN C.FgKoma = ''T'' THEN ''Y'' ELSE ''T'' END as Status '
+            +' FROM ARTrPenjualanHd A INNER JOIN ARMsCustomer C ON A.CustId=C.CustId '
+            +' INNER JOIN ArMsSales B ON A.SalesID=B.SalesID '
+            +' WHERE A.SaleId='''+quMainSaleID.AsString+'''');
+         Open;
+       End;
+
+       with quAct4,SQL do
+       begin
+         Close;Clear;
+         Add('SELECT CASE WHEN DATENAME(dw, '''+Formatdatetime('YYYY-mm-dd',quMainTglSP.ASDatetime)+''')=''Sunday'' THEN ''Minggu'' '
+            +'            WHEN DATENAME(dw, '''+Formatdatetime('YYYY-mm-dd',quMainTglSP.ASDatetime)+''')=''Monday'' THEN ''Senin'' '
+            +'            WHEN DATENAME(dw, '''+Formatdatetime('YYYY-mm-dd',quMainTglSP.ASDatetime)+''')=''Tuesday'' THEN ''Selasa'' '
+            +'            WHEN DATENAME(dw, '''+Formatdatetime('YYYY-mm-dd',quMainTglSP.ASDatetime)+''')=''Wednesday'' THEN ''Rabu'' '
+            +'            WHEN DATENAME(dw, '''+Formatdatetime('YYYY-mm-dd',quMainTglSP.ASDatetime)+''')=''Thursday'' THEN ''Kamis'' '
+            +'            WHEN DATENAME(dw, '''+Formatdatetime('YYYY-mm-dd',quMainTglSP.ASDatetime)+''')=''Friday'' THEN ''Jumat'' ELSE ''Sabtu'' END as hari, '
+            +'CASE WHEN '''+Formatdatetime('MM',quMainTglSP.ASDatetime)+'''=''01'' THEN ''Januari'' '
+            +'     WHEN '''+Formatdatetime('MM',quMainTglSP.ASDatetime)+'''=''02'' THEN ''Februari'' '
+            +'     WHEN '''+Formatdatetime('MM',quMainTglSP.ASDatetime)+'''=''03'' THEN ''Maret'' '
+            +'     WHEN '''+Formatdatetime('MM',quMainTglSP.ASDatetime)+'''=''04'' THEN ''April'' '
+            +'     WHEN '''+Formatdatetime('MM',quMainTglSP.ASDatetime)+'''=''05'' THEN ''Mei'' '
+            +'     WHEN '''+Formatdatetime('MM',quMainTglSP.ASDatetime)+'''=''06'' THEN ''Juni'' '
+            +'     WHEN '''+Formatdatetime('MM',quMainTglSP.ASDatetime)+'''=''07'' THEN ''Juli'' '
+            +'     WHEN '''+Formatdatetime('MM',quMainTglSP.ASDatetime)+'''=''08'' THEN ''Agustus'' '
+            +'     WHEN '''+Formatdatetime('MM',quMainTglSP.ASDatetime)+'''=''09'' THEN ''September'' '
+            +'     WHEN '''+Formatdatetime('MM',quMainTglSP.ASDatetime)+'''=''10'' THEN ''Oktober'' '
+            +'     WHEN '''+Formatdatetime('MM',quMainTglSP.ASDatetime)+'''=''11'' THEN ''November'' ELSE ''Desember'' END as Bulan ');
+         Open;
+       end;
+
+      HariSP     := quAct4.FieldByName('hari').AsString;
+      TanggalSP  := Formatdatetime('dd',quMainTglSP.ASDatetime);
+      BulanSP    := quAct4.FieldByName('bulan').AsString;
+      TahunSP    := Formatdatetime('YYYY',quMainTglSP.ASDatetime);
+
+      TglLengkap := TanggalSP + ' ' + BulanSP + ' ' + TahunSP;
+
+
+        qrLabel29.Caption := 'Telah menyerahkan hasil Pekerjaan '+quMainKeterangan2.AsString
+                            +' sesuai dengan '
+                            +'Surat Pesanan Nomor : '+quMainNoSP.AsString
+                            +' tanggal '+TglLengkap+'.';
+
+
+       if sCetak = '0' then
+         MyReport.PreviewModal
+       else
+         MyReport.Print;
+     finally
+       free;
+     end;
+
+  {if RbCetak.ItemIndex = 3 then
+  Begin
+     with quAct3,SQL do
+     begin
+       Close;Clear;
+       Add('SELECT CASE WHEN DATENAME(dw, '''+Formatdatetime('YYYY-mm-dd',quMainTransdate.ASDatetime)+''')=''Sunday'' THEN ''Minggu'' '
+          +'            WHEN DATENAME(dw, '''+Formatdatetime('YYYY-mm-dd',quMainTransdate.ASDatetime)+''')=''Monday'' THEN ''Senin'' '
+          +'            WHEN DATENAME(dw, '''+Formatdatetime('YYYY-mm-dd',quMainTransdate.ASDatetime)+''')=''Tuesday'' THEN ''Selasa'' '
+          +'            WHEN DATENAME(dw, '''+Formatdatetime('YYYY-mm-dd',quMainTransdate.ASDatetime)+''')=''Wednesday'' THEN ''Rabu'' '
+          +'            WHEN DATENAME(dw, '''+Formatdatetime('YYYY-mm-dd',quMainTransdate.ASDatetime)+''')=''Thursday'' THEN ''Kamis'' '
+          +'            WHEN DATENAME(dw, '''+Formatdatetime('YYYY-mm-dd',quMainTransdate.ASDatetime)+''')=''Friday'' THEN ''Jumat'' ELSE ''Sabtu'' END as hari, '
+          +'CASE WHEN '''+Formatdatetime('MM',quMainTransdate.ASDatetime)+'''=''01'' THEN ''Januari'' '
+          +'     WHEN '''+Formatdatetime('MM',quMainTransdate.ASDatetime)+'''=''02'' THEN ''Februari'' '
+          +'     WHEN '''+Formatdatetime('MM',quMainTransdate.ASDatetime)+'''=''03'' THEN ''Maret'' '
+          +'     WHEN '''+Formatdatetime('MM',quMainTransdate.ASDatetime)+'''=''04'' THEN ''April'' '
+          +'     WHEN '''+Formatdatetime('MM',quMainTransdate.ASDatetime)+'''=''05'' THEN ''Mei'' '
+          +'     WHEN '''+Formatdatetime('MM',quMainTransdate.ASDatetime)+'''=''06'' THEN ''Juni'' '
+          +'     WHEN '''+Formatdatetime('MM',quMainTransdate.ASDatetime)+'''=''07'' THEN ''Juli'' '
+          +'     WHEN '''+Formatdatetime('MM',quMainTransdate.ASDatetime)+'''=''08'' THEN ''Agustus'' '
+          +'     WHEN '''+Formatdatetime('MM',quMainTransdate.ASDatetime)+'''=''09'' THEN ''September'' '
+          +'     WHEN '''+Formatdatetime('MM',quMainTransdate.ASDatetime)+'''=''10'' THEN ''Oktober'' '
+          +'     WHEN '''+Formatdatetime('MM',quMainTransdate.ASDatetime)+'''=''11'' THEN ''November'' ELSE ''Desember'' END as Bulan ');
+       Open;
+     end;
+     Hari := quAct3.FieldByName('hari').AsString;
+     Tanggal := convert2(FormatFloat(sEditFormat,StrToInt(Formatdatetime('D',quMainTransdate.ASDatetime))));
+     Bulan := quAct3.FieldByName('bulan').AsString;
      Tahun := convert2(FormatFloat(sEditFormat,StrToInt(Formatdatetime('YYYY',quMainTransdate.ASDatetime))));
 
      with TfmARQRRptBAST.Create(Self) do
      try
+       QRImage2.Enabled := True;
+       Qrimage2.Left := 5; QRImage2.Top := 2;
        qrLabel3.Caption := 'No : PAS-BAST'+RightStr(quMainSaleID.AsString,11);
        qrLabel17.Caption := '     Pada '+Hari+' Tanggal '+Tanggal+' Bulan '+Bulan+' Tahun '+Tahun+' ('+Formatdatetime('d-M-yyyy',quMainTransdate.ASDatetime)+'), '
                            +'Rincian barang sesuai dengan Nomor ID Paket '+quMainPOID.ASString+' telah diterima oleh '+quMainLuCustName.ASString+' '
                            +'dengan baik, benar, dan lengkap. Dengan rincian sebagai berikut :';
+
+                           Pada Hari Kamis Tanggal Empat Bulan Desember Tahun Dua Ribu Dua Puluh Lima, yang bertanda tangan di bawah ini :
+
        if UpperCase(quMainCurrId.Value) ='IDR' then
        begin
           qlbCurr1.Caption := 'Rp ';
@@ -1832,7 +1947,7 @@ begin
          MyReport.Print;
      finally
        free;
-     end;
+     end;    }
      {with TfmQRRptInvPenjualan.Create(Self) do
      try
        MyReport.PrinterSettings.PrinterIndex := iPrint;
@@ -1931,7 +2046,7 @@ begin
      end;}
   End;
 
-  if RbCetak.ItemIndex = 4 then
+ { if RbCetak.ItemIndex = 4 then
   Begin
      with TfmQRRptBayarPeriksa.Create(Self) do
      try
@@ -1941,6 +2056,8 @@ begin
        QRLabel13.Enabled := False; QRLabel14.Enabled := False; QRLabel9.Enabled := False;
        qrlPerihal.Caption := ': Permohonan Pemeriksaan Barang/Pekerjaan';
        QRLabel6.Top := 348;
+       QRImage2.Enabled := True;
+       Qrimage2.Left := 13; QRImage2.Top := 10;
        qlbNote1.Caption := 'Berkenaan dengan telah diselesaikannya pekerjaan '+quMainKeterangan2.AsString
                           +' sesuai dengan Surat Pesanan (SP) No: '+quMainNoSP.AsString+', tanggal '+FormatDateTime('DD MMMM YYYY',quMainTglSP.AsDateTime)
                           +' dengan No Paket '+quMainPOID.AsString
@@ -1976,6 +2093,8 @@ begin
        QRLabel10.Enabled := True; QRLabel11.Enabled := True; QRLabel12.Enabled := True;
        QRLabel13.Enabled := True; QRLabel14.Enabled := True; QRLabel9.Enabled := True;
        QRDBText2.Enabled := False; qlbNote2.Enabled := True;
+       QRImage2.Enabled := True;
+       Qrimage2.Left := 13; QRImage2.Top := 10;
        qrlPerihal.Caption := ': Permohonan Pembayaran';
        qlbNote1.Caption := 'Dengan Hormat,'+#13
                           +'Melalui surat ini kami sampaikan bahwa telah diselesaikannya Paket '+quMainKeterangan2.AsString
@@ -1989,6 +2108,93 @@ begin
        Begin
          Close;Clear;
          add('SELECT '': ''+LEFT(SaleID,3)+RIGHT(SaleID,11) as NoSurat, C.Address,C.Custname,'
+            +'NoSP,CONVERT(VARCHAR(10),TglSP,103) as TglSP,A.POID '
+            +'FROM ARTrPenjualanHd A INNER JOIN ARMsCustomer C ON A.CustId=C.CustId '
+            +'WHERE A.SaleId='''+quMainSaleID.AsString+''' ');
+         Open;
+       End;
+
+       if sCetak = '0' then
+         MyReport.PreviewModal
+       else
+         MyReport.Print;
+
+      finally
+        free;
+     end;
+  End;   }
+
+  if RbCetak.ItemIndex = 4 then
+  Begin
+     with TfmQRRptBayarPeriksa.Create(Self) do
+     try
+       MyReport.PrinterSettings.PrinterIndex := iPrint;
+       qrlTitle.Caption := 'SURAT PERMOHONAN PEMERIKSAAN BARANG';
+       QRLabel6.Top := 400; qrlPeriode.Caption := 'Jakarta, '+FormatDateTime('DD MMMM YYYY',quMainKMKDate.AsDateTime);
+       QRLabel10.Enabled := False; QRLabel11.Enabled := False; QRLabel12.Enabled := False;
+       QRLabel13.Enabled := False; QRLabel14.Enabled := False; QRLabel9.Enabled := False;
+       QRShape3.Enabled := False;
+       QRImage2.Enabled := True;
+       Qrimage2.Left := 13; QRImage2.Top := 10;
+       QRMemo1.Lines.Text := sCompanyAddress;
+       //qrlPerihal.Caption := ': Permohonan Pemeriksaan Barang/Pekerjaan';
+       //QRLabel6.Top := 348;
+       qlbNote1.Caption := 'Dengan Hormat,'+#13
+                          +'Melalui surat ini kami sampaikan bahwa telah diselesaikannya Paket '+quMainKeterangan2.AsString
+                          +' sesuai dengan Surat Pesanan (SP) No: '+quMainNoSP.AsString+', tanggal '+FormatDateTime('DD MMMM YYYY',quMainTglSP.AsDateTime)
+                          +' , dengan ini Kami mengajukan permohonan Pemeriksaan dan Penyelesaian Hasil Pekerjaan.';
+
+
+//       qlbNote2.Caption := 'maka dengan ini kami mohonkan kepada Pejabat Pembuat Komitmen (PPK) '+quMainLuCustName.AsString+' untuk mengadakan pemeriksaan terhadap hasil pekerjaan tersebut';
+
+       with qu001,SQL do
+       Begin
+         Close;Clear;
+         add('SELECT ''No. ''+LEFT(SaleID,3)+RIGHT(SaleID,11) as NoSurat, C.Address,C.Custname,'
+            +'NoSP,CONVERT(VARCHAR(10),TglSP,103) as TglSP,A.POID '
+            +'FROM ARTrPenjualanHd A INNER JOIN ARMsCustomer C ON A.CustId=C.CustId '
+            +'WHERE A.SaleId='''+quMainSaleID.AsString+''' ');
+         Open;
+       End;
+
+       if sCetak = '0' then
+         MyReport.PreviewModal
+       else
+         MyReport.Print;
+
+      finally
+        free;
+     end;
+  End;
+
+  if RbCetak.ItemIndex = 5 then
+  Begin
+     with TfmQRRptBayarPeriksa.Create(Self) do
+     try
+       MyReport.PrinterSettings.PrinterIndex := iPrint;
+       qrlTitle.Caption := 'SURAT PERMOHONAN PEMBAYARAN';
+       qrlPeriode.Caption := 'Jakarta, '+FormatDateTime('DD MMMM YYYY',quMainTransDate.AsDateTime);
+       QRLabel10.Enabled := True; QRLabel11.Enabled := True; QRLabel12.Enabled := True;
+       QRLabel13.Enabled := True; QRLabel14.Enabled := True; QRLabel9.Enabled := True;   
+       QRMemo1.Lines.Text := sCompanyAddress;
+       QRImage2.Enabled := True;
+       Qrimage2.Left := 13; QRImage2.Top := 10;
+       //qrlPerihal.Caption := ': Permohonan Pembayaran';
+       qlbNote1.Caption := 'Dengan Hormat,'+#13
+                          +'Melalui surat ini kami sampaikan bahwa telah diselesaikannya Paket '+quMainKeterangan2.AsString
+                          +' sesuai dengan Surat Pesanan (SP) No: '+quMainNoSP.AsString+', tanggal '+FormatDateTime('DD MMMM YYYY',quMainTglSP.AsDateTime)
+                          +' , dengan ini Kami mengajukan permohonan untuk dilakukan pembayaran tagihan atas Kwitansi No. '+quMainSaleID.AsString
+                          +' Tertanggal '+FormatDateTime('DD MMMM YYYY',quMainTransDate.AsDateTime)+' sebesar '+convert(FormatFloat(sEditFormat,sTotal))+'rupiah # ke Rekening di bawah ini :';
+
+                          //+' dengan No Paket '+quMainPOID.AsString
+                          //+' yang telah diserahkan kepada Pejabat Pembuat Komitmen Bendahara Pengeluaran '+quMainActor.AsString;
+       {qlbNote2.Caption := 'Sehubungan dengan hal tersebut, maka dengan ini kami mengajukan permohonan untuk dilakukan pembayaran tagihan atas Kwitansi Nomor '+quMainSaleID.AsString
+                          +' tertanggal '+FormatDateTime('DD MMMM YYYY',quMainTransDate.AsDateTime)+' sebesar '+convert(FormatFloat(sEditFormat,sTotal))+'rupiah # ke rekening sebagai berikut';    }
+
+       with qu001,SQL do
+       Begin
+         Close;Clear;
+         add('SELECT ''No. ''+LEFT(SaleID,3)+RIGHT(SaleID,11) as NoSurat, C.Address,C.Custname,'
             +'NoSP,CONVERT(VARCHAR(10),TglSP,103) as TglSP,A.POID '
             +'FROM ARTrPenjualanHd A INNER JOIN ARMsCustomer C ON A.CustId=C.CustId '
             +'WHERE A.SaleId='''+quMainSaleID.AsString+''' ');
@@ -2040,6 +2246,8 @@ begin
          sHarga := 'Y'
        else
          sHarga := 'T';
+         QRImage2.Enabled := True;
+       Qrimage2.Left := 5; QRImage2.Top := 2;
 
        qrLabel3.Caption := 'No : '+RightStr(quMainSaleID.AsString,3)+'/PAS-BAUF/'+PeriodeRomawi(quMainTransDate.AsDateTime)+'/'+FormatDateTime('YYYY',quMainTransDate.AsDateTime);
        qrLabel17.Caption := 'Pada hari ini '+Hari+' Tanggal '+Tanggal+' Bulan '+Bulan+' Tahun '+Tahun+' ('+Formatdatetime('d-M-yyyy',quMainTransdate.ASDatetime)+') '

@@ -1885,7 +1885,7 @@ inherited fmARTRSales: TfmARTRSales
     Top = 220
   end
   object quCustomer: TADOQuery
-    Active = True
+    Active = False
     Connection = dmMain.dbConn
     CursorType = ctStatic
     Parameters = <>

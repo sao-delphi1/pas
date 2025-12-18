@@ -8,19 +8,25 @@ uses
 
 type
   TfmQRRptBayarPeriksa = class(TfmRptLv0)
-    QRImage2: TQRImage;
     QRImage1: TQRImage;
+    QRLabel1: TQRLabel;
+    QRLabel2: TQRLabel;
+    qrlPerihal: TQRLabel;
     QRDBText3: TQRDBText;
     QRLabel3: TQRLabel;
     QRDBText18: TQRDBText;
     QRDBText1: TQRDBText;
     qlbNote1: TQRLabel;
+    QRDBText2: TQRDBText;
+    qlbNote2: TQRLabel;
     QRLabel6: TQRLabel;
     QRLabel4: TQRLabel;
     QRLabel5: TQRLabel;
     QRLabel7: TQRLabel;
     QRLabel8: TQRLabel;
     QRLabel9: TQRLabel;
+    QRLabel10: TQRLabel;
+    QRLabel11: TQRLabel;
     QRLabel12: TQRLabel;
     QRLabel13: TQRLabel;
     QRLabel14: TQRLabel;
@@ -43,12 +49,7 @@ type
     QRLabel18: TQRLabel;
     QRLabel19: TQRLabel;
     QRLabel21: TQRLabel;
-    QRShape3: TQRShape;
-    QRLabel10: TQRLabel;
-    QRLabel11: TQRLabel;
-    QRMemo1: TQRMemo;
-    QRLabel2: TQRLabel;
-    QRShape4: TQRShape;
+    QRImage2: TQRImage;
   private
     { Private declarations }
   public

@@ -2525,7 +2525,6 @@ inherited fmARTrPenjualanIDR: TfmARTrPenjualanIDR
     Top = 320
   end
   object quValuta: TADOQuery
-    Active = True
     Connection = dmMain.dbConn
     CursorType = ctStatic
     BeforePost = quDetilBeforePost
@@ -2757,5 +2756,11 @@ inherited fmARTrPenjualanIDR: TfmARTrPenjualanIDR
     OnStateChange = dscekbayarStateChange
     Left = 864
     Top = 572
+  end
+  object quAct4: TADOQuery
+    Connection = dmMain.dbConn
+    Parameters = <>
+    Left = 408
+    Top = 68
   end
 end
