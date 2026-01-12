@@ -54,7 +54,7 @@ Const
   sDisFormat : string = '#,0.00';
 //  sEditformat : string= '#,0';
   sDisFormat1 : String= '#,0';
-  version : string = '20251216';
+  version : string = '20251222';
   PT : String ='PAS';
 var iCekHasp  : integer;
     Param1, Param2, Param3, Param4 : longint;

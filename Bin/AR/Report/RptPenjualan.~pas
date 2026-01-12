@@ -150,7 +150,7 @@ begin
   SalesID := quCalc.FieldByName('SalesID').AsString;
 
   sQuery := 'SELECT L.*,M.SalesName,CASE WHEN L.GP > ISNULL(M.TOmzet,0) THEN L.Margin*M.Kom1*0.01 ELSE L.Margin*M.Kom2*0.01 END as HKomisi FROM( '
-           +'SELECT K.*,ISNULL(Jual-TModal,0) as Margin,ISNULL(MarginAll,0) as MarginAll,ISNULL(PPNOut-PPNIn,0) as PPNMargin,'
+           +'SELECT K.*,ISNULL(Jual-TModal,0) as Margin,ISNULL(MarginInvBeli,0) as MarginAll,ISNULL(PPNOut-PPNIn,0) as PPNMargin,'
            +'(SELECT ISNULL(SUM(X.Qty*(X.Price-X.Modal)),0) FROM ARTrPenjualanDt X INNER JOIN ARTrPenjualanHd Y ON X.SaleID=Y.SaleID '
            +'WHERE Y.SalesID=K.SalesID AND CONVERT(VARCHAR(8),Y.Transdate,112) BETWEEN '''+dari+''' AND '''+sampai+''') as GP,'
            +'ISNULL((SELECT SUM(A.Amount) FROM CFTrKKBBDt A '
@@ -165,7 +165,7 @@ begin
            +'ISNULL(ROUND((CASE WHEN B.FgTax=''Y'' THEN (A.Qty*A.Price)*0.1 ELSE 0 END),2),0) as PPNOut,ISNULL(ROUND(A.Modal,2),0) as Modal,ISNULL(ROUND(A.Qty*A.Modal,2),0) as TModal,'
            +'ISNULL(ROUND((A.Qty*A.Modal/(1+(B.PPNFee*0.01))*0.1),2),0) as PPNIn,ISNULL(A.Komisi,0) as Komisi,ISNULL(A.Qty*A.Komisi,0) as TKomisi,ISNULL(B.TTLPj,0) as TotalInv, '
            +'ISNULL((SELECT SUM(Y.Price) FROM ARTrPenjualanSN X INNER JOIN APTrPurchaseDtSN Y on Y.SNID=X.SNID WHERE A.SaleID=X.SaleID AND X.ItemID=A.ItemID),0) as ModalInvBeli, '
-           +'ISNULL((SELECT SUM(X.Price-Y.Price) FROM ARTrPenjualanSN X INNER JOIN APTrPurchaseDtSN Y on Y.SNID=X.SNID WHERE A.SaleID=X.SaleID AND X.ItemID=A.ItemID),0) as MarginAll '
+           +'ISNULL((SELECT SUM(X.Price-Y.Price) FROM ARTrPenjualanSN X INNER JOIN APTrPurchaseDtSN Y on Y.SNID=X.SNID WHERE A.SaleID=X.SaleID AND X.ItemID=A.ItemID),0) as MarginInvBeli '
            +'FROM ARTrPenjualandt A '
            +'Inner join ARTrPenjualanHd B on A.SaleID=B.SaleID '
            +'INNER JOIN ARMsCustomer C on B.CustID=C.CustID '
